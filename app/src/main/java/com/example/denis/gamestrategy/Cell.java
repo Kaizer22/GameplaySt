@@ -26,6 +26,8 @@ public class Cell {
 
     }
 
+    public Texture getTexture(){return texture;}
+
 
     public void setcWidth(int cW){cWidth = cW;}
 
@@ -35,9 +37,9 @@ public class Cell {
 
     public int getcHeight(){return cHeigth;}
 
-    public void drawCell(Canvas canvas, int x , int y){    // x,y in array map[][]
+    //public void drawCell(Canvas canvas, int x , int y){    // x,y in array map[][]
 
-        Paint paint = new Paint();
-        canvas.drawBitmap(texture.getBitmap(),x*cWidth,y*cHeigth,paint);
-    }
+       // Paint paint = new Paint();
+      //  canvas.drawBitmap(texture.getBitmap(),x*cWidth,y*cHeigth,paint);
+    //}
 }

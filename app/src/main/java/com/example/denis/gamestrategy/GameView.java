@@ -25,9 +25,12 @@ public class GameView extends View{
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        Drawer drawer = new Drawer();
         Map m = new Map();
         m.loadMap(am,t0,t1,t2);
-        m.draw0All0Map(canvas);
+        drawer.draw0All0Map(canvas,m);
         Paint mPaint = new Paint();
     }
+
+    public void onUpdate(){}
 }
