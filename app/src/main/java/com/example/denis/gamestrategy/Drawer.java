@@ -16,7 +16,7 @@ public class Drawer {
         canvas.drawBitmap(cell.getTexture().getBitmap(),x*cell.getcWidth(),y*cell.getcHeight(),paint);
     }
 
-    public void draw0All0Map(Canvas canvas, Map map) { // считать ширину и высоту от данного Canva
+    public void drawMap(Canvas canvas, Map map) {
         Cell[][] m = map.getMap();
 
         int my = map.getMaxY(),

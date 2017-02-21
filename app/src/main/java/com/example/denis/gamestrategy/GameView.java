@@ -27,8 +27,13 @@ public class GameView extends View{
         super.onDraw(canvas);
         Drawer drawer = new Drawer();
         Map m = new Map();
+        ScreenManager scM = new ScreenManager();
+
         m.loadMap(am,t0,t1,t2);
-        drawer.draw0All0Map(canvas,m);
+        scM.calculateVisibleMap(canvas);
+        scM.createVisibleMap(m);
+
+        drawer.drawMap(canvas,scM.visibleMap);
         Paint mPaint = new Paint();
     }
 
