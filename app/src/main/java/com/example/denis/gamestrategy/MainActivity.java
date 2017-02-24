@@ -8,6 +8,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(new GameView(this));
+        GameView game = new GameView(this);
+        game.prepareGameView();
+        setContentView(game);
     }
 }
