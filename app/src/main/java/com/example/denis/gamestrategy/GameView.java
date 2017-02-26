@@ -2,9 +2,11 @@ package com.example.denis.gamestrategy;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -13,8 +15,14 @@ import android.view.View;
  */
 
 public class GameView extends View{
+
+    //DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
+
+
     final AssetManager am;
-    final  int moveMistake = 25;
+    final  int moveMistake = 30;
+    //Bitmap b = Bitmap.createBitmap(displaymetrics.widthPixels, displaymetrics.heightPixels, Bitmap.Config.ARGB_8888);
+   // Canvas myCanvas = new Canvas(b);
     Drawer drawer = new Drawer();
     Map m = new Map();
     ScreenManager scM = new ScreenManager();
@@ -24,38 +32,42 @@ public class GameView extends View{
         super(context);
         am = context.getAssets();
     }
-
-    private Texture t0 = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.water)); //текстуры карты, хранить бы их как-нибудь по-другому
-    private Texture t1 = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.stone));
-    private Texture t2 = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.grass));
+    private Texture[] textures;
 
     public void prepareGameView(){
-        m.loadMap(am,t0,t1,t2);
+        textures = new Texture[]{
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_water)),                //0
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.savannah)),                   //1
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.small_mountains)),            //2
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.snow_peaks)),                 //3
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.small_mountains_coast)),      //4
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_mountains_diag)),       //5
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_mountains_small_diag)), //6
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.desert)),                     //7
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_desert_diag)),          //8
+
+        };
+        m.loadMap(am,textures);
+
 
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        int x = 0,y = 0;
 
         switch(event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 startEventX = (int)event.getX();
                 startEventY = (int)event.getY();
                 break;
-            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_MOVE:
                 finalEventX = (int)event.getX();
                 finalEventY = (int)event.getY();
 
-                if (finalEventX - startEventX > moveMistake)
-                    x = -1;
-                else if (finalEventX - startEventX < -1*moveMistake)
-                    x = 1;
-                if (finalEventY - startEventY > moveMistake)
-                    y = -1;
-                else if (finalEventY - startEventY < -1*moveMistake)
-                    y = 1;
-                onUpdate(x, y);
+                onUpdate();
+
+                startEventX = (int)event.getX();
+                startEventY = (int)event.getY();
                 break;
         }
 
@@ -66,14 +78,25 @@ public class GameView extends View{
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+
         scM.calculateVisibleMap(canvas);
-        scM.createVisibleMap(m);
+        scM.createVisibleMap(m);                    //!!!!!
 
         drawer.drawMap(canvas,scM.visibleMap);
         Paint mPaint = new Paint();
     }
 
-    public void onUpdate(int x, int y ){
+    public void onUpdate(){
+        int x = 0,y = 0;
+
+        if (finalEventX - startEventX > moveMistake)
+            x = -1;
+        else if (finalEventX - startEventX < -1*moveMistake)
+            x = 1;
+        if (finalEventY - startEventY > moveMistake)
+            y = -1;
+        else if (finalEventY - startEventY < -1*moveMistake)
+            y = 1;
 
         if(( (scM.posXOnGlobalMap + x) >= 0 ) && ( (scM.posXOnGlobalMap + x) < (m.getMaxX()-scM.vmX)) ) {
             scM.posXOnGlobalMap += x;

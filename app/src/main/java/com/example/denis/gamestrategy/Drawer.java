@@ -9,10 +9,11 @@ import android.graphics.Rect;
  */
 
 public class Drawer {
+    Paint paint = new Paint();
 
     public void drawCell(Canvas canvas,Cell cell, int x , int y){    // x,y in array map[][]
 
-        Paint paint = new Paint();
+
         canvas.drawBitmap(cell.getTexture().getBitmap(),x*cell.getcWidth(),y*cell.getcHeight(),paint);
     }
 

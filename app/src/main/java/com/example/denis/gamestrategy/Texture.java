@@ -12,9 +12,11 @@ public class Texture {
 
     public Texture (Bitmap bm){
         bitmap = bm;
-        bmX = bm.getWidth();
-        bmY = bm.getHeight();
+        bmX = bitmap.getWidth();
+        bmY = bitmap.getHeight();
     }
+
+
     public void resizeTexture(int width, int height){
         bitmap = Bitmap.createScaledBitmap(bitmap,width,height,false);
         bmX = bitmap.getWidth();

@@ -40,7 +40,7 @@ public class Map {
         map[y] = c;
     }
 
-    public void loadMap(int mY, int mX){
+    public void loadMap(int mY, int mX){                   //!!!!
 
         map = new Cell[mY][mX];
 
@@ -51,7 +51,7 @@ public class Map {
         }
     }
 
-    public void loadMap(final AssetManager am, final Texture t0 ,final Texture t1,final Texture t2) {
+    public void loadMap(final AssetManager am, final Texture[] textures) {
 
         /// /количество клеток в строке и в столбце  в текстовом документе
         // запилить хотя бы массивом текстур
@@ -80,23 +80,12 @@ public class Map {
 
                                 buf = sc.nextInt();
                                 map[j][i] = new Cell();
+                                map[j][i].setTexture(textures[buf]);
 
-                                switch (buf){
-                                    case(0):
-                                        map[j][i].setTexture(t0);
-                                        break;
-                                    case(1):
-                                        map[j][i].setTexture(t1);
-                                        break;
-                                    case(2):
-                                        map[j][i].setTexture(t2);
-                                        break;
                                 }
                             }
                             sc.nextLine();
                         }
-                    }
-
                     sc.close();
                     in.close();
 

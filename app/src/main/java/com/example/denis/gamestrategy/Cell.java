@@ -1,6 +1,7 @@
 package com.example.denis.gamestrategy;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -10,7 +11,9 @@ import android.graphics.Rect;
  */
 
 public class Cell {
-    private Texture texture ;
+
+    //Bitmap defaultBitmap = Bitmap.createBitmap(128,128,Bitmap.Config.ARGB_8888);
+    private Texture texture; //= new Texture(defaultBitmap);
 
     private int cWidth, cHeigth;
 
@@ -21,7 +24,7 @@ public class Cell {
     }
 
 
-    public void setTexture(Texture tx){
+    public void setTexture(Texture tx){                 //  утечка памяти
         texture = new Texture(tx.getBitmap());
 
     }
