@@ -7,6 +7,7 @@ import android.graphics.Canvas;
  */
 
 public class ScreenManager {
+
     Map visibleMap = new Map();
     final int cellsInLine = 10;
     int vmY, vmX = cellsInLine;

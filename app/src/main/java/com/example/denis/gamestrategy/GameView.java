@@ -5,7 +5,6 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,13 +15,13 @@ import android.view.View;
 
 public class GameView extends View{
 
-    //DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
+    DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
 
 
     final AssetManager am;
     final  int moveMistake = 30;
-    //Bitmap b = Bitmap.createBitmap(displaymetrics.widthPixels, displaymetrics.heightPixels, Bitmap.Config.ARGB_8888);
-   // Canvas myCanvas = new Canvas(b);
+    Bitmap b = Bitmap.createBitmap(displaymetrics.widthPixels, displaymetrics.heightPixels, Bitmap.Config.ARGB_8888); // отнимать высоту заголовка от высоты Bitmap
+    Canvas myCanvas = new Canvas(b);
     Drawer drawer = new Drawer();
     Map m = new Map();
     ScreenManager scM = new ScreenManager();
@@ -33,21 +32,26 @@ public class GameView extends View{
         am = context.getAssets();
     }
     private Texture[] textures;
+    private Texture itexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.info_bar));
+    private InfoBar infoBar = new InfoBar(itexture);
 
     public void prepareGameView(){
         textures = new Texture[]{
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_water)),                //0
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.savannah)),                   //1
-                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.small_mountains)),            //2
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills)),                      //2
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.snow_peaks)),                 //3
-                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.small_mountains_coast)),      //4
-                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_mountains_diag)),       //5
-                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_mountains_small_diag)), //6
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_coast)),                //4
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_diag)),                 //5
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_small_diag)),           //6
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.desert)),                     //7
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_desert_diag)),          //8
 
         };
         m.loadMap(am,textures);
+
+        scM.calculateVisibleMap(myCanvas);               // нужно делать один раз , а не для каждого кадра!
+        infoBar.calculateInfoBar(myCanvas,scM);
 
 
     }
@@ -79,11 +83,12 @@ public class GameView extends View{
         super.onDraw(canvas);
 
 
-        scM.calculateVisibleMap(canvas);
-        scM.createVisibleMap(m);                    //!!!!!
+        scM.createVisibleMap(m);
 
         drawer.drawMap(canvas,scM.visibleMap);
-        Paint mPaint = new Paint();
+        drawer.drawInfoRectangle(infoBar,canvas);
+
+
     }
 
     public void onUpdate(){

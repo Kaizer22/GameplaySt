@@ -1,11 +1,5 @@
 package com.example.denis.gamestrategy;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
-
 /**
  * Created by denis on 19.02.17.
  */
@@ -14,8 +8,9 @@ public class Cell {
 
     //Bitmap defaultBitmap = Bitmap.createBitmap(128,128,Bitmap.Config.ARGB_8888);
     private Texture texture; //= new Texture(defaultBitmap);
-
+    private Terrain terrain;
     private int cWidth, cHeigth;
+
 
     public void setSize(int cW, int cH){
         cWidth = cW;
@@ -40,9 +35,5 @@ public class Cell {
 
     public int getcHeight(){return cHeigth;}
 
-    //public void drawCell(Canvas canvas, int x , int y){    // x,y in array map[][]
 
-       // Paint paint = new Paint();
-      //  canvas.drawBitmap(texture.getBitmap(),x*cWidth,y*cHeigth,paint);
-    //}
 }

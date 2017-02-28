@@ -54,7 +54,6 @@ public class Map {
     public void loadMap(final AssetManager am, final Texture[] textures) {
 
         /// /количество клеток в строке и в столбце  в текстовом документе
-        // запилить хотя бы массивом текстур
         //class MapLoader extends AsyncTask<Void, Void, Void> {
            // @Override
            // protected void onPreExecute() {super.onPreExecute();}
