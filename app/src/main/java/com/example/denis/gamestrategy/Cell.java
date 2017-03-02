@@ -10,6 +10,7 @@ public class Cell {
     private Texture texture; //= new Texture(defaultBitmap);
     private Terrain terrain;
     private int cWidth, cHeigth;
+    public Unit unitOnIt;
 
 
     public void setSize(int cW, int cH){
@@ -35,5 +36,11 @@ public class Cell {
 
     public int getcHeight(){return cHeigth;}
 
+
+    public enum Terrain {
+        HILLS, PEAKS, DESERT, SAVANNAH, JUNGLE,
+
+        HILLS_COAST, DESERT_COAST, SAVANNAH_COAST, JUNGLE_COAST
+    }
 
 }

@@ -14,11 +14,15 @@ public abstract class Unit {
             unitAttack, unitDefence,
             unitProductionPrice, unitPopulatinPrice;
 
-    Unit(Texture t0,Texture t1,int x, int y){
-        texture = t0;
-        fraction = t1;
+    public Unit(Texture t,Texture f,int y, int x){
+        texture = t;
+        fraction = f;
         posX = x;
         posY = y;
+    }
+
+    public void setSize(int width,int height){
+        texture.resizeTexture(width,height);
     }
 
     public void moveTo(int x,int y){}

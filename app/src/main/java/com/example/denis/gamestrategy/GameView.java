@@ -35,6 +35,7 @@ public class GameView extends View{
     private Texture itexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.info_bar));
     private InfoBar infoBar = new InfoBar(itexture);
 
+    //добавить текстуры карты
     public void prepareGameView(){
         textures = new Texture[]{
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_water)),                //0
