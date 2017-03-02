@@ -11,6 +11,7 @@ public class Cell {
     private Terrain terrain;
     private int cWidth, cHeigth;
     public Unit unitOnIt;
+    public boolean unitOn;
 
 
     public void setSize(int cW, int cH){

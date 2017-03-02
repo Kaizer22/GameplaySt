@@ -52,21 +52,22 @@ public class ScreenManager {
             InputStream in = am.open("unit_map");
             Scanner sc = new Scanner(in);
             int buf;
-            maxX = sc.nextInt();
-            sc.nextLine();
-            maxY = sc.nextInt();
-            sc.nextLine();
-            for (int i = 0; i < maxY; i++) {
-                for (int j = 0; j < maxX; j++) {
+
+            for (int i = 0; i < m.getMaxY(); i++) {
+                for (int j = 0; j < m.getMaxX(); j++) {
                     buf = sc.nextInt();
                     switch (buf) {
-                        case 1:
+                        case 0: //разобраться с индексами для текстур юнитов!
                             player.units.add(new Spearmans(unitTextures[buf], player.fraction, i, j)); //добавить больше юнитов
                             map[i][j].unitOnIt = player.units.get(player.units.size()-1);
+                            map[i][j].unitOn = true;
                     }
                 }
+                sc.nextLine();
 
             }
+            in.close();
+            sc.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 
 public class Player {
-    ArrayList<Unit> units;
+    ArrayList<Unit> units = new ArrayList<Unit>();
     Texture fraction;
 
     public Player(Texture f){

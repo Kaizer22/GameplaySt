@@ -20,7 +20,7 @@ public class GameView extends View{
 
     final AssetManager am;
     final  int moveMistake = 30;
-    Bitmap b = Bitmap.createBitmap(displaymetrics.widthPixels, displaymetrics.heightPixels, Bitmap.Config.ARGB_8888); // отнимать высоту заголовка от высоты Bitmap
+    Bitmap b = Bitmap.createBitmap(displaymetrics.widthPixels, displaymetrics.heightPixels - 100, Bitmap.Config.ARGB_8888); // отнимать высоту заголовка от высоты Bitmap
     Canvas myCanvas = new Canvas(b);
     Drawer drawer = new Drawer();
     Map m = new Map();
@@ -31,13 +31,23 @@ public class GameView extends View{
         super(context);
         am = context.getAssets();
     }
-    private Texture[] textures;
-    private Texture itexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.info_bar));
-    private InfoBar infoBar = new InfoBar(itexture);
 
+    private Texture[] mapTextures;
+    private Texture[] unitTextures;
+    private Texture itexture ;
+    private Texture fraction_test;
+
+    private InfoBar infoBar;
+    private Player player;
     //добавить текстуры карты
     public void prepareGameView(){
-        textures = new Texture[]{
+        itexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.info_bar));
+        infoBar = new InfoBar(itexture);
+
+        fraction_test = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_test));
+        player = new Player(fraction_test);
+
+        mapTextures = new Texture[]{
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_water)),                //0
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.savannah)),                   //1
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills)),                      //2
@@ -49,9 +59,13 @@ public class GameView extends View{
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_desert_diag)),          //8
 
         };
-        m.loadMap(am,textures);
+        unitTextures = new Texture[]{
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.armored))
+        };
+        m.loadMap(am, mapTextures);
 
-        scM.calculateVisibleMap(myCanvas);               // нужно делать один раз , а не для каждого кадра!
+        scM.calculateVisibleMap(myCanvas);
+        scM.loadUnitMap(player,m,unitTextures,am);
         infoBar.calculateInfoBar(myCanvas,scM);
 
 

@@ -23,7 +23,16 @@ public abstract class Unit {
 
     public void setSize(int width,int height){
         texture.resizeTexture(width,height);
+        fraction.resizeTexture(width,height);
     }
 
-    public void moveTo(int x,int y){}
+    public Texture getTexture() {
+        return texture;
+    }
+
+    public Texture getFraction() {
+        return fraction;
+    }
+
+    public void moveTo(int x, int y){}
 }
