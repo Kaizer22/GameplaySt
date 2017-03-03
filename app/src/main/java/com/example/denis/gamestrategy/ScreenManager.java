@@ -3,7 +3,8 @@ package com.example.denis.gamestrategy;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
 
-import com.example.denis.gamestrategy.Units.Spearmans;
+import com.example.denis.gamestrategy.Units.ArmoredVehicle;
+import com.example.denis.gamestrategy.Units.CamelWarrior;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -58,9 +59,15 @@ public class ScreenManager {
                     buf = sc.nextInt();
                     switch (buf) {
                         case 0: //разобраться с индексами для текстур юнитов!
-                            player.units.add(new Spearmans(unitTextures[buf], player.fraction, i, j)); //добавить больше юнитов
+                            player.units.add(new ArmoredVehicle(unitTextures[buf], player.fraction, i, j)); //добавить больше юнитов
                             map[i][j].unitOnIt = player.units.get(player.units.size()-1);
                             map[i][j].unitOn = true;
+                            break;
+                        case 1:
+                            player.units.add(new CamelWarrior(unitTextures[buf], player.fraction, i, j));
+                            map[i][j].unitOnIt = player.units.get(player.units.size()-1);
+                            map[i][j].unitOn = true;
+                            break;
                     }
                 }
                 sc.nextLine();

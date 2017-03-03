@@ -60,7 +60,8 @@ public class GameView extends View{
 
         };
         unitTextures = new Texture[]{
-                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.armored))
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.armored)),
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.camel_warrior))
         };
         m.loadMap(am, mapTextures);
 

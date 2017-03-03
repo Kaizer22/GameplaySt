@@ -14,9 +14,9 @@ public class Drawer {
         canvas.drawBitmap(cell.getTexture().getBitmap(),x*cell.getcWidth(),y*cell.getcHeight(),paint);
     }
 
-    public void drawUnit(Canvas canvas, Unit unit,Cell cell){
-        canvas.drawBitmap(unit.getFraction().getBitmap(),unit.posX*cell.getcWidth(),unit.posY*cell.getcHeight(),paint);
-        canvas.drawBitmap(unit.getTexture().getBitmap(),unit.posX*cell.getcWidth(),unit.posY*cell.getcHeight(),paint);
+    public void drawUnit(Canvas canvas, Unit unit,Cell cell,int x, int y){
+        canvas.drawBitmap(unit.getFraction().getBitmap(),x*cell.getcWidth(),y*cell.getcHeight(),paint);
+        canvas.drawBitmap(unit.getTexture().getBitmap(),x*cell.getcWidth(),y*cell.getcHeight(),paint);
     }
 
     public void drawInfoRectangle(InfoBar ir, Canvas canvas){
@@ -38,7 +38,7 @@ public class Drawer {
                 drawCell(canvas,m[i][j],j,i);
                 if(m[i][j].unitOn) {
                     m[i][j].unitOnIt.setSize(cW, cH);
-                    drawUnit(canvas, m[i][j].unitOnIt, m[i][j]);
+                    drawUnit(canvas, m[i][j].unitOnIt, m[i][j],j,i);
                 }
             }
         }

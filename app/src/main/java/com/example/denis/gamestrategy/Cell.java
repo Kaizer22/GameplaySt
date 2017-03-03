@@ -10,7 +10,7 @@ public class Cell {
     private Texture texture; //= new Texture(defaultBitmap);
     private Terrain terrain;
     private int cWidth, cHeigth;
-    public Unit unitOnIt;
+    public Unit unitOnIt ;
     public boolean unitOn;
 
 
