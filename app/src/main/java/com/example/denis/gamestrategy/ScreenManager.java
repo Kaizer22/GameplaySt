@@ -18,9 +18,9 @@ import java.util.Scanner;
 public class ScreenManager {
 
     Map visibleMap = new Map();
-    final int cellsInLine = 10;
+    final int cellsInLine = 10; //пригодится для изменения масштаба
     int vmY, vmX = cellsInLine;
-    int posXOnGlobalMap = 4 , posYOnGlobalMap = 2;
+    int posXOnGlobalMap = 0 , posYOnGlobalMap = 0;
 
 
 
@@ -46,7 +46,6 @@ public class ScreenManager {
     }
 
     public void loadUnitMap(Player player,Map m,Texture[] unitTextures, AssetManager am) {
-        int maxX, maxY;
         Cell[][] map = m.getMap();
         try {
 
@@ -55,7 +54,7 @@ public class ScreenManager {
             int buf;
 
             for (int i = 0; i < m.getMaxY(); i++) {
-                for (int j = 0; j < m.getMaxX(); j++) {
+                for (int j = 0; j < m.getMaxX(); j++) { //прим. размер карты юнитов должен совпадать с размером карты!
                     buf = sc.nextInt();
                     switch (buf) {
                         case 0: //разобраться с индексами для текстур юнитов!

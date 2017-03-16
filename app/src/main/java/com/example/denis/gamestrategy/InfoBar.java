@@ -17,9 +17,9 @@ public class InfoBar {
         texture = new Texture(tx.getBitmap());
     }
 
-    public void calculateInfoBar(Canvas canvas, ScreenManager scM){
+    public void calculateInfoBar(Canvas canvas, ScreenManager scM, int scale){
         width = canvas.getWidth();
-        height = canvas.getHeight() / scM.vmY / 2;
+        height = canvas.getHeight() / scale ;
         y = canvas.getHeight() - height;
         texture.resizeTexture(width,height);
 

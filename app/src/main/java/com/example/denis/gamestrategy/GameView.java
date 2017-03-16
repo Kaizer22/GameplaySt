@@ -20,7 +20,9 @@ public class GameView extends View{
 
     final AssetManager am;
     final  int moveMistake = 30;
-    Bitmap b = Bitmap.createBitmap(displaymetrics.widthPixels, displaymetrics.heightPixels - 100, Bitmap.Config.ARGB_8888); // отнимать высоту заголовка от высоты Bitmap
+    int infoBarScale = 6;
+    int mapSize = 64;
+    Bitmap b = Bitmap.createBitmap(displaymetrics.widthPixels, displaymetrics.heightPixels - 100, Bitmap.Config.ARGB_8888); // отнимать высоту заголовка от высоты Bitmap(а не 100)
     Canvas myCanvas = new Canvas(b);
     Drawer drawer = new Drawer();
     Map m = new Map();
@@ -41,33 +43,34 @@ public class GameView extends View{
     private Player player;
     //добавить текстуры карты
     public void prepareGameView(){
-        itexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.info_bar));
+        itexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.text_back_100x48));
         infoBar = new InfoBar(itexture);
 
         fraction_test = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_test));
         player = new Player(fraction_test);
 
         mapTextures = new Texture[]{
-                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_water)),                //0
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_water)),                //0              //заменить ассоциативным массивом
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.savannah)),                   //1
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills)),                      //2
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.snow_peaks)),                 //3
-                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_coast)),                //4
-                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_diag)),                 //5
-                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_small_diag)),           //6
-                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.desert)),                     //7
-                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_desert_diag)),          //8
+                                  //new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_coast)),                //4
+                                  //new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_diag)),                 //5
+                                  //new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_small_diag)),           //6
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.desert)),                     //4
+                                  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.jungle))                      //5
+                                    //new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_desert_diag)),          //8
 
         };
         unitTextures = new Texture[]{
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.armored)),
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.camel_warrior))
         };
-        m.loadMap(am, mapTextures);
+        m.generateMap(am,mapTextures,mapSize); //loadMap(am, mapTextures);
 
         scM.calculateVisibleMap(myCanvas);
         scM.loadUnitMap(player,m,unitTextures,am);
-        infoBar.calculateInfoBar(myCanvas,scM);
+        infoBar.calculateInfoBar(myCanvas,scM,infoBarScale);
 
 
     }

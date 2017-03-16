@@ -28,7 +28,12 @@ public class Cell {
 
     public Texture getTexture(){return texture;}
 
-
+    public void setTerrain(Terrain t){
+        terrain = t;
+    }
+    public Terrain getTerrain(){
+        return terrain;
+    }
     public void setcWidth(int cW){cWidth = cW;}
 
     public int getcWidth(){return cWidth;}
@@ -39,7 +44,7 @@ public class Cell {
 
 
     public enum Terrain {
-        HILLS, PEAKS, DESERT, SAVANNAH, JUNGLE,
+        HILLS, PEAKS, DESERT, SAVANNAH, JUNGLE, WATER,
 
         HILLS_COAST, DESERT_COAST, SAVANNAH_COAST, JUNGLE_COAST
     }
