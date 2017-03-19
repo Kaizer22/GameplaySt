@@ -3,6 +3,7 @@ package com.example.denis.gamestrategy;
 import android.app.Application;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.denis.gamestrategy.Units.ArmoredVehicle;
@@ -22,14 +23,19 @@ public class ScreenManager {
     Map visibleMap = new Map();
     int cellsInLine = 10; //пригодится для изменения масштаба
     int vmY, vmX = cellsInLine;
+    public int cellWidth, cellHeight;
     int posXOnGlobalMap = 0 , posYOnGlobalMap = 0;
+    Unit choosenUnit;
+    //City choosenCity;
 
 
 
 
     public ScreenManager(Canvas canvas){                   // вычисляет параметры видимой карты
         vmY = canvas.getHeight() / (canvas.getWidth() / cellsInLine)+1;
-        visibleMap.loadMap(vmY,vmX); //!!!!!!!!!!!
+        cellWidth = canvas.getWidth()/vmX;
+        cellHeight = canvas.getHeight()/vmY;
+        visibleMap.loadMap(vmY,vmX);
     }
 
 
@@ -83,13 +89,22 @@ public class ScreenManager {
             e.printStackTrace();
         }
     }
-    public void chooseUnit(Cell cell,InfoBar ib){
+    public void chooseUnit(Cell cell,int cx,int cy, InfoBar ib){
+
+        choosenUnit = cell.unitOnIt;
+        cell.unitOnIt.posXOnScreen = cx;
+        cell.unitOnIt.posYOnScreen = cy;
         ib.message ="("+cell.unitOnIt.nameOfUnit + ") З(%)/А/Защ./Ш --- " + cell.unitOnIt.unitHP/cell.unitOnIt.unitMaxHP*100 +"/"+ cell.unitOnIt.unitAttack+"/"+cell.unitOnIt.unitDefence+"/"+ cell.unitOnIt.unitSteps;   ;
 
     }
-    public void chooseCell(InfoBar infoBar,Canvas canvas,int x,int y){
+    public void chooseCell(Map glM, InfoBar infoBar,Canvas canvas,int x,int y){
+        choosenUnit = null;
 
-        Cell c = visibleMap.getMap()[y/(canvas.getHeight()/vmY)][x/(canvas.getWidth()/vmX)];
+        Cell[][] m = visibleMap.getMap();
+        int cx = x/(canvas.getWidth()/vmX) ;
+        int cy = y/(canvas.getHeight()/vmY) ;
+        Cell c = m[cy][cx];
+
         switch(c.getTerrain()){
             case WATER:
                 infoBar.message = "Вода";
@@ -113,8 +128,38 @@ public class ScreenManager {
         //Integer f = c.getcWidth();
         //infoBar.message = f.toString();
              if (c.unitOn){
-                chooseUnit(c,infoBar);
+                chooseUnit(c,cx,cy,infoBar);
              }
 
+    }
+
+
+    public void createMarkers() {
+        for (int i = choosenUnit.unitSteps; i >= 0; i--) {
+            if (choosenUnit.posYOnScreen + choosenUnit.unitSteps < vmY && choosenUnit.posXOnScreen + choosenUnit.unitSteps < vmX) {
+                visibleMap.setMarker(choosenUnit.posYOnScreen + choosenUnit.unitSteps, choosenUnit.posXOnScreen + choosenUnit.unitSteps, true);
+            }
+            if (choosenUnit.posYOnScreen + choosenUnit.unitSteps < vmY) {
+                visibleMap.setMarker(choosenUnit.posYOnScreen + choosenUnit.unitSteps, choosenUnit.posXOnScreen, true);
+            }
+            if (choosenUnit.posYOnScreen - choosenUnit.unitSteps >= 0 && choosenUnit.posXOnScreen + choosenUnit.unitSteps < vmX) {
+                visibleMap.setMarker(choosenUnit.posYOnScreen - choosenUnit.unitSteps, choosenUnit.posXOnScreen + choosenUnit.unitSteps, true);
+            }
+            if (choosenUnit.posYOnScreen - choosenUnit.unitSteps >= 0) {
+                visibleMap.setMarker(choosenUnit.posYOnScreen - choosenUnit.unitSteps, choosenUnit.posXOnScreen, true);
+            }
+            if (choosenUnit.posYOnScreen - choosenUnit.unitSteps >= 0 && choosenUnit.posXOnScreen - choosenUnit.unitSteps >= 0) {
+                visibleMap.setMarker(choosenUnit.posYOnScreen - choosenUnit.unitSteps, choosenUnit.posXOnScreen - choosenUnit.unitSteps, true);
+            }
+            if (choosenUnit.posXOnScreen - choosenUnit.unitSteps >= 0) {
+                visibleMap.setMarker(choosenUnit.posYOnScreen, choosenUnit.posXOnScreen - choosenUnit.unitSteps, true);
+            }
+            if (choosenUnit.posYOnScreen + choosenUnit.unitSteps < vmY && choosenUnit.posXOnScreen - choosenUnit.unitSteps >= 0) {
+                visibleMap.setMarker(choosenUnit.posYOnScreen + choosenUnit.unitSteps, choosenUnit.posXOnScreen - choosenUnit.unitSteps, true);
+            }
+            if (choosenUnit.posYOnScreen + choosenUnit.unitSteps < vmY) {
+                visibleMap.setMarker(choosenUnit.posYOnScreen + choosenUnit.unitSteps, choosenUnit.posXOnScreen, true);
+            }
+        }
     }
 }

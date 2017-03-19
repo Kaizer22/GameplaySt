@@ -8,8 +8,11 @@ public abstract class Unit {
     private Texture texture;   // иконка юнита
     private Texture fraction;  // фон за иконкой, зависящии от племени
 
+    public boolean isChoosen;
+
     public  String nameOfUnit;
     public int posX,posY;
+    public int posXOnScreen, posYOnScreen;
     public int unitHP;
     public int unitMaxHP;
     public int unitMaxSteps;

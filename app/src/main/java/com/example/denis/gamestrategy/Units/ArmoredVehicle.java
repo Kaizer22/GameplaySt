@@ -11,7 +11,7 @@ public class ArmoredVehicle extends Unit {
 
     public ArmoredVehicle(Texture t, Texture f, int y, int x) {
         super(t, f, y, x);
-        unitMaxSteps = 2;
+        unitMaxSteps = 1;
         unitSteps = unitMaxSteps;
         nameOfUnit = "Бронеповозка";
         unitMaxHP = 100;

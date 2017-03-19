@@ -37,6 +37,11 @@ public class Map {
         map[Y][X] = c;
     }
 
+    public void setMarker(int Y,int X,boolean t){
+        if(map[Y][X].unitOnIt == null)
+            map[Y][X].someMarkerOnIt = t;
+    }
+
     public void setLine(int y,Cell[] c) {
         map[y] = c;
     }
@@ -74,7 +79,8 @@ public class Map {
 
                                 buf = sc.nextInt();
                                 map[j][i] = new Cell();
-                                map[j][i].setTexture(textures[buf]);
+                                //switch(buf){map[j][i].setTerrain();}
+
 
                                 }
                             }
@@ -91,36 +97,10 @@ public class Map {
 
     }
 
-    public void generateMap(AssetManager am, Texture[] textures,int mXY){
+    public void generateMap(AssetManager am,int mXY){
         MapGenerator mg = new MapGenerator();
         mg.generateMap(am,mXY);
         updateParam();
-        //for (int i = 0; i < map.length ; i++) {
-           // for (int j = 0; j < map[i].length; j++) {
-                //switch(map[i][j].getTerrain()){
-                    //case WATER:
-                        //map[i][j].setTexture(textures[0]);
-                       // break;
-                   // case SAVANNAH:
-                       // map[i][j].setTexture(textures[1]);
-                        //break;
-                    //case HILLS:
-                       // map[i][j].setTexture(textures[2]);
-                        //break;
-                    //case PEAKS:
-                        //map[i][j].setTexture(textures[3]);
-                        //break;
-                    //case DESERT:
-                        //map[i][j].setTexture(textures[4]);
-                        //break;
-                    //case JUNGLE:
-                        //map[i][j].setTexture(textures[5]);
-                        //break;
-               //}
-
-            //}
-
-        //}
 
     }
 

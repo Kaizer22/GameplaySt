@@ -22,9 +22,9 @@ public class GameView extends View{
 
     final AssetManager am;
     final  int moveMistake = 30;
-    int infoBarScale = 5;
+    int infoBarScale =6;
     int mapSize = 64;
-    Bitmap b = Bitmap.createBitmap(displaymetrics.widthPixels, displaymetrics.heightPixels - 100, Bitmap.Config.ARGB_8888); // отнимать высоту заголовка от высоты Bitmap(а не 100)
+    Bitmap b = Bitmap.createBitmap(displaymetrics.widthPixels, displaymetrics.heightPixels - 145, Bitmap.Config.ARGB_8888); // отнимать высоту заголовка от высоты Bitmap(а не 145)
     Canvas myCanvas = new Canvas(b);
     Drawer drawer;
     Map m ;
@@ -40,6 +40,7 @@ public class GameView extends View{
     private Texture[] unitTextures;
     private Texture infoBarTexture;
     private Texture fraction_test;
+    private Texture moveOpportunityMarker;
 
     private InfoBar infoBar;
     private Player player;
@@ -49,6 +50,9 @@ public class GameView extends View{
 
         fraction_test = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_test));
         player = new Player(fraction_test);
+        scM = new ScreenManager(myCanvas);
+
+        moveOpportunityMarker = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.move_opportunity));
 
         mapTextures = new Texture[]{
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_water)),                //0              //заменить ассоциативным массивом
@@ -67,16 +71,25 @@ public class GameView extends View{
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.armored)),
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.camel_warrior))
         };
-
-        drawer = new Drawer();
+        resizeTextureArray(mapTextures,scM);
+        resizeTextureArray(unitTextures,scM);
+        moveOpportunityMarker.resizeTexture(scM.cellWidth, scM.cellHeight);
+        drawer = new Drawer(moveOpportunityMarker);
         m = new Map();
-        m.generateMap(am,mapTextures,mapSize); //loadMap(am, mapTextures);
-        scM = new ScreenManager(myCanvas);
+        m.generateMap(am,mapSize); //loadMap(am, mapTextures);
+
         scM.loadUnitMap(player,m,unitTextures,am);
         infoBar = new InfoBar(myCanvas,scM,infoBarScale,infoBarTexture);
         drawer.setTextSize(infoBar.textSize);
 
 
+    }
+
+
+    public void resizeTextureArray(Texture[] textures,ScreenManager scM){
+        for (Texture t:textures) {
+            t.resizeTexture(scM.cellWidth,scM.cellHeight);
+        }
     }
 
     @Override
@@ -103,7 +116,7 @@ public class GameView extends View{
                 finalEventX = (int)event.getX();
                 finalEventY = (int)event.getY();
                 if (startEventX - finalEventX <= moveMistake && startEventX - finalEventX <= moveMistake){
-                    scM.chooseCell(infoBar,myCanvas,finalEventX,finalEventY);
+                    scM.chooseCell(m,infoBar,myCanvas,finalEventX,finalEventY);
                 }
         }
 
@@ -118,7 +131,7 @@ public class GameView extends View{
 
         scM.createVisibleMap(m);
 
-        drawer.drawMap(canvas,scM.visibleMap);
+        drawer.drawMap(canvas,scM,mapTextures,scM.visibleMap);
         drawer.drawInfoRectangle(infoBar,canvas);
 
 
