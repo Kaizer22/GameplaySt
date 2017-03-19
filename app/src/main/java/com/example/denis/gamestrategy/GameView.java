@@ -6,8 +6,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 /**
  * Created by denis on 19.02.17.
@@ -20,14 +22,14 @@ public class GameView extends View{
 
     final AssetManager am;
     final  int moveMistake = 30;
-    int infoBarScale = 6;
+    int infoBarScale = 5;
     int mapSize = 64;
     Bitmap b = Bitmap.createBitmap(displaymetrics.widthPixels, displaymetrics.heightPixels - 100, Bitmap.Config.ARGB_8888); // отнимать высоту заголовка от высоты Bitmap(а не 100)
     Canvas myCanvas = new Canvas(b);
-    Drawer drawer = new Drawer();
-    Map m = new Map();
-    ScreenManager scM = new ScreenManager();
-    int startEventX = 0,startEventY = 0,finalEventX = 0,finalEventY = 0;
+    Drawer drawer;
+    Map m ;
+    ScreenManager scM ;
+    int startEventMoveX = 0, startEventMoveY = 0,finalEventX = 0,finalEventY = 0, startEventX = 0, startEventY = 0;
 
     public GameView(Context context) {
         super(context);
@@ -36,15 +38,14 @@ public class GameView extends View{
 
     private Texture[] mapTextures;
     private Texture[] unitTextures;
-    private Texture itexture ;
+    private Texture infoBarTexture;
     private Texture fraction_test;
 
     private InfoBar infoBar;
     private Player player;
     //добавить текстуры карты
     public void prepareGameView(){
-        itexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.text_back_100x48));
-        infoBar = new InfoBar(itexture);
+        infoBarTexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.info_bar));
 
         fraction_test = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_test));
         player = new Player(fraction_test);
@@ -66,11 +67,14 @@ public class GameView extends View{
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.armored)),
                                   new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.camel_warrior))
         };
-        m.generateMap(am,mapTextures,mapSize); //loadMap(am, mapTextures);
 
-        scM.calculateVisibleMap(myCanvas);
+        drawer = new Drawer();
+        m = new Map();
+        m.generateMap(am,mapTextures,mapSize); //loadMap(am, mapTextures);
+        scM = new ScreenManager(myCanvas);
         scM.loadUnitMap(player,m,unitTextures,am);
-        infoBar.calculateInfoBar(myCanvas,scM,infoBarScale);
+        infoBar = new InfoBar(myCanvas,scM,infoBarScale,infoBarTexture);
+        drawer.setTextSize(infoBar.textSize);
 
 
     }
@@ -80,6 +84,8 @@ public class GameView extends View{
 
         switch(event.getAction()){
             case MotionEvent.ACTION_DOWN:
+                startEventMoveX = (int)event.getX();
+                startEventMoveY = (int)event.getY();
                 startEventX = (int)event.getX();
                 startEventY = (int)event.getY();
                 break;
@@ -89,13 +95,21 @@ public class GameView extends View{
 
                 onUpdate();
 
-                startEventX = (int)event.getX();
-                startEventY = (int)event.getY();
+                startEventMoveX = (int)event.getX();
+                startEventMoveY = (int)event.getY();
                 break;
+
+            case MotionEvent.ACTION_UP:
+                finalEventX = (int)event.getX();
+                finalEventY = (int)event.getY();
+                if (startEventX - finalEventX <= moveMistake && startEventX - finalEventX <= moveMistake){
+                    scM.chooseCell(infoBar,myCanvas,finalEventX,finalEventY);
+                }
         }
 
         return true;
     }
+
 
     @Override
     public void onDraw(Canvas canvas) {
@@ -113,13 +127,13 @@ public class GameView extends View{
     public void onUpdate(){
         int x = 0,y = 0;
 
-        if (finalEventX - startEventX > moveMistake)
+        if (finalEventX - startEventMoveX > moveMistake)
             x = -1;
-        else if (finalEventX - startEventX < -1*moveMistake)
+        else if (finalEventX - startEventMoveX < -1*moveMistake)
             x = 1;
-        if (finalEventY - startEventY > moveMistake)
+        if (finalEventY - startEventMoveY > moveMistake)
             y = -1;
-        else if (finalEventY - startEventY < -1*moveMistake)
+        else if (finalEventY - startEventMoveY < -1*moveMistake)
             y = 1;
 
         if(( (scM.posXOnGlobalMap + x) >= 0 ) && ( (scM.posXOnGlobalMap + x) < (m.getMaxX()-scM.vmX)) ) {

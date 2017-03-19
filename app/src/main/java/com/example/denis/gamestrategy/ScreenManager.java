@@ -1,7 +1,9 @@
 package com.example.denis.gamestrategy;
 
+import android.app.Application;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
+import android.widget.Toast;
 
 import com.example.denis.gamestrategy.Units.ArmoredVehicle;
 import com.example.denis.gamestrategy.Units.CamelWarrior;
@@ -18,13 +20,14 @@ import java.util.Scanner;
 public class ScreenManager {
 
     Map visibleMap = new Map();
-    final int cellsInLine = 10; //пригодится для изменения масштаба
+    int cellsInLine = 10; //пригодится для изменения масштаба
     int vmY, vmX = cellsInLine;
     int posXOnGlobalMap = 0 , posYOnGlobalMap = 0;
 
 
 
-    public void calculateVisibleMap(Canvas canvas){                   // вычисляет параметры видимой карты
+
+    public ScreenManager(Canvas canvas){                   // вычисляет параметры видимой карты
         vmY = canvas.getHeight() / (canvas.getWidth() / cellsInLine)+1;
         visibleMap.loadMap(vmY,vmX); //!!!!!!!!!!!
     }
@@ -79,7 +82,39 @@ public class ScreenManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public void chooseUnit(Cell cell,InfoBar ib){
+        ib.message ="("+cell.unitOnIt.nameOfUnit + ") З(%)/А/Защ./Ш --- " + cell.unitOnIt.unitHP/cell.unitOnIt.unitMaxHP*100 +"/"+ cell.unitOnIt.unitAttack+"/"+cell.unitOnIt.unitDefence+"/"+ cell.unitOnIt.unitSteps;   ;
 
+    }
+    public void chooseCell(InfoBar infoBar,Canvas canvas,int x,int y){
+
+        Cell c = visibleMap.getMap()[y/(canvas.getHeight()/vmY)][x/(canvas.getWidth()/vmX)];
+        switch(c.getTerrain()){
+            case WATER:
+                infoBar.message = "Вода";
+                break;
+            case SAVANNAH:
+                infoBar.message = "Саванна";
+                break;
+            case HILLS:
+                infoBar.message = "Холмы";
+                break;
+            case PEAKS:
+                infoBar.message = "Горы";
+                break;
+            case DESERT:
+                infoBar.message = "Пустыня";
+                break;
+            case JUNGLE:
+                infoBar.message = "Джунгли";
+                break;
+            }
+        //Integer f = c.getcWidth();
+        //infoBar.message = f.toString();
+             if (c.unitOn){
+                chooseUnit(c,infoBar);
+             }
 
     }
 }

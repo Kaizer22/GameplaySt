@@ -1,6 +1,7 @@
 package com.example.denis.gamestrategy;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 /**
  * Created by denis on 19.02.17.
@@ -18,7 +19,9 @@ public class Texture {
 
 
     public void resizeTexture(int width, int height){
-        bitmap = Bitmap.createScaledBitmap(bitmap,width,height,false);
+        Bitmap newbitmap = Bitmap.createScaledBitmap(bitmap,width,height,false);
+        bitmap = newbitmap.copy(newbitmap.getConfig(),newbitmap.isMutable() ? true : false);
+        newbitmap.recycle();
         bmX = bitmap.getWidth();
         bmY = bitmap.getHeight();
     }

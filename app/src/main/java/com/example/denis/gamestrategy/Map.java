@@ -54,13 +54,7 @@ public class Map {
 
     public void loadMap(final AssetManager am, final Texture[] textures) {
 
-        /// /количество клеток в строке и в столбце  в текстовом документе
-        //class MapLoader extends AsyncTask<Void, Void, Void> {
-           // @Override
-           // protected void onPreExecute() {super.onPreExecute();}
-
-            //@Override
-            //protected Void doInBackground(Void... params) {
+        //количество клеток в строке и в столбце  в текстовом документе
                 try{
 
                     InputStream in = am.open("map");
@@ -94,45 +88,39 @@ public class Map {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-               //return null;
-          // }
 
-          //  @Override
-           // protected void onPostExecute(Void o) {super.onPostExecute(o);}
-       // }
-       // new MapLoader().execute();
     }
 
     public void generateMap(AssetManager am, Texture[] textures,int mXY){
         MapGenerator mg = new MapGenerator();
         mg.generateMap(am,mXY);
         updateParam();
-        for (int i = 0; i < map.length ; i++) {
-            for (int j = 0; j < map[i].length; j++) {
-                switch(map[i][j].getTerrain()){
-                    case WATER:
-                        map[i][j].setTexture(textures[0]);
-                        break;
-                    case SAVANNAH:
-                        map[i][j].setTexture(textures[1]);
-                        break;
-                    case HILLS:
-                        map[i][j].setTexture(textures[2]);
-                        break;
-                    case PEAKS:
-                        map[i][j].setTexture(textures[3]);
-                        break;
-                    case DESERT:
-                        map[i][j].setTexture(textures[4]);
-                        break;
-                    case JUNGLE:
-                        map[i][j].setTexture(textures[5]);
-                        break;
-                }
+        //for (int i = 0; i < map.length ; i++) {
+           // for (int j = 0; j < map[i].length; j++) {
+                //switch(map[i][j].getTerrain()){
+                    //case WATER:
+                        //map[i][j].setTexture(textures[0]);
+                       // break;
+                   // case SAVANNAH:
+                       // map[i][j].setTexture(textures[1]);
+                        //break;
+                    //case HILLS:
+                       // map[i][j].setTexture(textures[2]);
+                        //break;
+                    //case PEAKS:
+                        //map[i][j].setTexture(textures[3]);
+                        //break;
+                    //case DESERT:
+                        //map[i][j].setTexture(textures[4]);
+                        //break;
+                    //case JUNGLE:
+                        //map[i][j].setTexture(textures[5]);
+                        //break;
+               //}
 
-            }
+            //}
 
-        }
+        //}
 
     }
 

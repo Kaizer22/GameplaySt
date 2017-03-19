@@ -8,19 +8,27 @@ import android.graphics.Paint;
  */
 
 public class Drawer {
-    private Paint paint = new Paint();
+    private Paint paint;
+    Drawer(){
+        paint = new Paint();
 
-    public void drawCell(Canvas canvas,Cell cell, int x , int y){    // x,y in array map[][]
+    }
+
+    public void drawCell(Canvas canvas,Cell cell, int x , int y,){    // x,y in array map[][]
         canvas.drawBitmap(cell.getTexture().getBitmap(),x*cell.getcWidth(),y*cell.getcHeight(),paint);
     }
 
     public void drawUnit(Canvas canvas, Unit unit,Cell cell,int x, int y){
-        canvas.drawBitmap(unit.getFraction().getBitmap(),x*cell.getcWidth(),y*cell.getcHeight(),paint);
         canvas.drawBitmap(unit.getTexture().getBitmap(),x*cell.getcWidth(),y*cell.getcHeight(),paint);
+        canvas.drawBitmap(unit.getFraction().getBitmap(),x*cell.getcWidth(),y*cell.getcHeight(),paint);
     }
 
     public void drawInfoRectangle(InfoBar ir, Canvas canvas){
         canvas.drawBitmap(ir.getTexture().getBitmap(),ir.x,ir.y,paint);
+        canvas.drawText(ir.message,ir.x+canvas.getWidth()/20,ir.y+ir.textSize,paint);
+    }
+    public void setTextSize(int ts){
+        paint.setTextSize(ts);
     }
 
     public void drawMap(Canvas canvas, Map map) {

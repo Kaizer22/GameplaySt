@@ -8,11 +8,16 @@ public abstract class Unit {
     private Texture texture;   // иконка юнита
     private Texture fraction;  // фон за иконкой, зависящии от племени
 
+    public  String nameOfUnit;
     public int posX,posY;
-    int     unitHP, unitMaxHP,
-            unitMaxSteps, unitSteps,
-            unitAttack, unitDefence,
-            unitProductionPrice, unitPopulatinPrice;
+    public int unitHP;
+    public int unitMaxHP;
+    public int unitMaxSteps;
+    public int unitSteps;
+    public int unitAttack;
+    public int unitDefence;
+    public int unitProductionPrice;
+    public int unitPopulatinPrice;
 
     public Unit(Texture t,Texture f,int y, int x){
         texture = t;
@@ -34,5 +39,5 @@ public abstract class Unit {
         return fraction;
     }
 
-    public void moveTo(int x, int y){}
+    public void move(int x, int y){}
 }
