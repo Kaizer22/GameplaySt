@@ -6,10 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 /**
  * Created by denis on 19.02.17.
@@ -22,8 +20,9 @@ public class GameView extends View{
 
     final AssetManager am;
     final  int moveMistake = 30;
-    int infoBarScale =6;
+    //int infoBarScale =6;
     int mapSize = 64;
+    int scale = 16;
     Bitmap b = Bitmap.createBitmap(displaymetrics.widthPixels, displaymetrics.heightPixels - 145, Bitmap.Config.ARGB_8888); // отнимать высоту заголовка от высоты Bitmap(а не 145)
     Canvas myCanvas = new Canvas(b);
     Drawer drawer;
@@ -50,7 +49,7 @@ public class GameView extends View{
 
         fraction_test = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_test));
         player = new Player(fraction_test);
-        scM = new ScreenManager(myCanvas);
+        scM = new ScreenManager(myCanvas,scale);
 
         moveOpportunityMarker = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.move_opportunity));
 
@@ -79,7 +78,7 @@ public class GameView extends View{
         m.generateMap(am,mapSize); //loadMap(am, mapTextures);
 
         scM.loadUnitMap(player,m,unitTextures,am);
-        infoBar = new InfoBar(myCanvas,scM,infoBarScale,infoBarTexture);
+        infoBar = new InfoBar(myCanvas,scM,infoBarTexture);
         drawer.setTextSize(infoBar.textSize);
 
 
@@ -117,6 +116,8 @@ public class GameView extends View{
                 finalEventY = (int)event.getY();
                 if (startEventX - finalEventX <= moveMistake && startEventX - finalEventX <= moveMistake){
                     scM.chooseCell(m,infoBar,myCanvas,finalEventX,finalEventY);
+                    //scale++;
+                    //scM = new ScreenManager(myCanvas,scale);
                 }
         }
 
@@ -131,7 +132,7 @@ public class GameView extends View{
 
         scM.createVisibleMap(m);
 
-        drawer.drawMap(canvas,scM,mapTextures,scM.visibleMap);
+        drawer.drawVisibleMap(canvas,scM,mapTextures,scM.visibleMap,m);
         drawer.drawInfoRectangle(infoBar,canvas);
 
 
@@ -149,11 +150,11 @@ public class GameView extends View{
         else if (finalEventY - startEventMoveY < -1*moveMistake)
             y = 1;
 
-        if(( (scM.posXOnGlobalMap + x) >= 0 ) && ( (scM.posXOnGlobalMap + x) < (m.getMaxX()-scM.vmX)) ) {
+        if(( (scM.posXOnGlobalMap + x) >= 0 ) && ( (scM.posXOnGlobalMap + x) <= (m.getMaxX()-scM.vmX)) ) {
             scM.posXOnGlobalMap += x;
         }
 
-        if((scM.posYOnGlobalMap + y) >= 0 && (scM.posYOnGlobalMap + y ) < (m.getMaxY()-scM.vmY) ) {
+        if((scM.posYOnGlobalMap + y) >= 0 && (scM.posYOnGlobalMap + y ) <= (m.getMaxY()-scM.vmY) ) {
             scM.posYOnGlobalMap += y;
         }
         invalidate();

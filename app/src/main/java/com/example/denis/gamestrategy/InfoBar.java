@@ -16,11 +16,11 @@ public class InfoBar {
     private Texture texture;
 
 
-    public InfoBar(Canvas canvas, ScreenManager scM, int scale,Texture tx){
+    public InfoBar(Canvas canvas, ScreenManager scM, Texture tx){
         width = canvas.getWidth();
-        height = canvas.getHeight() / scale ;
+        height = scM.cellHeight / 2;
         y = canvas.getHeight() - height;
-        textSize = height / 3;
+        textSize = height / 4 * 3;
         texture = tx;
         texture.resizeTexture(width,height);
         texture = new Texture(tx.getBitmap());

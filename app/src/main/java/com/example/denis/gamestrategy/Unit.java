@@ -9,6 +9,7 @@ public abstract class Unit {
     private Texture fraction;  // фон за иконкой, зависящии от племени
 
     public boolean isChoosen;
+    public boolean isShip;
 
     public  String nameOfUnit;
     public int posX,posY;
@@ -42,5 +43,13 @@ public abstract class Unit {
         return fraction;
     }
 
-    public void move(int x, int y){}
+    public void move(Cell c1,Cell c2, int x, int y){
+        c2.someMarkerOnIt = false;
+        c1.unitOn = false;
+        c1.unitOnIt = null;
+        c2.unitOn = true;
+        c2.unitOnIt = this;
+        posX = x;
+        posY = y;
+    }
 }

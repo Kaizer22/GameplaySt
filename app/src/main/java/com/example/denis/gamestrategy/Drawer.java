@@ -39,13 +39,14 @@ public class Drawer { // можно  сделать чтобы  все текс�
 
     }
 
-    public void drawMap(Canvas canvas,ScreenManager scM,Texture[] textures, Map map) {
+    public void drawVisibleMap(Canvas canvas, ScreenManager scM, Texture[] textures, Map map,Map glMap) {
 
         Cell[][] m = map.getMap();
         Texture texture;
 
-        if(scM.choosenUnit != null && scM.choosenUnit.unitSteps > 0)
-            scM.createMarkers();
+
+
+
 
         for (int i = 0; i < scM.vmY ; i++) {
             for (int j = 0; j < scM.vmX ; j++) {

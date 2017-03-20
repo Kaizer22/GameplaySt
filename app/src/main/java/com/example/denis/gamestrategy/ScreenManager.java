@@ -1,10 +1,7 @@
 package com.example.denis.gamestrategy;
 
-import android.app.Application;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.denis.gamestrategy.Units.ArmoredVehicle;
 import com.example.denis.gamestrategy.Units.CamelWarrior;
@@ -21,8 +18,8 @@ import java.util.Scanner;
 public class ScreenManager {
 
     Map visibleMap = new Map();
-    int cellsInLine = 10; //пригодится для изменения масштаба
-    int vmY, vmX = cellsInLine;
+    int scale; // (cells In Line X)
+    int vmY, vmX;
     public int cellWidth, cellHeight;
     int posXOnGlobalMap = 0 , posYOnGlobalMap = 0;
     Unit choosenUnit;
@@ -31,11 +28,14 @@ public class ScreenManager {
 
 
 
-    public ScreenManager(Canvas canvas){                   // вычисляет параметры видимой карты
-        vmY = canvas.getHeight() / (canvas.getWidth() / cellsInLine)+1;
+    public ScreenManager(Canvas canvas, int s){             // вычисляет параметры видимой карты
+        scale = s;
+        vmY = canvas.getHeight() / (canvas.getWidth() / scale)+1;
+        vmX = scale;
         cellWidth = canvas.getWidth()/vmX;
         cellHeight = canvas.getHeight()/vmY;
         visibleMap.loadMap(vmY,vmX);
+
     }
 
 
@@ -89,76 +89,100 @@ public class ScreenManager {
             e.printStackTrace();
         }
     }
-    public void chooseUnit(Cell cell,int cx,int cy, InfoBar ib){
+    public void chooseUnit(Map glMap,Cell cell,int cx,int cy, InfoBar ib){
 
-        choosenUnit = cell.unitOnIt;
+        if (choosenUnit!= null && cell.unitOnIt.isChoosen){
+
+            choosenUnit.isChoosen = false;
+            createMarkers(glMap,false);
+            choosenUnit = null;
+        }else {
+            if(choosenUnit!= null)
+                createMarkers(glMap,false);
+
+            choosenUnit = cell.unitOnIt;
+            choosenUnit.isChoosen = true;
+            if( choosenUnit.unitSteps > 0) {
+                createMarkers(glMap,true);
+            }
+        }
+
+
         cell.unitOnIt.posXOnScreen = cx;
         cell.unitOnIt.posYOnScreen = cy;
         ib.message ="("+cell.unitOnIt.nameOfUnit + ") З(%)/А/Защ./Ш --- " + cell.unitOnIt.unitHP/cell.unitOnIt.unitMaxHP*100 +"/"+ cell.unitOnIt.unitAttack+"/"+cell.unitOnIt.unitDefence+"/"+ cell.unitOnIt.unitSteps;   ;
 
     }
-    public void chooseCell(Map glM, InfoBar infoBar,Canvas canvas,int x,int y){
-        choosenUnit = null;
+    public void chooseCell(Map glMap, InfoBar infoBar,Canvas canvas,int x,int y){
 
         Cell[][] m = visibleMap.getMap();
-        int cx = x/(canvas.getWidth()/vmX) ;
+        Cell[][] glM = glMap.getMap();
+
+        int cx = x/(canvas.getWidth()/vmX);        //тут иногда за границы массива выходит
+        if (cx == vmX)
+            cx--;
+        else if(cx < 0)
+            cx = 0;
+
         int cy = y/(canvas.getHeight()/vmY) ;
+        if (cy == vmY)
+            cy--;
+        else if(cx < 0)
+            cy = 0;
+
         Cell c = m[cy][cx];
 
-        switch(c.getTerrain()){
-            case WATER:
-                infoBar.message = "Вода";
-                break;
-            case SAVANNAH:
-                infoBar.message = "Саванна";
-                break;
-            case HILLS:
-                infoBar.message = "Холмы";
-                break;
-            case PEAKS:
-                infoBar.message = "Горы";
-                break;
-            case DESERT:
-                infoBar.message = "Пустыня";
-                break;
-            case JUNGLE:
-                infoBar.message = "Джунгли";
-                break;
-            }
+        Integer glcX = posXOnGlobalMap + cx;
+        Integer glcY = posYOnGlobalMap + cy;
+
+
+
+        if (c.unitOn) {
+            chooseUnit(glMap, c, cx, cy, infoBar);
+
+        }else if(c.someMarkerOnIt ){
+            createMarkers(glMap,false);
+            choosenUnit.move(glM[choosenUnit.posY][choosenUnit.posX],c,glcX,glcY);
+        }else {
+            infoBar.message = c.getInfoAboutCell();
+            infoBar.message += "   ("+glcX.toString()+":"+glcY.toString()+")";
+        }
+
         //Integer f = c.getcWidth();
         //infoBar.message = f.toString();
-             if (c.unitOn){
-                chooseUnit(c,cx,cy,infoBar);
-             }
+
 
     }
 
 
-    public void createMarkers() {
+
+
+    public void createMarkers(Map glMap,boolean isMarker) {
+        int maxY = glMap.getMaxY() , maxX = glMap.getMaxX() ;
         for (int i = choosenUnit.unitSteps; i >= 0; i--) {
-            if (choosenUnit.posYOnScreen + choosenUnit.unitSteps < vmY && choosenUnit.posXOnScreen + choosenUnit.unitSteps < vmX) {
-                visibleMap.setMarker(choosenUnit.posYOnScreen + choosenUnit.unitSteps, choosenUnit.posXOnScreen + choosenUnit.unitSteps, true);
+            if (choosenUnit.posY + i < maxY  && choosenUnit.posX + i < maxX) {
+                glMap.setMarker(choosenUnit.posY + i, choosenUnit.posX + i, isMarker);
             }
-            if (choosenUnit.posYOnScreen + choosenUnit.unitSteps < vmY) {
-                visibleMap.setMarker(choosenUnit.posYOnScreen + choosenUnit.unitSteps, choosenUnit.posXOnScreen, true);
+            if (choosenUnit.posY + i < maxY) {
+                glMap.setMarker(choosenUnit.posY + i, choosenUnit.posX, isMarker);
             }
-            if (choosenUnit.posYOnScreen - choosenUnit.unitSteps >= 0 && choosenUnit.posXOnScreen + choosenUnit.unitSteps < vmX) {
-                visibleMap.setMarker(choosenUnit.posYOnScreen - choosenUnit.unitSteps, choosenUnit.posXOnScreen + choosenUnit.unitSteps, true);
+            if (choosenUnit.posY - i >= 0 && choosenUnit.posX + i < maxX) {
+                glMap.setMarker(choosenUnit.posY - i, choosenUnit.posX + i, isMarker);
             }
-            if (choosenUnit.posYOnScreen - choosenUnit.unitSteps >= 0) {
-                visibleMap.setMarker(choosenUnit.posYOnScreen - choosenUnit.unitSteps, choosenUnit.posXOnScreen, true);
+            if (choosenUnit.posY - i >= 0) {
+                glMap.setMarker(choosenUnit.posY - i, choosenUnit.posX, isMarker);
             }
-            if (choosenUnit.posYOnScreen - choosenUnit.unitSteps >= 0 && choosenUnit.posXOnScreen - choosenUnit.unitSteps >= 0) {
-                visibleMap.setMarker(choosenUnit.posYOnScreen - choosenUnit.unitSteps, choosenUnit.posXOnScreen - choosenUnit.unitSteps, true);
+            if (choosenUnit.posY - i >= 0 && choosenUnit.posX - i >= 0) {
+                glMap.setMarker(choosenUnit.posY - i, choosenUnit.posX - i, isMarker);
             }
-            if (choosenUnit.posXOnScreen - choosenUnit.unitSteps >= 0) {
-                visibleMap.setMarker(choosenUnit.posYOnScreen, choosenUnit.posXOnScreen - choosenUnit.unitSteps, true);
+            if (choosenUnit.posX - i >= 0) {
+                glMap.setMarker(choosenUnit.posY, choosenUnit.posX - i, isMarker);
             }
-            if (choosenUnit.posYOnScreen + choosenUnit.unitSteps < vmY && choosenUnit.posXOnScreen - choosenUnit.unitSteps >= 0) {
-                visibleMap.setMarker(choosenUnit.posYOnScreen + choosenUnit.unitSteps, choosenUnit.posXOnScreen - choosenUnit.unitSteps, true);
+            if (choosenUnit.posY + i< maxY && choosenUnit.posX - i >= 0) {
+                glMap.setMarker(choosenUnit.posY + i, choosenUnit.posX - i, isMarker);
             }
-            if (choosenUnit.posYOnScreen + choosenUnit.unitSteps < vmY) {
-                visibleMap.setMarker(choosenUnit.posYOnScreen + choosenUnit.unitSteps, choosenUnit.posXOnScreen, true);
+            if (choosenUnit.posX + i < maxX) {
+                glMap.setMarker(choosenUnit.posY , choosenUnit.posX + i, isMarker);
             }
         }
     }
