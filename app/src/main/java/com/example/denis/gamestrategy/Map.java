@@ -42,6 +42,11 @@ public class Map {
             map[Y][X].someMarkerOnIt = t;
     }
 
+    public void setTerritory(int Y,int X,boolean t){
+            map[Y][X].isSomeonsTerritory = t;
+    }
+
+
     public void setLine(int y,Cell[] c) {
         map[y] = c;
     }

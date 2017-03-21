@@ -6,11 +6,14 @@ package com.example.denis.gamestrategy;
 
 public class Cell {
     private Terrain terrain;
+
     public Unit unitOnIt ;
-    //public City cityOnIt;
-    //public boolean cityOn;
+    public City cityOnIt;
+
+    public boolean cityOn;
     public boolean unitOn;
     public boolean someMarkerOnIt;
+    public boolean isSomeonsTerritory;
 
 
     public void setTerrain(Terrain t){

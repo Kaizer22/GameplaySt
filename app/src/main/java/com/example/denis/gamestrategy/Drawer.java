@@ -39,10 +39,19 @@ public class Drawer { // можно  сделать чтобы  все текс�
 
     }
 
-    public void drawVisibleMap(Canvas canvas, ScreenManager scM, Texture[] textures, Map map,Map glMap) {
+    public void drawCity(Canvas canvas,City city,ScreenManager screenManager,int x,int y) {
+        canvas.drawBitmap(city.getTexture().getBitmap(), x * screenManager.cellWidth, y * screenManager.cellHeight, paint);
+        canvas.drawBitmap(city.getFraction().getBitmap(), x * screenManager.cellWidth, y * screenManager.cellHeight, paint);
+
+    }
+    public void drawFractionGround(Canvas canvas,Texture fractionGround,ScreenManager screenManager,int x,int y){
+        canvas.drawBitmap(fractionGround.getBitmap(),x*screenManager.cellWidth,y*screenManager.cellHeight,paint);
+    }
+
+    public void drawVisibleMap(Canvas canvas, ScreenManager scM,Texture fractionGround, Texture[] mapTextures, Map map,Map glMap) { // вместо fractionGround будет массив
 
         Cell[][] m = map.getMap();
-        Texture texture;
+        Texture mapTexture;
 
 
 
@@ -50,34 +59,45 @@ public class Drawer { // можно  сделать чтобы  все текс�
 
         for (int i = 0; i < scM.vmY ; i++) {
             for (int j = 0; j < scM.vmX ; j++) {
-                switch(m[i][j].getTerrain()){
+                switch(m[i][j].getTerrain()){            //заменить ассоциативным массивом
                  case WATER:
-                     texture = textures[0];
+                     mapTexture = mapTextures[0];
                   break;
                  case SAVANNAH:
-                     texture = textures[1];
+                     mapTexture = mapTextures[1];
                   break;
                  case HILLS:
-                     texture = textures[2];
+                     mapTexture = mapTextures[2];
                   break;
                  case PEAKS:
-                     texture = textures[3];
+                     mapTexture = mapTextures[3];
                   break;
                  case DESERT:
-                     texture = textures[4];
+                     mapTexture = mapTextures[4];
                  break;
                  default:
-                     texture = textures[5];
+                     mapTexture = mapTextures[5];
                  break;
                 }
 
 
-                   drawCell(canvas,scM,texture,j,i);
+                   drawCell(canvas,scM,mapTexture,j,i);
+
+
+                if(m[i][j].isSomeonsTerritory){
+                    drawFractionGround(canvas,fractionGround,scM,j,i);
+                }
+
+                if (m[i][j].cityOn){
+                    m[i][j].cityOnIt.setSize(scM.cellWidth, scM.cellHeight);
+                    drawCity(canvas,m[i][j].cityOnIt,scM,j,i);
+                }
+
+
                 if(m[i][j].unitOn) {
                     m[i][j].unitOnIt.setSize(scM.cellWidth, scM.cellHeight);
                     drawUnit(canvas, m[i][j].unitOnIt, scM,j,i);
-                }
-                if(m[i][j].someMarkerOnIt){
+                }else if(m[i][j].someMarkerOnIt){
                     drawMarker(canvas,scM,j,i);
                 }
             }

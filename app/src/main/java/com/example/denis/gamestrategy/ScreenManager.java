@@ -3,6 +3,7 @@ package com.example.denis.gamestrategy;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
 
+
 import com.example.denis.gamestrategy.Units.ArmoredVehicle;
 import com.example.denis.gamestrategy.Units.CamelWarrior;
 
@@ -54,26 +55,91 @@ public class ScreenManager {
         }
     }
 
-    public void loadUnitMap(Player player,Map m,Texture[] unitTextures, AssetManager am) {
-        Cell[][] map = m.getMap();
+    public void loadCityMap(Player player,Map glM, Texture city, AssetManager am) {
+        Cell[][] map = glM.getMap();
+        String d = player.getFractionName();
+        try {
+
+            InputStream in = am.open("fraction_"+ d +"_city_map");
+            Scanner sc = new Scanner(in);
+            int buf;
+
+            for (int i = 0; i < glM.getMaxY(); i++) {
+                for (int j = 0; j < glM.getMaxX(); j++) { //прим. размер карты городов должен совпадать с размером карты!
+                    buf = sc.nextInt();
+                    if (buf == 1) {
+                        // player.units.add(new ArmoredVehicle(unitTextures[buf], player.fraction, i, j)); //добавить больше юнитов
+                        map[i][j].cityOnIt = new City(player.cityFraction,city, j, i); //player.units.get(player.units.size()-1);
+                        map[i][j].cityOn = true;
+                        makeCityTerritory(glM,map[i][j].cityOnIt,true);
+                    }
+
+                }
+                sc.nextLine();
+
+            }
+            in.close();
+            sc.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void makeCityTerritory(Map glM, City city, boolean isTerritory) {
+        int maxY = glM.getMaxY() , maxX = glM.getMaxX() ;
+        for (int i = 0; i <= city.affectArea  ; i++) {
+            if (city.posY + i < maxY  && city.posX + i < maxX) {
+                glM.setTerritory(city.posY + i, city.posX + i, isTerritory);
+            }
+            if (city.posY + i < maxY) {
+                glM.setTerritory(city.posY + i, city.posX, isTerritory);
+            }
+            if (city.posY - i >= 0 && city.posX + i < maxX) {
+                glM.setTerritory(city.posY - i, city.posX + i, isTerritory);
+            }
+            if (city.posY - i >= 0) {
+                glM.setTerritory(city.posY - i, city.posX, isTerritory);
+            }
+            if (city.posY - i >= 0 && city.posX - i >= 0) {
+                glM.setTerritory(city.posY - i, city.posX - i, isTerritory);
+            }
+            if (city.posX - i >= 0) {
+                glM.setTerritory(city.posY, city.posX - i, isTerritory);
+            }
+            if (city.posY + i< maxY && city.posX - i >= 0) {
+                glM.setTerritory(city.posY + i, city.posX - i, isTerritory);
+            }
+            if (city.posX + i < maxX) {
+                glM.setTerritory(city.posY , city.posX + i, isTerritory);
+            }
+        }
+    }
+
+
+
+
+    public void loadUnitMap(Player player,Map glM,Texture[] unitTextures, AssetManager am) {
+        Cell[][] map = glM.getMap();
         try {
 
             InputStream in = am.open("unit_map");
             Scanner sc = new Scanner(in);
             int buf;
 
-            for (int i = 0; i < m.getMaxY(); i++) {
-                for (int j = 0; j < m.getMaxX(); j++) { //прим. размер карты юнитов должен совпадать с размером карты!
+            for (int i = 0; i < glM.getMaxY(); i++) {
+                for (int j = 0; j < glM.getMaxX(); j++) { //прим. размер карты юнитов должен совпадать с размером карты!
                     buf = sc.nextInt();
                     switch (buf) {
                         case 0: //разобраться с индексами для текстур юнитов!
-                            player.units.add(new ArmoredVehicle(unitTextures[buf], player.fraction, i, j)); //добавить больше юнитов
-                            map[i][j].unitOnIt = player.units.get(player.units.size()-1);
+                           // player.units.add(new ArmoredVehicle(unitTextures[buf], player.fraction, i, j)); //добавить больше юнитов
+                            map[i][j].unitOnIt =  new ArmoredVehicle(unitTextures[buf], player.unitFraction, i, j); //player.units.get(player.units.size()-1);
                             map[i][j].unitOn = true;
                             break;
                         case 1:
-                            player.units.add(new CamelWarrior(unitTextures[buf], player.fraction, i, j));
-                            map[i][j].unitOnIt = player.units.get(player.units.size()-1);
+                            //player.units.add(new CamelWarrior(unitTextures[buf], player.fraction, i, j));
+                            map[i][j].unitOnIt = new CamelWarrior(unitTextures[buf], player.unitFraction, i, j); //player.units.get(player.units.size()-1);
                             map[i][j].unitOn = true;
                             break;
                     }
@@ -89,6 +155,8 @@ public class ScreenManager {
             e.printStackTrace();
         }
     }
+
+
     public void chooseUnit(Map glMap,Cell cell,int cx,int cy, InfoBar ib){
 
         if (choosenUnit!= null && cell.unitOnIt.isChoosen){
@@ -114,21 +182,25 @@ public class ScreenManager {
 
     }
     public void chooseCell(Map glMap, InfoBar infoBar,Canvas canvas,int x,int y){
+        //if (y<0)
+           // y*=-1;
 
         Cell[][] m = visibleMap.getMap();
         Cell[][] glM = glMap.getMap();
 
         int cx = x/(canvas.getWidth()/vmX);        //тут иногда за границы массива выходит
-        if (cx == vmX)
+        if (cx == vmX) {
             cx--;
-        else if(cx < 0)
+        }else if(cx < 0){
             cx = 0;
+        }
 
         int cy = y/(canvas.getHeight()/vmY) ;
-        if (cy == vmY)
+        if (cy == vmY) {
             cy--;
-        else if(cx < 0)
+        }else if(cx < 0) {
             cy = 0;
+        }
 
         Cell c = m[cy][cx];
 
@@ -145,7 +217,7 @@ public class ScreenManager {
             choosenUnit.move(glM[choosenUnit.posY][choosenUnit.posX],c,glcX,glcY);
         }else {
             infoBar.message = c.getInfoAboutCell();
-            infoBar.message += "   ("+glcX.toString()+":"+glcY.toString()+")";
+            infoBar.message += "   ("+glcX.toString()+";"+glcY.toString()+") "+c.cityOn;
         }
 
         //Integer f = c.getcWidth();
