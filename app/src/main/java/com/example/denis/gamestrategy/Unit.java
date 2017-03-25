@@ -5,7 +5,8 @@ package com.example.denis.gamestrategy;
  */
 
 public abstract class Unit {
-    private Texture texture;   // иконка юнита
+    private TypeOfUnit type;
+
     private Texture fraction;  // фон за иконкой, зависящии от племени
 
     public boolean isChoosen;
@@ -23,25 +24,20 @@ public abstract class Unit {
     public int unitProductionPrice;
     public int unitPopulatinPrice;
 
-    public Unit(Texture t,Texture f,int y, int x){
-        texture = t;
+    public Unit(TypeOfUnit t,Texture f,int y, int x){
+        type = t;
         fraction = f;
         posX = x;
         posY = y;
     }
 
-    public void setSize(int width,int height){
-        texture.resizeTexture(width,height);
-        fraction.resizeTexture(width,height);
-    }
 
-    public Texture getTexture() {
-        return texture;
-    }
 
     public Texture getFraction() {
         return fraction;
     }
+
+    public TypeOfUnit getType(){return type;}
 
     public void move(Cell c1,Cell c2, int x, int y){
         c2.someMarkerOnIt = false;
@@ -51,5 +47,9 @@ public abstract class Unit {
         c2.unitOnIt = this;
         posX = x;
         posY = y;
+    }
+
+    public enum TypeOfUnit {
+        ARMORED_VEHICLE, CAMEL_WARRIOR
     }
 }

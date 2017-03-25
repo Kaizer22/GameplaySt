@@ -1,6 +1,7 @@
 package com.example.denis.gamestrategy;
 
 import android.content.res.AssetManager;
+import java.util.Map;
 import android.graphics.Canvas;
 
 
@@ -18,7 +19,7 @@ import java.util.Scanner;
 
 public class ScreenManager {
 
-    Map visibleMap = new Map();
+
     int scale; // (cells In Line X)
     int vmY, vmX;
     public int cellWidth, cellHeight;
@@ -29,33 +30,34 @@ public class ScreenManager {
 
 
 
-    public ScreenManager(Canvas canvas, int s){             // вычисляет параметры видимой карты
+    public ScreenManager(int screenWidth,int screenHeight, int s){             // вычисляет параметры видимой карты
         scale = s;
-        vmY = canvas.getHeight() / (canvas.getWidth() / scale)+1;
         vmX = scale;
-        cellWidth = canvas.getWidth()/vmX;
-        cellHeight = canvas.getHeight()/vmY;
-        visibleMap.loadMap(vmY,vmX);
+        vmY = screenHeight / (screenWidth / vmX)+1;
+
+        cellWidth = screenWidth/vmX;
+        cellHeight = screenHeight/vmY;
+
 
     }
 
 
-    public void createVisibleMap(Map glM){                           // построение видимой карты
+  //  public void createVisibleMap(GlobalMap glM){                           // построение видимой карты
 
-        visibleMap.updateParam();
-        Cell[][] glCellMap = glM.getMap();
-        int vsI = 0, vsJ = 0;
+       // visibleMap.updateParam();
+       // Cell[][] glCellMap = glM.getMap();
+        //int vsI = 0, vsJ = 0;
 
-        for (int glI = posYOnGlobalMap; vsI < vmY; glI++,vsI++) {
-            for (int glJ = posXOnGlobalMap; vsJ < vmX ; glJ++,vsJ++) {
-               visibleMap.setCell(vsI,vsJ,glCellMap[glI][glJ]);
-            }
-            vsJ = 0;
+        //for (int glI = posYOnGlobalMap; vsI < vmY; glI++,vsI++) {
+            //for (int glJ = posXOnGlobalMap; vsJ < vmX ; glJ++,vsJ++) {
+               //visibleMap.setCell(vsI,vsJ,glCellMap[glI][glJ]);
+           // }
+           // vsJ = 0;
 
-        }
-    }
+       // }
+    //}
 
-    public void loadCityMap(Player player,Map glM, Texture city, AssetManager am) {
+    public void loadCityMap(Player player,GlobalMap glM, Texture city, AssetManager am) {
         Cell[][] map = glM.getMap();
         String d = player.getFractionName();
         try {
@@ -87,7 +89,7 @@ public class ScreenManager {
         }
     }
 
-    private void makeCityTerritory(Map glM, City city, boolean isTerritory) {
+    private void makeCityTerritory(GlobalMap glM, City city, boolean isTerritory) {
         int maxY = glM.getMaxY() , maxX = glM.getMaxX() ;
         for (int i = 0; i <= city.affectArea  ; i++) {
             if (city.posY + i < maxY  && city.posX + i < maxX) {
@@ -120,7 +122,7 @@ public class ScreenManager {
 
 
 
-    public void loadUnitMap(Player player,Map glM,Texture[] unitTextures, AssetManager am) {
+    public void loadUnitMap(Player player,GlobalMap glM, Map <String,Texture> unitTextures, AssetManager am) {
         Cell[][] map = glM.getMap();
         try {
 
@@ -134,12 +136,12 @@ public class ScreenManager {
                     switch (buf) {
                         case 0: //разобраться с индексами для текстур юнитов!
                            // player.units.add(new ArmoredVehicle(unitTextures[buf], player.fraction, i, j)); //добавить больше юнитов
-                            map[i][j].unitOnIt =  new ArmoredVehicle(unitTextures[buf], player.unitFraction, i, j); //player.units.get(player.units.size()-1);
+                            map[i][j].unitOnIt =  new ArmoredVehicle(unitTextures.get("armored_vehicle"), player.unitFraction, i, j); //player.units.get(player.units.size()-1);
                             map[i][j].unitOn = true;
                             break;
                         case 1:
                             //player.units.add(new CamelWarrior(unitTextures[buf], player.fraction, i, j));
-                            map[i][j].unitOnIt = new CamelWarrior(unitTextures[buf], player.unitFraction, i, j); //player.units.get(player.units.size()-1);
+                            map[i][j].unitOnIt = new CamelWarrior(unitTextures.get("cmael_warrior"), player.unitFraction, i, j); //player.units.get(player.units.size()-1);
                             map[i][j].unitOn = true;
                             break;
                     }
@@ -157,7 +159,7 @@ public class ScreenManager {
     }
 
 
-    public void chooseUnit(Map glMap,Cell cell,int cx,int cy, InfoBar ib){
+    public void chooseUnit(GlobalMap glMap,Cell cell,int cx,int cy, InfoBar ib){
 
         if (choosenUnit!= null && cell.unitOnIt.isChoosen){
 
@@ -181,28 +183,24 @@ public class ScreenManager {
         ib.message ="("+cell.unitOnIt.nameOfUnit + ") З(%)/А/Защ./Ш --- " + cell.unitOnIt.unitHP/cell.unitOnIt.unitMaxHP*100 +"/"+ cell.unitOnIt.unitAttack+"/"+cell.unitOnIt.unitDefence+"/"+ cell.unitOnIt.unitSteps;   ;
 
     }
-    public void chooseCell(Map glMap, InfoBar infoBar,Canvas canvas,int x,int y){
-        //if (y<0)
-           // y*=-1;
-
-        Cell[][] m = visibleMap.getMap();
+    public void chooseCell(GlobalMap glMap, InfoBar infoBar,int screenWidth,int screenHeight,int x,int y){
         Cell[][] glM = glMap.getMap();
 
-        int cx = x/(canvas.getWidth()/vmX);        //тут иногда за границы массива выходит
+        int cx = x/(screenWidth/vmX);        //тут иногда за границы массива выходит
         if (cx == vmX) {
             cx--;
         }else if(cx < 0){
             cx = 0;
         }
 
-        int cy = y/(canvas.getHeight()/vmY) ;
+        int cy = y/(screenHeight/vmY) ;
         if (cy == vmY) {
             cy--;
         }else if(cx < 0) {
             cy = 0;
         }
 
-        Cell c = m[cy][cx];
+        Cell c = glM[posYOnGlobalMap+cy][posXOnGlobalMap+cx];
 
         Integer glcX = posXOnGlobalMap + cx;
         Integer glcY = posYOnGlobalMap + cy;
@@ -229,7 +227,7 @@ public class ScreenManager {
 
 
 
-    public void createMarkers(Map glMap,boolean isMarker) {
+    public void createMarkers(GlobalMap glMap,boolean isMarker) {
         int maxY = glMap.getMaxY() , maxX = glMap.getMaxX() ;
         for (int i = choosenUnit.unitSteps; i >= 0; i--) {
             if (choosenUnit.posY + i < maxY  && choosenUnit.posX + i < maxX) {

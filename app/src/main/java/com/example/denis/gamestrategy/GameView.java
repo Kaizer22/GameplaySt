@@ -2,10 +2,8 @@ package com.example.denis.gamestrategy;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -15,73 +13,63 @@ import android.view.View;
 
 public class GameView extends View{
 
-    DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
-
-
     final AssetManager am;
+     int screenWidth ;
+     int screenHeight ;
     final  int moveMistake = 30;
-    //int infoBarScale =6;
     int mapSize = 64;
     int scale = 16;
-    Bitmap b = Bitmap.createBitmap(displaymetrics.widthPixels, displaymetrics.heightPixels - 145, Bitmap.Config.ARGB_8888); // отнимать высоту заголовка от высоты Bitmap(а не 145)
-    Canvas myCanvas = new Canvas(b);
     Drawer drawer;
-    Map m ;
-    ScreenManager scM ;
+    GlobalMap m ;
+    ScreenManager  scM;
+    TextureManager txM ;
     int startEventMoveX = 0, startEventMoveY = 0,finalEventX = 0,finalEventY = 0, startEventX = 0, startEventY = 0;
 
-    public GameView(Context context) {
+    public InfoBar infoBar;
+    public Player player;
+
+    //@Override
+    //protected void onSizeChanged(int w, int h, int oldw, int oldh){
+        //screenWidth = w;
+        //screenHeight = h;
+       // super.onSizeChanged(w, h, oldw, oldh);
+
+    //}
+
+    public GameView(Context context,int w,int h) {
         super(context);
+        screenWidth = w;
+        screenHeight = h-145;
         am = context.getAssets();
     }
 
-    private Texture[] mapTextures;
-    private Texture[] unitTextures;
 
-    private Texture cityTextureEarly;
-    private Texture cityTextureLate;
-
-    private Texture infoBarTexture;
-
-    private Texture fractionUnit_test;
-    private Texture fractionCity_test; // заменить массивом текстур фракций
-    private Texture fractionGround_test;
-
-    private Texture moveOpportunityMarker;
-
-    private InfoBar infoBar;
-    private Player player;
     //добавить текстуры карты
     public void prepareGameView(){
 
+        txM = new TextureManager();
         loadTextures();
 
-        player = new Player(Player.Fraction.BERBER,fractionUnit_test,fractionCity_test,fractionGround_test);
-        scM = new ScreenManager(myCanvas,scale);
 
-        resizeTextureArray(mapTextures,scM);
-        resizeTextureArray(unitTextures,scM);
-        fractionGround_test.resizeTexture(scM.cellWidth,scM.cellHeight);
+        player = new Player(Player.Fraction.BERBER,txM.fractionUnit_test,txM.fractionCity_test,txM.fractionGround_test);
+        scM = new ScreenManager(screenWidth,screenHeight,scale);
 
-        moveOpportunityMarker.resizeTexture(scM.cellWidth, scM.cellHeight);
-        drawer = new Drawer(moveOpportunityMarker);
-        m = new Map();
+        txM.resizeTextures(scM);
+
+        drawer = new Drawer(txM.moveOpportunityMarker);
+        m = new GlobalMap();
         m.generateMap(am,mapSize); //loadMap(am, mapTextures);
 
-        scM.loadUnitMap(player,m,unitTextures,am);
-        scM.loadCityMap(player,m,cityTextureEarly,am);
-        infoBar = new InfoBar(myCanvas,scM,infoBarTexture);
+        scM.loadUnitMap(player,m,txM.unitTextures,am);
+        scM.loadCityMap(player,m,txM.cityTextureEarly,am);
+        infoBar = new InfoBar(screenWidth,screenHeight,scM,txM.infoBarTexture);
         drawer.setTextSize(infoBar.textSize);
 
 
     }
 
 
-    public void resizeTextureArray(Texture[] textures,ScreenManager scM){
-        for (Texture t:textures) {
-            t.resizeTexture(scM.cellWidth,scM.cellHeight);
-        }
-    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
@@ -107,7 +95,7 @@ public class GameView extends View{
                 finalEventX = (int)event.getX();
                 finalEventY = (int)event.getY();
                 if (startEventX - finalEventX <= moveMistake && startEventX - finalEventX <= moveMistake){
-                    scM.chooseCell(m,infoBar,myCanvas,finalEventX,finalEventY);
+                    scM.chooseCell(m,infoBar,screenWidth,screenHeight,finalEventX,finalEventY);
                     //scale+=2;
                     //scM = new ScreenManager(myCanvas,scale);
                 }
@@ -120,11 +108,7 @@ public class GameView extends View{
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-
-        scM.createVisibleMap(m);
-
-        drawer.drawVisibleMap(canvas,scM,fractionGround_test,mapTextures,scM.visibleMap,m);
+        drawer.drawVisibleMap(canvas,scM,txM,m);
         drawer.drawInfoRectangle(infoBar,canvas);
 
 
@@ -153,33 +137,27 @@ public class GameView extends View{
     }
 
     private void loadTextures(){
-        infoBarTexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.info_bar));
+        txM.infoBarTexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.info_bar));
 
-        cityTextureEarly = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_early));
-        cityTextureLate = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late));
+        txM.cityTextureEarly = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_early));
+        txM.cityTextureLate = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late));
 
-        fractionUnit_test = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_unit_test));
-        fractionCity_test  = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_city_test));
-        fractionGround_test = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_ground_test));
+        txM.fractionUnit_test = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_unit_test));
+        txM.fractionCity_test  = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_city_test));
+        txM.fractionGround_test = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_ground_test));
 
-        moveOpportunityMarker = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.move_opportunity));
+        txM.moveOpportunityMarker = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.move_opportunity));
 
-        mapTextures = new Texture[]{
-                new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_water)),                //0              //заменить ассоциативным массивом
-                new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.savannah)),                   //1
-                new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills)),                      //2
-                new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.snow_peaks)),                 //3
-                //new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_coast)),                //4
-                //new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_diag)),                 //5
-                //new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_small_diag)),           //6
-                new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.desert)),                     //4
-                new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.jungle))                      //5
-                //new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_desert_diag)),          //8
+        txM.mapTextures.put("water",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.ocean_water)));
+        txM.mapTextures.put("savannah",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.savannah)));
+        txM.mapTextures.put("hills",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills)));
+        txM.mapTextures.put("peaks",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.snow_peaks)));
+        txM.mapTextures.put("desert",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.desert)));
+        txM.mapTextures.put("jungle",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.jungle)));
 
-        };
-        unitTextures = new Texture[]{
-                new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.armored)),
-                new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.camel_warrior))
-        };
+        //txM.
+
+        txM.unitTextures.put("armored_vehicle",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.armored)));
+        txM.unitTextures.put("camel_warrior",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.camel_warrior)));
     }
 }

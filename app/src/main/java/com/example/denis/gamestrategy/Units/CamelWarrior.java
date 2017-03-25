@@ -9,7 +9,7 @@ import com.example.denis.gamestrategy.Unit;
 
 public class CamelWarrior extends Unit {
     public CamelWarrior(Texture t, Texture f, int y, int x) {
-        super(t, f, y, x);
+        super(TypeOfUnit.CAMEL_WARRIOR, f, y, x);
         unitMaxSteps = 2;
         unitSteps = unitMaxSteps;
         nameOfUnit = "Воин на верблюде";

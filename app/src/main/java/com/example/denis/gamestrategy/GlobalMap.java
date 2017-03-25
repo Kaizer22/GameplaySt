@@ -16,7 +16,7 @@ import java.util.Scanner;
  * Created by denis on 19.02.17.
  */
 
-public class Map {
+public class GlobalMap {
     private Cell[][] map;
     private int maxX ,maxY ;
 

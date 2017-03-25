@@ -10,7 +10,7 @@ import com.example.denis.gamestrategy.Unit;
 public class ArmoredVehicle extends Unit {
 
     public ArmoredVehicle(Texture t, Texture f, int y, int x) {
-        super(t, f, y, x);
+        super(TypeOfUnit.ARMORED_VEHICLE, f, y, x);
         unitMaxSteps = 1;
         unitSteps = unitMaxSteps;
         nameOfUnit = "Бронеповозка";
@@ -18,6 +18,7 @@ public class ArmoredVehicle extends Unit {
         unitHP = unitMaxHP;
         unitAttack = 15;
         unitDefence = 20;
+
 
     }
 }

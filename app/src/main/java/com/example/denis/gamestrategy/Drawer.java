@@ -2,13 +2,12 @@ package com.example.denis.gamestrategy;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 
 /**
  * Created by denis on 20.02.17.
  */
 
-public class Drawer { // можно  сделать чтобы  все текстуры хранились тут
+public class Drawer {
     Texture moveOpportunityMarker;
     private Paint paint;
     Drawer(Texture mOM){
@@ -21,9 +20,9 @@ public class Drawer { // можно  сделать чтобы  все текс�
         canvas.drawBitmap(texture.getBitmap(),x*screenManager.cellWidth,y*screenManager.cellHeight,paint);
     }
 
-    public void drawUnit(Canvas canvas, Unit unit,ScreenManager screenManager,int x, int y){
-        canvas.drawBitmap(unit.getTexture().getBitmap(),x*screenManager.cellWidth,y*screenManager.cellHeight,paint);
-        canvas.drawBitmap(unit.getFraction().getBitmap(),x*screenManager.cellWidth,y*screenManager.cellHeight,paint);
+    public void drawUnit(Canvas canvas, Texture t,Texture f,ScreenManager screenManager,int x, int y){
+        canvas.drawBitmap(t.getBitmap(),x*screenManager.cellWidth,y*screenManager.cellHeight,paint);
+        canvas.drawBitmap(f.getBitmap(),x*screenManager.cellWidth,y*screenManager.cellHeight,paint);
     }
 
     public void drawInfoRectangle(InfoBar ir, Canvas canvas){
@@ -48,57 +47,45 @@ public class Drawer { // можно  сделать чтобы  все текс�
         canvas.drawBitmap(fractionGround.getBitmap(),x*screenManager.cellWidth,y*screenManager.cellHeight,paint);
     }
 
-    public void drawVisibleMap(Canvas canvas, ScreenManager scM,Texture fractionGround, Texture[] mapTextures, Map map,Map glMap) { // вместо fractionGround будет массив
+    public void drawVisibleMap(Canvas canvas, ScreenManager scM,TextureManager txM, GlobalMap glGlobalMap) { // вместо fractionGround будет массив
 
-        Cell[][] m = map.getMap();
+        Cell[][] m = glGlobalMap.getMap();
+        int cx,cy;
         Texture mapTexture;
+        Texture unitTexture;
 
 
 
 
 
-        for (int i = 0; i < scM.vmY ; i++) {
-            for (int j = 0; j < scM.vmX ; j++) {
-                switch(m[i][j].getTerrain()){            //заменить ассоциативным массивом
-                 case WATER:
-                     mapTexture = mapTextures[0];
-                  break;
-                 case SAVANNAH:
-                     mapTexture = mapTextures[1];
-                  break;
-                 case HILLS:
-                     mapTexture = mapTextures[2];
-                  break;
-                 case PEAKS:
-                     mapTexture = mapTextures[3];
-                  break;
-                 case DESERT:
-                     mapTexture = mapTextures[4];
-                 break;
-                 default:
-                     mapTexture = mapTextures[5];
-                 break;
-                }
+        for (int i = scM.posYOnGlobalMap; i < (scM.vmY+scM.posYOnGlobalMap) ; i++) {
+            for (int j = scM.posXOnGlobalMap; j < (scM.vmX+scM.posXOnGlobalMap) ; j++) {
 
+                mapTexture = txM.returnMapTexture(m[i][j].getTerrain());
 
-                   drawCell(canvas,scM,mapTexture,j,i);
+                cx = j - scM.posXOnGlobalMap;
+                cy = i - scM.posYOnGlobalMap;
+                drawCell(canvas,scM,mapTexture,cx,cy);
 
 
                 if(m[i][j].isSomeonsTerritory){
-                    drawFractionGround(canvas,fractionGround,scM,j,i);
+                    drawFractionGround(canvas,txM.fractionGround_test,scM,cx,cy);
                 }
+
 
                 if (m[i][j].cityOn){
                     m[i][j].cityOnIt.setSize(scM.cellWidth, scM.cellHeight);
-                    drawCity(canvas,m[i][j].cityOnIt,scM,j,i);
+                    drawCity(canvas,m[i][j].cityOnIt,scM,cx,cy);
                 }
 
 
                 if(m[i][j].unitOn) {
-                    m[i][j].unitOnIt.setSize(scM.cellWidth, scM.cellHeight);
-                    drawUnit(canvas, m[i][j].unitOnIt, scM,j,i);
+
+                    unitTexture = txM.returnUnitTexture(m[i][j].unitOnIt.getType());
+                    drawUnit(canvas, unitTexture,m[i][j].unitOnIt.getFraction(), scM,cx,cy);
+
                 }else if(m[i][j].someMarkerOnIt){
-                    drawMarker(canvas,scM,j,i);
+                    drawMarker(canvas,scM,cx,cy);
                 }
             }
         }
