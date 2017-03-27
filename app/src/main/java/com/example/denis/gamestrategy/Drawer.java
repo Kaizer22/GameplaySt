@@ -61,7 +61,7 @@ public class Drawer {
         for (int i = scM.posYOnGlobalMap; i < (scM.vmY+scM.posYOnGlobalMap) ; i++) {
             for (int j = scM.posXOnGlobalMap; j < (scM.vmX+scM.posXOnGlobalMap) ; j++) {
 
-                mapTexture = txM.returnMapTexture(m[i][j].getTerrain());
+                mapTexture = txM.returnMapTexture(m[i][j].getTerrain(),m[i][j].getTypeOfCell());
 
                 cx = j - scM.posXOnGlobalMap;
                 cy = i - scM.posYOnGlobalMap;

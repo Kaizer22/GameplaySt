@@ -42,20 +42,6 @@ public class ScreenManager {
     }
 
 
-  //  public void createVisibleMap(GlobalMap glM){                           // построение видимой карты
-
-       // visibleMap.updateParam();
-       // Cell[][] glCellMap = glM.getMap();
-        //int vsI = 0, vsJ = 0;
-
-        //for (int glI = posYOnGlobalMap; vsI < vmY; glI++,vsI++) {
-            //for (int glJ = posXOnGlobalMap; vsJ < vmX ; glJ++,vsJ++) {
-               //visibleMap.setCell(vsI,vsJ,glCellMap[glI][glJ]);
-           // }
-           // vsJ = 0;
-
-       // }
-    //}
 
     public void loadCityMap(Player player,GlobalMap glM, Texture city, AssetManager am) {
         Cell[][] map = glM.getMap();

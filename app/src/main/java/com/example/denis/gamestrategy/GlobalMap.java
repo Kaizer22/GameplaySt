@@ -126,7 +126,6 @@ public class GlobalMap {
             }
 
         }
-
         private void makePattern(final AssetManager am, Cell[][] map, int step){ //размеры карты должны быть кратны step
             try{
 
@@ -172,7 +171,6 @@ public class GlobalMap {
 
 
         }
-
         private void makeFractal(Cell[][] map, int step){
             Cell.Terrain t;
             int cy,cx;
@@ -198,18 +196,155 @@ public class GlobalMap {
 
         }
 
-        public void generateMap(AssetManager am,int mXY) {
-            int step = mXY / 8;
-            map = new Cell[mXY][mXY];
+        private void makeCoast(Cell [][] map,int maxXY ){
+            for (int i = 0; i < maxXY; i++) {
+                for (int j = 0; j < maxXY; j++) {
+                    map[i][j].setTypeOfCell(setCellType(map,j,i,maxXY));
+                }
+            }
+        }
+        private Cell.TypeOfCell setCellType(Cell[][] m ,int x, int y, int maxXY){
+            if (m[y][x].getTerrain() != Cell.Terrain.WATER) {
 
-            for (int i = 0; i < mXY; i++) {
-                for (int j = 0; j < mXY; j++) {
+                if ((x+1 < maxXY) && (y+1 < maxXY) && (x-1 >= 0) && (y-1 >= 0)) {
+                    if ( (m[y][x+1].getTerrain() == Cell.Terrain.WATER) ||  (m[y+1][x].getTerrain() == Cell.Terrain.WATER)  || (m[y][x-1].getTerrain() ==Cell.Terrain.WATER)  || (m[y-1][x].getTerrain() == Cell.Terrain.WATER)){
+
+
+                        if ((m[y-1][x+1].getTerrain() == Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.DIAG_R_T_C;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x].getTerrain() == Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.DIAG_R_D_C;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() == Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.DIAG_L_D_C;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.DIAG_L_T_C;
+
+
+
+
+
+                        if ((m[y-1][x+1].getTerrain() == Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() == Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.COAST_R;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x].getTerrain() == Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.COAST_D;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.COAST_L;
+                        if ((m[y-1][x+1].getTerrain() == Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.COAST_T;
+
+
+
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.BAY_T;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() == Cell.Terrain.WATER) &&(m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.BAY_R;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() == Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.BAY_D;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.BAY_L;
+
+
+
+
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_L_T_C_Re;
+                        if ((m[y-1][x+1].getTerrain() == Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_R_T_C_Re;
+                        if ((m[y-1][x+1].getTerrain() == Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_R_T_C;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_R_D_C;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x].getTerrain() == Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_R_D_C_Re;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() == Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_L_D_C_Re;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_L_D_C;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_L_T_C;
+
+
+
+
+
+                        if ((m[y-1][x+1].getTerrain() == Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.CORNER_REVERSE_R_T_C;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.CORNER_REVERSE_R_D_C;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.CORNER_REVERSE_L_D_C;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.CORNER_REVERSE_L_T_C;
+
+
+
+
+                        if ((m[y-1][x+1].getTerrain() == Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() ==Cell.Terrain.WATER)  && (m[y+1][x].getTerrain() == Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.CORNER_R_D_C;
+                        if ( (m[y][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.CORNER_R_T_C;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x].getTerrain() == Cell.Terrain.WATER)  && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.CORNER_L_D_C;
+                        if ((m[y-1][x+1].getTerrain() == Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER) &&  (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.CORNER_L_T_C;
+
+
+
+
+                        if ( (m[y][x+1].getTerrain() ==Cell.Terrain.WATER)  && (m[y+1][x].getTerrain() == Cell.Terrain.WATER)  && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER)  && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.PENINSULA_D;
+                        if ( (m[y][x+1].getTerrain() ==Cell.Terrain.WATER)  && (m[y+1][x].getTerrain() == Cell.Terrain.WATER)  && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER)  && (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.PENINSULA_R;
+                        if ( (m[y][x+1].getTerrain() !=Cell.Terrain.WATER)  && (m[y+1][x].getTerrain() == Cell.Terrain.WATER)  && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER)  && (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.PENINSULA_L;
+                        if ( (m[y][x+1].getTerrain() ==Cell.Terrain.WATER)  && (m[y+1][x].getTerrain() != Cell.Terrain.WATER)  && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER)  && (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.PENINSULA_T;
+
+
+
+                        if ( (m[y][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_REVERSE_R_T_C_Re;
+                        if ( (m[y][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_REVERSE_R_T_C;
+                        if ((m[y-1][x+1].getTerrain() == Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() ==Cell.Terrain.WATER)  && (m[y+1][x].getTerrain() == Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_REVERSE_R_D_C;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() ==Cell.Terrain.WATER)  && (m[y+1][x].getTerrain() == Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_REVERSE_R_D_C_Re;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() ==Cell.Terrain.WATER) && (m[y+1][x].getTerrain() == Cell.Terrain.WATER)  && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_REVERSE_L_D_C_Re;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() == Cell.Terrain.WATER)  && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y-1][x].getTerrain() !=Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_REVERSE_L_D_C;
+                        if ((m[y-1][x+1].getTerrain() != Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() ==Cell.Terrain.WATER) && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER) &&  (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_REVERSE_L_T_C;
+                        if ((m[y-1][x+1].getTerrain() == Cell.Terrain.WATER )  && (m[y][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x+1].getTerrain() !=Cell.Terrain.WATER) && (m[y+1][x].getTerrain() != Cell.Terrain.WATER) && (m[y+1][x-1].getTerrain() !=Cell.Terrain.WATER) && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER)  && (m[y-1][x].getTerrain() ==Cell.Terrain.WATER))
+                            return Cell.TypeOfCell.SMALL_DIAG_REVERSE_L_T_C_Re;
+
+
+
+
+
+                    }else if ((m[y][x+1].getTerrain() == Cell.Terrain.WATER) &&  (m[y+1][x].getTerrain() == Cell.Terrain.WATER)  && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER)  && (m[y-1][x].getTerrain() == Cell.Terrain.WATER))
+                        return Cell.TypeOfCell.ISLAND;
+
+                    return Cell.TypeOfCell.DEFAULT;
+                }
+            }
+            return Cell.TypeOfCell.DEFAULT;
+        }
+
+        public void generateMap(AssetManager am,int maxXY) {
+            int step = maxXY / 8;
+            map = new Cell[maxXY][maxXY];
+
+            for (int i = 0; i < maxXY; i++) {
+                for (int j = 0; j < maxXY; j++) {
                     map[i][j] = new Cell();
                 }
             }
             makePattern(am,map,step); //подготовка шаблона с заданной детализацией
             step /= 2;                //увеличение детализации
             makeFractal(map,step);    //рекурсивное построение фрактала
+            makeCoast(map,maxXY);
 
         }
     }
