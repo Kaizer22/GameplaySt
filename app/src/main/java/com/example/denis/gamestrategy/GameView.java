@@ -110,8 +110,6 @@ public class GameView extends View{
         super.onDraw(canvas);
         drawer.drawVisibleMap(canvas,scM,txM,m);
         drawer.drawInfoRectangle(infoBar,canvas);
-
-
     }
 
     public void onUpdate(){
@@ -155,7 +153,30 @@ public class GameView extends View{
         txM.mapTextures.put("desert",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.desert)));
         txM.mapTextures.put("jungle",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.jungle)));
 
-        //txM.
+        txM.mapTextures.put("savannah_diag_l_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put("savannah_diag_r_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put("savannah_diag_l_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put("savannah_diag_r_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+
+        txM.mapTextures.put("hills_diag_l_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put("hills_diag_r_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put("hills_diag_r_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put("hills_diag_l_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+
+        txM.mapTextures.put("desert_diag_l_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put("desert_diag_r_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put("desert_diag_l_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put("desert_diag_r_r_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+
+        txM.mapTextures.put("jungle_diag_l_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put("jungle_diag_l_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put("jungle_diag_r_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put("jungle_diag_r_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+
+
+        txM.mapTextures.put("diag_l_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+
+
 
         txM.unitTextures.put("armored_vehicle",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.armored)));
         txM.unitTextures.put("camel_warrior",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.camel_warrior)));

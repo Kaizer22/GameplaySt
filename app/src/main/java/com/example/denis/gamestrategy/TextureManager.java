@@ -46,31 +46,32 @@ public class TextureManager {
 
 
     public Texture returnMapTexture(Cell.Terrain t, Cell.TypeOfCell type){
+
         switch(t){
             case WATER:
                 return mapTextures.get("water");
             case SAVANNAH:
-                if (type ==  Cell.TypeOfCell.DEFAULT)
+                //if (type ==  Cell.TypeOfCell.DEFAULT)
                     return mapTextures.get("savannah");
-                return getTextureByType("savannah",type);
+               // return getTextureByType("savannah",type);
 
             case HILLS:
-                if (type ==  Cell.TypeOfCell.DEFAULT)
+                //if (type ==  Cell.TypeOfCell.DEFAULT)
                     return mapTextures.get("hills");
-                return getTextureByType("hills",type);
+                //return getTextureByType("hills",type);
             case PEAKS:
-                if (type ==  Cell.TypeOfCell.DEFAULT)
+                //if (type ==  Cell.TypeOfCell.DEFAULT)
                     return mapTextures.get("peaks");
-                return getTextureByType("peaks",type);
+                //return getTextureByType("peaks",type);
             case DESERT:
-                if (type ==  Cell.TypeOfCell.DEFAULT)
+                //if (type ==  Cell.TypeOfCell.DEFAULT)
                     return mapTextures.get("desert");
-                return getTextureByType("desert",type);
+                //return getTextureByType("desert",type);
             default:
                 {
-                    if (type ==  Cell.TypeOfCell.DEFAULT)
+                    //if (type ==  Cell.TypeOfCell.DEFAULT)
                         return mapTextures.get("jungle");
-                    return getTextureByType("jungle", type);
+                    //return getTextureByType("jungle", type);
             }
         }
     }
@@ -78,21 +79,103 @@ public class TextureManager {
 
     private Texture getTextureByType(String terrain , Cell.TypeOfCell type){
 
-       switch (type){
+       switch (type) {
            case ISLAND:
                return mapTextures.get(terrain + "_island");
 
-                                                                                         //DIAG_L_T_C, DIAG_R_T_C, DIAG_R_D_C, DIAG_L_D_C,
-                                                                                          // COAST_T, COAST_D, COAST_L, COAST_R,
-                                                                                          //BAY_T, BAY_D, BAY_L, BAY_R,
-                                                                                            //PENINSULA_T,PENINSULA_D,PENINSULA_L,PENINSULA_R,
-                                                                                               // SMALL_DIAG_L_T_C,SMALL_DIAG_L_T_C_Re, SMALL_DIAG_R_T_C,SMALL_DIAG_R_T_C_Re, SMALL_DIAG_R_D_C,SMALL_DIAG_R_D_C_Re, SMALL_DIAG_L_D_C, SMALL_DIAG_L_D_C_Re,
-                                                                                              //SMALL_DIAG_REVERSE_L_T_C,SMALL_DIAG_REVERSE_L_T_C_Re, SMALL_DIAG_REVERSE_R_T_C,SMALL_DIAG_REVERSE_R_T_C_Re, SMALL_DIAG_REVERSE_R_D_C, SMALL_DIAG_REVERSE_R_D_C_Re, SMALL_DIAG_REVERSE_L_D_C, SMALL_DIAG_REVERSE_L_D_C_Re,
-                                                                                           //CORNER_L_T_C, CORNER_R_T_C, CORNER_R_D_C, CORNER_L_D_C,
-                                                                                           //CORNER_REVERSE_L_T_C, CORNER_REVERSE_R_T_C, CORNER_REVERSE_R_D_C, CORNER_REVERSE_L_D_C,
-                                                                                           // ISLAND, DEFAULT
+           case DIAG_L_D_C:
+               return mapTextures.get(terrain + "_diag_l_d_c");
+           case DIAG_L_T_C:
+               return mapTextures.get(terrain + "_diag_l_t_c");
+           case DIAG_R_D_C:
+               return mapTextures.get(terrain + "_diag_r_d_c");
+           case DIAG_R_T_C:
+               return mapTextures.get(terrain + "_diag_r_t_c");
+
+           case COAST_D:
+               return mapTextures.get(terrain + "_coast_d");
+           case COAST_T:
+               return mapTextures.get(terrain + "_coast_t");
+           case COAST_L:
+               return mapTextures.get(terrain + "_coast_l");
+           case COAST_R:
+               return mapTextures.get(terrain + "_coast_r");
+
+           case BAY_D:
+               return mapTextures.get(terrain + "_bay_d");
+           case BAY_T:
+               return mapTextures.get(terrain + "_bay_t");
+           case BAY_L:
+               return mapTextures.get(terrain + "_bay_l");
+           case BAY_R:
+               return mapTextures.get(terrain + "_bay_r");
+
+           case PENINSULA_D:
+               return mapTextures.get(terrain + "_peninsula_d");
+           case PENINSULA_T:
+               return mapTextures.get(terrain + "_peninsula_t");
+           case PENINSULA_L:
+               return mapTextures.get(terrain + "_peninsula_l");
+           case PENINSULA_R:
+               return mapTextures.get(terrain + "_peninsula_r");
+
+
+           case CORNER_L_D_C:
+               return mapTextures.get(terrain + "_corner_l_d_c");
+           case CORNER_L_T_C:
+               return mapTextures.get(terrain + "_corner_l_t_c");
+           case CORNER_R_D_C:
+               return mapTextures.get(terrain + "_corner_r_d_c");
+           case CORNER_R_T_C:
+               return mapTextures.get(terrain + "_corner_r_t_c");
+
+           case CORNER_REVERSE_L_D_C:
+               return mapTextures.get(terrain + "_corner_reverse_l_d_c");
+           case CORNER_REVERSE_L_T_C:
+               return mapTextures.get(terrain + "_corner_reverse_l_t_c");
+           case CORNER_REVERSE_R_D_C:
+               return mapTextures.get(terrain + "_corner_reverse_r_d_c");
+           case CORNER_REVERSE_R_T_C:
+               return mapTextures.get(terrain + "_corner_reverse_r_t_c");
+
+
+           case SMALL_DIAG_L_D_C:
+               return mapTextures.get(terrain + "_small_diag_l_d_c");
+           case SMALL_DIAG_L_D_C_Re:
+               return mapTextures.get(terrain + "_smal_diag_l_d_c_re");
+           case SMALL_DIAG_L_T_C:
+               return mapTextures.get(terrain + "_small_diag_l_t_c");
+           case SMALL_DIAG_L_T_C_Re:
+               return mapTextures.get(terrain + "_small_diag_l_t_c_re");
+           case SMALL_DIAG_R_D_C:
+               return mapTextures.get(terrain + "_small_diag_r_d_c");
+           case SMALL_DIAG_R_D_C_Re:
+               return mapTextures.get(terrain + "_small_diag_r_d_c_re");
+           case SMALL_DIAG_R_T_C:
+               return mapTextures.get(terrain + "_small_diag_r_t_c");
+           case SMALL_DIAG_R_T_C_Re:
+               return mapTextures.get(terrain + "_small_diag_r_t_c_re");
+
+
+           case SMALL_DIAG_REVERSE_L_D_C:
+               return mapTextures.get(terrain + "_small_diag_re_l_d_c");
+           case SMALL_DIAG_REVERSE_L_D_C_Re:
+               return mapTextures.get(terrain + "_small_diag_re_l_d_c_re");
+           case SMALL_DIAG_REVERSE_L_T_C:
+               return mapTextures.get(terrain + "_small_diag_re_l_t_c");
+           case SMALL_DIAG_REVERSE_L_T_C_Re:
+               return mapTextures.get(terrain + "_small_diag_re_l_t_c_re");
+           case SMALL_DIAG_REVERSE_R_D_C:
+               return mapTextures.get(terrain + "_small_diag_re_r_d_c");
+           case SMALL_DIAG_REVERSE_R_D_C_Re:
+               return mapTextures.get(terrain + "_samll_diag_re_r_d_c_re");
+           case SMALL_DIAG_REVERSE_R_T_C:
+               return mapTextures.get(terrain + "_small_diag_re_r_t_c");
+           case SMALL_DIAG_REVERSE_R_T_C_Re:
+               return mapTextures.get(terrain + "_small_diag_re_r_t_c_re");
        }
-      return mapTextures.get("peaks");
+
+      return mapTextures.get("island");
     }
     public Texture returnUnitTexture(Unit.TypeOfUnit t){
         switch(t){

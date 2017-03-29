@@ -31,6 +31,7 @@ public class Cell {
 
     public String getInfoAboutCell(){
         String info;
+
         switch (terrain) {
             case WATER:
                 info = "Вода";
@@ -57,6 +58,7 @@ public class Cell {
             case COAST_T:
                 info += "Coast_T";
         }
+        info = terrain.toString() + " " + typeOfCell.toString();
         return info;
     }
 
@@ -73,6 +75,8 @@ public class Cell {
     }
     public enum Terrain {
         HILLS, PEAKS, DESERT, SAVANNAH, JUNGLE, WATER,
+
+        NOT_WATER, DOESNT_MATTER
     }
 
 }
