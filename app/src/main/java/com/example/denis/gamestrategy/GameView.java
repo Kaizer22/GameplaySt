@@ -2,8 +2,10 @@ package com.example.denis.gamestrategy;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -134,6 +136,86 @@ public class GameView extends View{
         invalidate();
     }
 
+
+    private int currentType;
+    private int currentTerrain;
+    private String getCurrentName(){
+        String s;
+
+        Cell.Terrain[] terrain = Cell.Terrain.values();
+        Cell.TypeOfCell[] type = Cell.TypeOfCell.values();
+
+        Log.d("Look here",terrain[currentTerrain].toString());
+        if (type[currentType] == Cell.TypeOfCell.DEFAULT){
+
+            currentTerrain ++;
+            currentType = 0;
+            s = terrain[currentTerrain].toString().toLowerCase()+"_"+type[currentType].toString().toLowerCase();
+            currentType ++;
+            Log.d("First name in nexting",s);
+            return s;
+
+        }else
+            s = terrain[currentTerrain].toString().toLowerCase()+"_"+type[currentType].toString().toLowerCase();
+            currentType++;
+            Log.d("First name",s);
+            return s;
+    }
+    private void loadCurrentTerrainTextures(){
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_diag_l_t_c)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_diag_r_t_c)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_diag_r_d_c)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_diag_l_d_c)));
+
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_coast_t)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_coast_d)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_coast_l)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_coast_r)));
+
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+
+
+
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_small_diag_l_t_c_re)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_small_diag_r_t_c_re)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_small_diag_r_d_c_re)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.hills_small_diag_l_d_c_re)));
+
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+
+        txM.mapTextures.put(getCurrentName(),new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
+
+    }
+
     private void loadTextures(){
         txM.infoBarTexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.info_bar));
 
@@ -153,32 +235,14 @@ public class GameView extends View{
         txM.mapTextures.put("desert",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.desert)));
         txM.mapTextures.put("jungle",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.jungle)));
 
-        txM.mapTextures.put("savannah_diag_l_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-        txM.mapTextures.put("savannah_diag_r_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-        txM.mapTextures.put("savannah_diag_l_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-        txM.mapTextures.put("savannah_diag_r_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-
-        txM.mapTextures.put("hills_diag_l_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-        txM.mapTextures.put("hills_diag_r_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-        txM.mapTextures.put("hills_diag_r_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-        txM.mapTextures.put("hills_diag_l_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-
-        txM.mapTextures.put("desert_diag_l_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-        txM.mapTextures.put("desert_diag_r_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-        txM.mapTextures.put("desert_diag_l_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-        txM.mapTextures.put("desert_diag_r_r_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-
-        txM.mapTextures.put("jungle_diag_l_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-        txM.mapTextures.put("jungle_diag_l_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-        txM.mapTextures.put("jungle_diag_r_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-        txM.mapTextures.put("jungle_diag_r_d_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-
-
-        txM.mapTextures.put("diag_l_t_c",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late)));
-
-
+        loadCurrentTerrainTextures(); // hills
+        loadCurrentTerrainTextures(); // desert
+        loadCurrentTerrainTextures(); // savannah
+        loadCurrentTerrainTextures(); // jungle
 
         txM.unitTextures.put("armored_vehicle",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.armored)));
         txM.unitTextures.put("camel_warrior",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.camel_warrior)));
     }
+
+
 }

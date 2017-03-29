@@ -54,11 +54,8 @@ public class Cell {
             default:
                 info = "";
         }
-        switch(typeOfCell){
-            case COAST_T:
-                info += "Coast_T";
-        }
-        info = terrain.toString() + " " + typeOfCell.toString();
+
+        info += "  " + typeOfCell.toString(); // для отладки
         return info;
     }
 
@@ -74,7 +71,7 @@ public class Cell {
         ISLAND, DEFAULT
     }
     public enum Terrain {
-        HILLS, PEAKS, DESERT, SAVANNAH, JUNGLE, WATER,
+        HILLS,  DESERT, SAVANNAH, JUNGLE, PEAKS, WATER,
 
         NOT_WATER, DOESNT_MATTER
     }

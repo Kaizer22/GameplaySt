@@ -56,8 +56,6 @@ public class Drawer {
 
 
 
-
-
         for (int i = scM.posYOnGlobalMap; i < (scM.vmY+scM.posYOnGlobalMap) ; i++) {
             for (int j = scM.posXOnGlobalMap; j < (scM.vmX+scM.posXOnGlobalMap) ; j++) {
 
