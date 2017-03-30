@@ -8,11 +8,10 @@ import android.graphics.Paint;
  */
 
 public class Drawer {
-    Texture moveOpportunityMarker;
     private Paint paint;
-    Drawer(Texture mOM){
+    Drawer(){
         paint = new Paint();
-        moveOpportunityMarker = mOM;
+
 
     }
 
@@ -33,8 +32,8 @@ public class Drawer {
         paint.setTextSize(ts);
     }
 
-    public void drawMarker(Canvas canvas, ScreenManager screenManager,int x,int y){
-        canvas.drawBitmap(moveOpportunityMarker.getBitmap(),x*screenManager.cellWidth,y*screenManager.cellHeight,paint);
+    public void drawMarker(Canvas canvas,Texture marker, ScreenManager screenManager,int x,int y){
+        canvas.drawBitmap(marker.getBitmap(),x*screenManager.cellWidth,y*screenManager.cellHeight,paint);
 
     }
 
@@ -83,7 +82,7 @@ public class Drawer {
                     drawUnit(canvas, unitTexture,m[i][j].unitOnIt.getFraction(), scM,cx,cy);
 
                 }else if(m[i][j].someMarkerOnIt){
-                    drawMarker(canvas,scM,cx,cy);
+                    drawMarker(canvas,txM.moveOpportunityMarker,scM,cx,cy);
                 }
             }
         }

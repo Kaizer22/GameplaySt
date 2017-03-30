@@ -18,6 +18,7 @@ public class TextureManager {
 
     public Texture infoBarTexture;
 
+
     public Texture fractionUnit_test;
     public Texture fractionCity_test; // заменить массивом текстур фракций
     public Texture fractionGround_test;
@@ -49,8 +50,6 @@ public class TextureManager {
 
     public Texture returnMapTexture(Cell.Terrain t, Cell.TypeOfCell type){
         String terrain = t.toString().toLowerCase();
-        if (type ==  Cell.TypeOfCell.DEFAULT)
-            return mapTextures.get(terrain);
         return mapTextures.get(terrain + "_"+ type.toString().toLowerCase());
     }
 

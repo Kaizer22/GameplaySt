@@ -300,19 +300,19 @@ public class GlobalMap {
         private Cell.TypeOfCell setCellType(Cell[][] m ,int x, int y, int maxXY){
             if (m[y][x].getTerrain() != Cell.Terrain.WATER) {
 
-                if ((x+1 < maxXY) && (y+1 < maxXY) && (x-1 >= 0) && (y-1 >= 0)) {
-                    if ( (m[y][x+1].getTerrain() == Cell.Terrain.WATER) ||  (m[y+1][x].getTerrain() == Cell.Terrain.WATER)  || (m[y][x-1].getTerrain() ==Cell.Terrain.WATER)  || (m[y-1][x].getTerrain() == Cell.Terrain.WATER)){
+                if ((x + 1 < maxXY) && (y + 1 < maxXY) && (x - 1 >= 0) && (y - 1 >= 0)) {
 
-                        TypeMask currentMask = createCurrentMask(m,x,y);
-                        for (TypeMask mask :allMasks ){
-                            if(mask.equals(currentMask))
-                                return mask.typeOfMasc;
-                        }
-
-                    }else if ((m[y][x+1].getTerrain() == Cell.Terrain.WATER) &&  (m[y+1][x].getTerrain() == Cell.Terrain.WATER)  && (m[y][x-1].getTerrain() ==Cell.Terrain.WATER)  && (m[y-1][x].getTerrain() == Cell.Terrain.WATER))
+                    if ((m[y][x + 1].getTerrain() == Cell.Terrain.WATER) && (m[y + 1][x].getTerrain() == Cell.Terrain.WATER) && (m[y][x - 1].getTerrain() == Cell.Terrain.WATER) && (m[y - 1][x].getTerrain() == Cell.Terrain.WATER)){
                         return Cell.TypeOfCell.ISLAND;
 
-                    //return Cell.TypeOfCell.DEFAULT;
+                    } else if ((m[y][x + 1].getTerrain() == Cell.Terrain.WATER) || (m[y + 1][x].getTerrain() == Cell.Terrain.WATER) || (m[y][x - 1].getTerrain() == Cell.Terrain.WATER) || (m[y - 1][x].getTerrain() == Cell.Terrain.WATER)) {
+
+                        TypeMask currentMask = createCurrentMask(m, x, y);
+                        for (TypeMask mask : allMasks) {
+                            if (mask.equals(currentMask))
+                                return mask.typeOfMasc;
+                        }
+                    }
                 }
             }
             return Cell.TypeOfCell.DEFAULT;
