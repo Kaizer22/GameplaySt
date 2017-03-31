@@ -13,6 +13,7 @@ import android.view.View;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 
 /**
  * Created by denis on 19.02.17.
@@ -21,8 +22,8 @@ import java.io.InputStream;
 public class GameView extends View{
 
     final AssetManager am;
-     int screenWidth ;
-     int screenHeight ;
+    int screenWidth ;
+    int screenHeight ;
     final  int moveMistake = 30;
     int mapSize = 64;
     int scale = 16;
@@ -35,37 +36,43 @@ public class GameView extends View{
     public InfoBar infoBar;
     public Player player;
 
-    //@Override
-    //protected void onSizeChanged(int w, int h, int oldw, int oldh){
-        //screenWidth = w;
-        //screenHeight = h;
-       // super.onSizeChanged(w, h, oldw, oldh);
+    public LinkedList<Player> players;
 
-    //}
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh){
+        super.onSizeChanged(w, h, oldw, oldh);
 
-    public GameView(Context context,int w,int h) {
-        super(context);
         screenWidth = w;
-        screenHeight = h-145;
+        screenHeight = h;
+
+        prepareGameView();
+
+
+    }
+
+    public GameView(Context context) {
+        super(context);
         am = context.getAssets();
     }
 
 
-    //добавить текстуры карты
+
     public void prepareGameView(){
 
         txM = new TextureManager();
         loadTextures();
 
 
-        player = new Player(Player.Fraction.BERBER,txM.fractionUnit_test,txM.fractionCity_test,txM.fractionGround_test);
+        player = new Player(Player.Fraction.BERBER);
         scM = new ScreenManager(screenWidth,screenHeight,scale);
 
         txM.resizeTextures(scM);
 
         drawer = new Drawer();
         m = new GlobalMap();
-        m.generateMap(am,mapSize); //loadMap(am, mapTextures);
+        m.generateMap(am,mapSize);  //loadMap(am, mapTextures); при повторном запуске
+
+        //createPlayers(); //loadPlayers(); при повторном запуске
 
         scM.loadUnitMap(player,m,txM.unitTextures,am);
         scM.loadCityMap(player,m,txM.cityTextureEarly,am);
@@ -74,6 +81,14 @@ public class GameView extends View{
 
 
     }
+
+    public void createPlayers(){
+        Player.Fraction[] fractions = Player.Fraction.values();
+        for (int i = 0; i < fractions.length - 1 ; i++) {
+            players.add(new Player(fractions[i]));
+        }
+    }
+    public void loadPlayers(){}
 
 
 
@@ -104,7 +119,7 @@ public class GameView extends View{
                 if (startEventX - finalEventX <= moveMistake && startEventX - finalEventX <= moveMistake){
                     scM.chooseCell(m,infoBar,screenWidth,screenHeight,finalEventX,finalEventY);
                     //scale+=2;
-                    //scM = new ScreenManager(myCanvas,scale);
+                    //scM = new ScreenManager(screenWidth,screenHeight,scale);
                 }
         }
 
@@ -143,9 +158,37 @@ public class GameView extends View{
 
 
 
+    private void loadFractionsTexturesFromAssets(){
+        try {
+
+            InputStream ims ;
+            Bitmap b;
+            String s;
+            Player.Fraction[] fractions = Player.Fraction.values();
+            TextureManager.TypeOfFractionTexture[] types = TextureManager.TypeOfFractionTexture.values();
+
+            for (int i = 0; i < fractions.length-1; i++) {
+                for (int j = 0; j < types.length; j++) {
+                    s = fractions[i].toString().toLowerCase()+"_"+types[j].toString().toLowerCase(); //+".png";
+                    Log.d("Something  ",s);
+                    ims = am.open(s);
+                    b = BitmapFactory.decodeStream(ims);
+                    //s = terrain[i].toString().toLowerCase()+"_"+type[j].toString().toLowerCase();
+                    txM.fractionsTextures.put(s,new Texture(b));
 
 
-    private void loadMapTexturesFromAsset() {
+                }
+            }
+
+
+
+        }
+        catch(IOException ex) {
+            Log.d("Something","Wrong");
+            return;
+        }
+    }
+    private void loadMapTexturesFromAssets() {
         try {
 
             InputStream ims ;
@@ -186,13 +229,11 @@ public class GameView extends View{
         txM.cityTextureEarly = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_early));
         txM.cityTextureLate = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late));
 
-        txM.fractionUnit_test = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_unit_test));
-        txM.fractionCity_test  = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_city_test));
-        txM.fractionGround_test = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.fraction_ground_test));
-
-        loadMapTexturesFromAsset();
-
         txM.moveOpportunityMarker = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.move_opportunity));
+
+        loadMapTexturesFromAssets();
+        loadFractionsTexturesFromAssets();
+
         txM.unitTextures.put("armored_vehicle",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.armored)));
         txM.unitTextures.put("camel_warrior",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.camel_warrior)));
     }

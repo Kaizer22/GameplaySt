@@ -13,15 +13,15 @@ public class TextureManager {
     public Map <String, Texture> mapHalfTextures;
     public Map <String, Texture> unitTextures;
 
+    public Map<String, Texture>  fractionsTextures;
+    //public Map<String, Texture>  fractionsForCity;
+    //public Map<String, Texture>  fractionForG
+
     public Texture cityTextureEarly;
     public Texture cityTextureLate;
 
     public Texture infoBarTexture;
 
-
-    public Texture fractionUnit_test;
-    public Texture fractionCity_test; // заменить массивом текстур фракций
-    public Texture fractionGround_test;
 
     public Texture moveOpportunityMarker;
 
@@ -35,8 +35,9 @@ public class TextureManager {
     public void resizeTextures(ScreenManager scM){
         resizeTextureArray(mapTextures,scM);
         resizeTextureArray(unitTextures,scM);
-        fractionGround_test.resizeTexture(scM.cellWidth,scM.cellHeight);
-        fractionUnit_test.resizeTexture(scM.cellWidth,scM.cellHeight);
+        resizeTextureArray(fractionsTextures,scM);
+        //fractionGround_test.resizeTexture(scM.cellWidth,scM.cellHeight);
+        //fractionUnit_test.resizeTexture(scM.cellWidth,scM.cellHeight);
         moveOpportunityMarker.resizeTexture(scM.cellWidth, scM.cellHeight);
     }
 
@@ -46,21 +47,22 @@ public class TextureManager {
         }
     }
 
+    public Texture getTextureByFraction(Player.Fraction f, TypeOfFractionTexture t){
+        return fractionsTextures.get(f.toString()+"_"+t.toString());
+    }
 
-
-    public Texture returnMapTexture(Cell.Terrain t, Cell.TypeOfCell type){
+    public Texture getMapTextureByTerrainAndType(Cell.Terrain t, Cell.TypeOfCell type){
         String terrain = t.toString().toLowerCase();
         return mapTextures.get(terrain + "_"+ type.toString().toLowerCase());
     }
 
 
 
-    public Texture returnUnitTexture(Unit.TypeOfUnit t){
-        switch(t){
-            case ARMORED_VEHICLE:
-                return unitTextures.get("armored_vehicle");
-            default:
-                return unitTextures.get("camel_warrior");
-        }
+    public Texture getUnitTextureByType(Unit.TypeOfUnit t){
+          return unitTextures.get(t.toString());
+    }
+
+    public enum TypeOfFractionTexture{
+        UNIT,CITY,TERRITORY
     }
 }

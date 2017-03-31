@@ -7,7 +7,7 @@ package com.example.denis.gamestrategy;
 public abstract class Unit {
     private TypeOfUnit type;
 
-    private Texture fraction;  // фон за иконкой, зависящии от племени
+    public Player.Fraction fraction;  // фон за иконкой, зависящии от племени
 
     public boolean isChoosen;
     public boolean isShip;
@@ -24,7 +24,7 @@ public abstract class Unit {
     public int unitProductionPrice;
     public int unitPopulatinPrice;
 
-    public Unit(TypeOfUnit t,Texture f,int y, int x){
+    public Unit(TypeOfUnit t, Player.Fraction f, int y, int x){
         type = t;
         fraction = f;
         posX = x;
@@ -33,9 +33,7 @@ public abstract class Unit {
 
 
 
-    public Texture getFraction() {
-        return fraction;
-    }
+
 
     public TypeOfUnit getType(){return type;}
 

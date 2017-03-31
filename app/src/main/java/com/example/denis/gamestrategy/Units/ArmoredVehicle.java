@@ -1,5 +1,6 @@
 package com.example.denis.gamestrategy.Units;
 
+import com.example.denis.gamestrategy.Player;
 import com.example.denis.gamestrategy.Texture;
 import com.example.denis.gamestrategy.Unit;
 
@@ -9,7 +10,7 @@ import com.example.denis.gamestrategy.Unit;
 
 public class ArmoredVehicle extends Unit {
 
-    public ArmoredVehicle(Texture t, Texture f, int y, int x) {
+    public ArmoredVehicle( Player.Fraction f, int y, int x) {
         super(TypeOfUnit.ARMORED_VEHICLE, f, y, x);
         unitMaxSteps = 1;
         unitSteps = unitMaxSteps;
@@ -18,6 +19,7 @@ public class ArmoredVehicle extends Unit {
         unitHP = unitMaxHP;
         unitAttack = 15;
         unitDefence = 20;
+        isShip = false;
 
 
     }

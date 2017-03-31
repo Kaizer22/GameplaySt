@@ -43,8 +43,8 @@ public class GlobalMap {
             map[Y][X].someMarkerOnIt = t;
     }
 
-    public void setTerritory(int Y,int X,boolean t){
-            map[Y][X].isSomeonsTerritory = t;
+    public void setFraction(int Y, int X, Player.Fraction f){
+            map[Y][X].territoryOf = f;
     }
 
 

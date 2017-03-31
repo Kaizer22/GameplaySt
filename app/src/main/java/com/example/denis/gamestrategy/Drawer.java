@@ -37,9 +37,9 @@ public class Drawer {
 
     }
 
-    public void drawCity(Canvas canvas,City city,ScreenManager screenManager,int x,int y) {
+    public void drawCity(Canvas canvas,City city, Texture cityFraction,ScreenManager screenManager,int x,int y) {
         canvas.drawBitmap(city.getTexture().getBitmap(), x * screenManager.cellWidth, y * screenManager.cellHeight, paint);
-        canvas.drawBitmap(city.getFraction().getBitmap(), x * screenManager.cellWidth, y * screenManager.cellHeight, paint);
+        canvas.drawBitmap(cityFraction.getBitmap(), x * screenManager.cellWidth, y * screenManager.cellHeight, paint);
 
     }
     public void drawFractionGround(Canvas canvas,Texture fractionGround,ScreenManager screenManager,int x,int y){
@@ -58,28 +58,30 @@ public class Drawer {
         for (int i = scM.posYOnGlobalMap; i < (scM.vmY+scM.posYOnGlobalMap) ; i++) {
             for (int j = scM.posXOnGlobalMap; j < (scM.vmX+scM.posXOnGlobalMap) ; j++) {
 
-                mapTexture = txM.returnMapTexture(m[i][j].getTerrain(),m[i][j].getTypeOfCell());
+                mapTexture = txM.getMapTextureByTerrainAndType(m[i][j].getTerrain(),m[i][j].getTypeOfCell());
 
                 cx = j - scM.posXOnGlobalMap;
                 cy = i - scM.posYOnGlobalMap;
                 drawCell(canvas,scM,mapTexture,cx,cy);
 
 
-                if(m[i][j].isSomeonsTerritory){
-                    drawFractionGround(canvas,txM.fractionGround_test,scM,cx,cy);
+                if(m[i][j].territoryOf != Player.Fraction.NONE){
+                    Texture fractionTerritory = txM.getTextureByFraction(m[i][j].territoryOf, TextureManager.TypeOfFractionTexture.TERRITORY);
+                    drawFractionGround(canvas,fractionTerritory,scM,cx,cy);
                 }
 
 
                 if (m[i][j].cityOn){
+                    Texture fractionCity = txM.getTextureByFraction(m[i][j].cityOnIt.fraction, TextureManager.TypeOfFractionTexture.CITY);
                     m[i][j].cityOnIt.setSize(scM.cellWidth, scM.cellHeight);
-                    drawCity(canvas,m[i][j].cityOnIt,scM,cx,cy);
+                    drawCity(canvas,m[i][j].cityOnIt,fractionCity,scM,cx,cy);
                 }
 
 
                 if(m[i][j].unitOn) {
-
-                    unitTexture = txM.returnUnitTexture(m[i][j].unitOnIt.getType());
-                    drawUnit(canvas, unitTexture,m[i][j].unitOnIt.getFraction(), scM,cx,cy);
+                    Texture fractionUnit = txM.getTextureByFraction(m[i][j].unitOnIt.fraction, TextureManager.TypeOfFractionTexture.UNIT);
+                    unitTexture = txM.getUnitTextureByType(m[i][j].unitOnIt.getType());
+                    drawUnit(canvas, unitTexture,fractionUnit, scM,cx,cy);
 
                 }else if(m[i][j].someMarkerOnIt){
                     drawMarker(canvas,txM.moveOpportunityMarker,scM,cx,cy);

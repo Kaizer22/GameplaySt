@@ -8,13 +8,19 @@ public class Cell {
     private Terrain terrain;
     private TypeOfCell typeOfCell;
 
-    public Unit unitOnIt ;
+    public Player.Fraction territoryOf;
+
+    public Unit unitOnIt;
     public City cityOnIt;
 
     public boolean cityOn;
     public boolean unitOn;
     public boolean someMarkerOnIt;
-    public boolean isSomeonsTerritory;
+    //public boolean isSomeonsTerritory;
+
+    public Cell(){
+        territoryOf = Player.Fraction.NONE;
+    }
 
 
     public void setTerrain(Terrain t){
@@ -55,7 +61,7 @@ public class Cell {
                 info = "";
         }
 
-        info += "  " + typeOfCell.toString(); // для отладки
+        info += "  " + typeOfCell.toString() +" "+ territoryOf.toString(); // для отладки
         return info;
     }
 
