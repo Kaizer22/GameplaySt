@@ -1,5 +1,6 @@
 package com.example.denis.gamestrategy.Units;
 
+import com.example.denis.gamestrategy.Player;
 import com.example.denis.gamestrategy.Texture;
 import com.example.denis.gamestrategy.Unit;
 
@@ -8,7 +9,7 @@ import com.example.denis.gamestrategy.Unit;
  */
 
 public class CamelWarrior extends Unit {
-    public CamelWarrior(Texture t, Texture f, int y, int x) {
+    public CamelWarrior( Player.Fraction f, int y, int x) {
         super(TypeOfUnit.CAMEL_WARRIOR, f, y, x);
         unitMaxSteps = 2;
         unitSteps = unitMaxSteps;
@@ -17,5 +18,6 @@ public class CamelWarrior extends Unit {
         unitHP = unitMaxHP;
         unitAttack = 15;
         unitDefence = 5;
+        isShip = false;
     }
 }

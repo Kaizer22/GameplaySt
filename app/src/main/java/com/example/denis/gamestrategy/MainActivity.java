@@ -7,17 +7,11 @@ import android.view.Display;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static int WIDTH_DEVICE;
-    public static int HEIGTH_DEVICE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Display display = getWindowManager().getDefaultDisplay();
-        WIDTH_DEVICE = display.getWidth();
-        HEIGTH_DEVICE = display.getHeight();
-        final GameView game = new GameView(this,WIDTH_DEVICE,HEIGTH_DEVICE);
-        game.prepareGameView();
+        GameView game = new GameView(this);
         setContentView(game);
     }
 }
