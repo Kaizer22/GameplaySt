@@ -1,7 +1,6 @@
 package com.example.denis.gamestrategy.Units;
 
 import com.example.denis.gamestrategy.Player;
-import com.example.denis.gamestrategy.Texture;
 import com.example.denis.gamestrategy.Unit;
 
 /**
@@ -16,8 +15,8 @@ public class CamelWarrior extends Unit {
         nameOfUnit = "Воин на верблюде";
         unitMaxHP = 50;
         unitHP = unitMaxHP;
-        unitAttack = 15;
-        unitDefence = 5;
+        unitBaseAttack = 30;
+        unitBaseDefense = 5;
         isShip = false;
     }
 }

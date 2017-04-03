@@ -1,11 +1,6 @@
 package com.example.denis.gamestrategy;
 
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.os.AsyncTask;
-import android.view.View;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,9 +33,13 @@ public class GlobalMap {
         map[Y][X] = c;
     }
 
-    public void setMarker(int Y,int X,boolean t){
+    public void setMoveOpportunityMarker(int Y, int X, boolean t){
         if(map[Y][X].unitOnIt == null)
-            map[Y][X].someMarkerOnIt = t;
+            map[Y][X].moveOpportunityMarkerOnIt = t;
+    }
+
+    public void setAttackMarker(int Y, int X, boolean t){
+            map[Y][X].attackMarkerOnIt = t;
     }
 
     public void setFraction(int Y, int X, Player.Fraction f){

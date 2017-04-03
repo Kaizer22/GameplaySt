@@ -1,8 +1,9 @@
 package com.example.denis.gamestrategy;
 
 import android.content.res.AssetManager;
+import android.util.Log;
+
 import java.util.Map;
-import android.graphics.Canvas;
 
 
 import com.example.denis.gamestrategy.Units.ArmoredVehicle;
@@ -59,7 +60,7 @@ public class ScreenManager {
                         // player1.units.add(new ArmoredVehicle(unitTextures[buf], player1.fraction, i, j)); //добавить больше юнитов
                         map[i][j].cityOnIt = new City(city,player.fr,j,i); //player1.units.get(player1.units.size()-1);
                         map[i][j].cityOn = true;
-                        makeCityTerritory(glM,map[i][j].cityOnIt);
+                        GameLogic.makeCityTerritory(glM,map[i][j].cityOnIt);
                     }
 
                 }
@@ -75,35 +76,7 @@ public class ScreenManager {
         }
     }
 
-    private void makeCityTerritory(GlobalMap glM, City city) {
-        int maxY = glM.getMaxY() , maxX = glM.getMaxX() ;
-        for (int i = 0; i <= city.affectArea  ; i++) {
-            if (city.posY + i < maxY  && city.posX + i < maxX) {
-                glM.setFraction(city.posY + i, city.posX + i, city.fraction);
-            }
-            if (city.posY + i < maxY) {
-                glM.setFraction(city.posY + i, city.posX, city.fraction);
-            }
-            if (city.posY - i >= 0 && city.posX + i < maxX) {
-                glM.setFraction(city.posY - i, city.posX + i, city.fraction);
-            }
-            if (city.posY - i >= 0) {
-                glM.setFraction(city.posY - i, city.posX, city.fraction);
-            }
-            if (city.posY - i >= 0 && city.posX - i >= 0) {
-                glM.setFraction(city.posY - i, city.posX - i, city.fraction);
-            }
-            if (city.posX - i >= 0) {
-                glM.setFraction(city.posY, city.posX - i, city.fraction);
-            }
-            if (city.posY + i< maxY && city.posX - i >= 0) {
-                glM.setFraction(city.posY + i, city.posX - i, city.fraction);
-            }
-            if (city.posX + i < maxX) {
-                glM.setFraction(city.posY , city.posX + i, city.fraction);
-            }
-        }
-    }
+
 
 
 
@@ -124,11 +97,15 @@ public class ScreenManager {
                         case 0: //разобраться с индексами для текстур юнитов!
                            // player1.units.add(new ArmoredVehicle(unitTextures[buf], player1.fraction, i, j)); //добавить больше юнитов
                             map[i][j].unitOnIt =  new ArmoredVehicle(player.fr, i, j); //player1.units.get(player1.units.size()-1);
+                            GameLogic.setUnitDefense(map[i][j]);
+                            GameLogic.setUnitAttack( map[i][j].unitOnIt);
                             map[i][j].unitOn = true;
                             break;
                         case 1:
                             //player1.units.add(new CamelWarrior(unitTextures[buf], player1.fraction, i, j));
                             map[i][j].unitOnIt = new CamelWarrior( player.fr, i, j); //player1.units.get(player1.units.size()-1);
+                            GameLogic.setUnitDefense(map[i][j]);
+                            GameLogic.setUnitAttack( map[i][j].unitOnIt);
                             map[i][j].unitOn = true;
                             break;
                     }
@@ -167,14 +144,14 @@ public class ScreenManager {
 
         cell.unitOnIt.posXOnScreen = cx;
         cell.unitOnIt.posYOnScreen = cy;
-        ib.message ="("+cell.unitOnIt.nameOfUnit + ") З(%)/А/Защ./Ш --- " + cell.unitOnIt.unitHP/cell.unitOnIt.unitMaxHP*100 +"/"+ cell.unitOnIt.unitAttack+"/"+cell.unitOnIt.unitDefence+"/"+ cell.unitOnIt.unitSteps;   ;
+        ib.message ="("+cell.unitOnIt.nameOfUnit + ") З(%)/А/Защ./Ш --- " + (int)(cell.unitOnIt.unitHP/cell.unitOnIt.unitMaxHP*100) +"/"+ (int)(cell.unitOnIt.unitAttack)+"/"+(int)(cell.unitOnIt.unitDefense) +"/"+ cell.unitOnIt.unitSteps;   ;
 
     }
 
     public void chooseCell(GlobalMap glMap, InfoBar infoBar,int screenWidth,int screenHeight,int x,int y){
         Cell[][] glM = glMap.getMap();
 
-        int cx = x/(screenWidth/vmX);        //тут иногда за границы массива выходит
+        int cx = x/(screenWidth/vmX);
         if (cx == vmX) {
             cx--;
         }else if(cx < 0){
@@ -194,14 +171,19 @@ public class ScreenManager {
         Integer glcY = posYOnGlobalMap + cy;
 
 
+        if(c.attackMarkerOnIt){
+            createMarkers(glMap,false);
+            choosenUnit.attack(c.unitOnIt,glM);
 
-        if (c.unitOn) {
+
+        }else if (c.unitOn) {
             chooseUnit(glMap, c, cx, cy, infoBar);
 
-        }else if(c.someMarkerOnIt ){
-            createMarkers(glMap,false);
-            choosenUnit.move(glM[choosenUnit.posY][choosenUnit.posX],c,glcX,glcY);
-        }else {
+        }else if(c.moveOpportunityMarkerOnIt) {
+            createMarkers(glMap, false);
+            choosenUnit.move(glM[choosenUnit.posY][choosenUnit.posX], c, glcX, glcY);
+
+        }else{
             infoBar.message = c.getInfoAboutCell();
             infoBar.message += "   ("+glcX.toString()+";"+glcY.toString()+") "+c.cityOn;
         }
@@ -229,29 +211,52 @@ public class ScreenManager {
             for (int i = choosenUnit.unitSteps; i >= 0; i--) {
 
                 if (uy + i < maxY  && ux + i < maxX ) {
-
-                    glMap.setMarker(uy + i, ux + i, isMarker);
+                    if (map[uy + i][ux + i].unitOnIt != null && map[uy + i][ux + i].unitOnIt.fraction != choosenUnit.fraction)
+                        glMap.setAttackMarker(uy + i, ux + i, isMarker);
+                    else
+                        glMap.setMoveOpportunityMarker(uy + i, ux + i, isMarker);
                 }
                 if (uy + i < maxY) {
-                    glMap.setMarker(uy + i, ux, isMarker);
+                    if (map[uy + i][ux].unitOnIt != null && map[uy + i][ux].unitOnIt.fraction != choosenUnit.fraction)
+                        glMap.setAttackMarker(uy + i, ux , isMarker);
+                    else
+                        glMap.setMoveOpportunityMarker(uy + i, ux, isMarker);
                 }
                 if (uy - i >= 0 && ux + i < maxX) {
-                    glMap.setMarker(uy - i, ux + i, isMarker);
+                    if (map[uy - i][ux + i].unitOnIt != null && map[uy - i][ux + i].unitOnIt.fraction != choosenUnit.fraction)
+                        glMap.setAttackMarker(uy - i, ux + i, isMarker);
+                    else
+                        glMap.setMoveOpportunityMarker(uy - i, ux + i, isMarker);
                 }
                 if (uy - i >= 0) {
-                    glMap.setMarker(uy - i, ux, isMarker);
+                    if (map[uy - i][ux].unitOnIt != null && map[uy - i][ux].unitOnIt.fraction != choosenUnit.fraction)
+                        glMap.setAttackMarker(uy - i, ux, isMarker);
+                    else
+                        glMap.setMoveOpportunityMarker(uy - i, ux, isMarker);
                 }
                 if (uy - i >= 0 && ux - i >= 0) {
-                    glMap.setMarker(uy - i, ux - i, isMarker);
+                    if (map[uy - i][ux - i].unitOnIt != null && map[uy - i][ux - i].unitOnIt.fraction != choosenUnit.fraction)
+                        glMap.setAttackMarker(uy - i, ux - i, isMarker);
+                    else
+                        glMap.setMoveOpportunityMarker(uy - i, ux - i, isMarker);
                 }
                 if (ux - i >= 0) {
-                    glMap.setMarker(uy, ux - i, isMarker);
+                    if (map[uy][ux - i].unitOnIt != null && map[uy][ux - i].unitOnIt.fraction != choosenUnit.fraction)
+                        glMap.setAttackMarker(uy, ux - i, isMarker);
+                    else
+                        glMap.setMoveOpportunityMarker(uy, ux - i, isMarker);
                 }
                 if (uy + i< maxY && ux - i >= 0) {
-                    glMap.setMarker(uy + i, ux - i, isMarker);
+                    if (map[uy + i][ux - i].unitOnIt != null && map[uy + i][ux - i].unitOnIt.fraction != choosenUnit.fraction)
+                        glMap.setAttackMarker(uy + i, ux - i, isMarker);
+                    else
+                        glMap.setMoveOpportunityMarker(uy + i, ux - i, isMarker);
                 }
                 if (ux + i < maxX) {
-                    glMap.setMarker(uy , ux + i, isMarker);
+                    if (map[uy][ux + i].unitOnIt != null && map[uy][ux + i].unitOnIt.fraction != choosenUnit.fraction)
+                        glMap.setAttackMarker(uy, ux + i, isMarker);
+                    else
+                        glMap.setMoveOpportunityMarker(uy , ux + i, isMarker);
                 }
             }
         }

@@ -10,14 +10,15 @@ public class Cell {
 
     public Player.Fraction territoryOf;
 
-    public int cellCoeff;
+    public double cellCoeff;
 
     public Unit unitOnIt;
     public City cityOnIt;
 
     public boolean cityOn;
     public boolean unitOn;
-    public boolean someMarkerOnIt;
+    public boolean moveOpportunityMarkerOnIt;
+    public boolean attackMarkerOnIt;
     //public boolean isSomeonsTerritory;
 
     public Cell(){
@@ -27,7 +28,9 @@ public class Cell {
 
     public void setTerrain(Terrain t){
         terrain = t;
+        cellCoeff = GameLogic.getCellCoeffByTerrain(t);
     }
+
     public void setTypeOfCell(TypeOfCell t){typeOfCell = t;}
 
     public Terrain getTerrain(){

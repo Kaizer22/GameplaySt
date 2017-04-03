@@ -24,6 +24,7 @@ public class TextureManager {
 
 
     public Texture moveOpportunityMarker;
+    public Texture attackOpportunityMarker;
 
     public TextureManager(){
         mapTextures = new HashMap<>();
@@ -40,6 +41,7 @@ public class TextureManager {
         //fractionGround_test.resizeTexture(scM.cellWidth,scM.cellHeight);
         //fractionUnit_test.resizeTexture(scM.cellWidth,scM.cellHeight);
         moveOpportunityMarker.resizeTexture(scM.cellWidth, scM.cellHeight);
+        attackOpportunityMarker.resizeTexture(scM.cellWidth, scM.cellHeight);
     }
 
     public void resizeTextureArray(Map <String,Texture> map, ScreenManager scM){

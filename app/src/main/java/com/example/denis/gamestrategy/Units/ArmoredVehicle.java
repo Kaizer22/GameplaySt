@@ -17,8 +17,8 @@ public class ArmoredVehicle extends Unit {
         nameOfUnit = "Бронеповозка";
         unitMaxHP = 100;
         unitHP = unitMaxHP;
-        unitAttack = 15;
-        unitDefence = 20;
+        unitBaseAttack = 80;
+        unitBaseDefense = 20;
         isShip = false;
 
 

@@ -177,7 +177,7 @@ public class GameView extends View{
             for (int i = 0; i < fractions.length-1; i++) {
                 for (int j = 0; j < types.length; j++) {
                     s = fractions[i].toString().toLowerCase()+"_"+types[j].toString().toLowerCase()+".png";
-                    Log.d("Something  ",s);
+                    //Log.d("Something  ",s);
                     ims = am.open(s);
                     b = BitmapFactory.decodeStream(ims);
                     s = fractions[i].toString().toLowerCase()+"_"+ types[j].toString().toLowerCase();
@@ -191,7 +191,7 @@ public class GameView extends View{
 
         }
         catch(IOException ex) {
-            Log.d("Something","Wrong");
+           // Log.d("Something","Wrong");
             return;
         }
     }
@@ -237,6 +237,7 @@ public class GameView extends View{
         txM.cityTextureLate = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_late));
 
         txM.moveOpportunityMarker = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.move_opportunity));
+        txM.attackOpportunityMarker = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.attack_opportunity));
 
         loadMapTexturesFromAssets();
         loadFractionsTexturesFromAssets();
