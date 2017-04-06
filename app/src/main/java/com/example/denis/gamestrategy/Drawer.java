@@ -3,6 +3,12 @@ package com.example.denis.gamestrategy;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
 /**
  * Created by denis on 20.02.17.
  */
@@ -29,6 +35,11 @@ public class Drawer {
         canvas.drawBitmap(ir.getTexture().getBitmap(), ir.x, ir.y, paint);
         canvas.drawText(ir.message, ir.x + canvas.getWidth() / 20, ir.y + ir.textSize, paint);
     }
+    public void drawResourceBar(ResourceBar rb, Canvas canvas) {
+        canvas.drawBitmap(rb.getResourceBarTexture().getBitmap(), rb.x, rb.y, paint);
+        //canvas.drawText(ir.message, ir.x + canvas.getWidth() / 20, ir.y + ir.textSize, paint);
+    }
+
 
     public void setTextSize(int ts) {
         paint.setTextSize(ts);
@@ -49,17 +60,24 @@ public class Drawer {
         canvas.drawBitmap(fractionGround.getBitmap(), x * screenManager.cellWidth, y * screenManager.cellHeight, paint);
     }
 
-    public void drawVisibleMap(Canvas canvas, ScreenManager scM, TextureManager txM, GlobalMap glGlobalMap) { // вместо fractionGround будет массив
+    public void drawVisibleMap(Player[] players, Canvas canvas, ScreenManager scM, TextureManager txM, GlobalMap glGlobalMap) { // вместо fractionGround будет массив
+        Map<String, Unit> allUnits = new HashMap<>();
+        Map <String, City> allCityes =  new HashMap<>();
+        for (int i = 0; i < players.length ; i++) {
+            allUnits.putAll(players[i].units);
+            allCityes.putAll(players[i].cityes);
+        }
 
         Cell[][] m = glGlobalMap.getMap();
         int cx, cy;
         Texture mapTexture;
         Texture unitTexture;
 
-
+        String cellKey;
         for (int i = scM.posYOnGlobalMap; i < (scM.vmY + scM.posYOnGlobalMap); i++) {
             for (int j = scM.posXOnGlobalMap; j < (scM.vmX + scM.posXOnGlobalMap); j++) {
 
+                cellKey = i+"_"+j;
                 mapTexture = txM.getMapTextureByTerrainAndType(m[i][j].getTerrain(), m[i][j].getTypeOfCell());
 
                 cx = j - scM.posXOnGlobalMap;
@@ -74,15 +92,17 @@ public class Drawer {
 
 
                 if (m[i][j].cityOn) {
-                    Texture fractionCity = txM.getTextureByFraction(m[i][j].cityOnIt.fraction, TextureManager.TypeOfFractionTexture.CITY);
-                    m[i][j].cityOnIt.setSize(scM.cellWidth, scM.cellHeight);
-                    drawCity(canvas, m[i][j].cityOnIt, fractionCity, scM, cx, cy);
+                    City city = allCityes.get(cellKey);
+                    Texture fractionCity = txM.getTextureByFraction(city.fraction, TextureManager.TypeOfFractionTexture.CITY);
+                    city.setSize(scM.cellWidth, scM.cellHeight);
+                    drawCity(canvas, city, fractionCity, scM, cx, cy);
                 }
 
 
                 if (m[i][j].unitOn) {
-                    Texture fractionUnit = txM.getTextureByFraction(m[i][j].unitOnIt.fraction, TextureManager.TypeOfFractionTexture.UNIT);
-                    unitTexture = txM.getUnitTextureByType(m[i][j].unitOnIt.getType());
+                    Unit unit = allUnits.get(cellKey);
+                    Texture fractionUnit = txM.getTextureByFraction(unit.fraction, TextureManager.TypeOfFractionTexture.UNIT);
+                    unitTexture = txM.getUnitTextureByType(unit.getType());
                     drawUnit(canvas, unitTexture, fractionUnit, scM, cx, cy);
                     if (m[i][j].attackMarkerOnIt)
                         drawMarker(canvas, txM.attackOpportunityMarker, scM, cx, cy);

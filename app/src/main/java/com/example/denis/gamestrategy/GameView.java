@@ -32,11 +32,13 @@ public class GameView extends View{
     int startEventMoveX = 0, startEventMoveY = 0,finalEventX = 0,finalEventY = 0, startEventX = 0, startEventY = 0;
 
     public InfoBar infoBar;
+    public ResourceBar resourceBar;
+
     public Player player1;
     public Player player2;
     public Player player3;
 
-    public LinkedList<Player> players;
+    public Player[] players = new Player[3];
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh){
@@ -79,7 +81,12 @@ public class GameView extends View{
         loadPlayer(player1);
         loadPlayer(player2);
         loadPlayer(player3);
+        players[0] = player1;
+        players[1] = player2;
+        players[2] = player3;
+
         infoBar = new InfoBar(screenWidth,screenHeight,scM,txM.infoBarTexture);
+        resourceBar = new ResourceBar(screenWidth,scM,txM.resourceBarTexture,txM.eatScoreIcon,txM.populationScoreIcon,txM.powerScoreIcon,txM.happinessScoreIcon);
         drawer.setTextSize(infoBar.textSize);
 
 
@@ -88,7 +95,7 @@ public class GameView extends View{
     public void createPlayers(){
         Player.Fraction[] fractions = Player.Fraction.values();
         for (int i = 0; i < fractions.length - 1 ; i++) {
-            players.add(new Player(fractions[i]));
+            //players.add(new Player(fractions[i]));
         }
     }
 
@@ -124,7 +131,7 @@ public class GameView extends View{
                 finalEventX = (int)event.getX();
                 finalEventY = (int)event.getY();
                 if (startEventX - finalEventX <= moveMistake && startEventX - finalEventX <= moveMistake){
-                    scM.chooseCell(m,infoBar,screenWidth,screenHeight,finalEventX,finalEventY);
+                    scM.chooseCell(player1,m,infoBar,screenWidth,screenHeight,finalEventX,finalEventY);
                     //scale+=2;
                     //scM = new ScreenManager(screenWidth,screenHeight,scale);
                 }
@@ -137,8 +144,9 @@ public class GameView extends View{
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        drawer.drawVisibleMap(canvas,scM,txM,m);
+        drawer.drawVisibleMap(players,canvas,scM,txM,m);
         drawer.drawInfoRectangle(infoBar,canvas);
+        drawer.drawResourceBar(resourceBar,canvas);
     }
 
     public void onUpdate(){
@@ -238,6 +246,13 @@ public class GameView extends View{
 
         txM.moveOpportunityMarker = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.move_opportunity));
         txM.attackOpportunityMarker = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.attack_opportunity));
+
+        txM.resourceBarTexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.resource_bar));
+
+        txM.populationScoreIcon = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.socio_64x64));
+        txM.powerScoreIcon = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.socio_64x64));
+        txM.eatScoreIcon =  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.socio_64x64));
+        txM.happinessScoreIcon = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.socio_64x64));
 
         loadMapTexturesFromAssets();
         loadFractionsTexturesFromAssets();

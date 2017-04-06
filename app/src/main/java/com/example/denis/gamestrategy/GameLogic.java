@@ -7,8 +7,8 @@ public abstract class  GameLogic {
     public static void setUnitAttack(Unit unit){
         unit.unitAttack = unit.unitBaseAttack*(unit.unitHP/unit.unitMaxHP);
     }
-    public static void setUnitDefense(Cell cell){
-        cell.unitOnIt.unitDefense = (int)(cell.unitOnIt.unitBaseDefense * cell.cellCoeff * (cell.unitOnIt.unitHP/ cell.unitOnIt.unitMaxHP));
+    public static void setUnitDefense(Unit unit,double cellCoeff){
+        unit.unitDefense = (int)(unit.unitBaseDefense * cellCoeff * (unit.unitHP/ unit.unitMaxHP));
     }
 
     public static double getCellCoeffByTerrain(Cell.Terrain t){
@@ -63,14 +63,18 @@ public abstract class  GameLogic {
         if (unit2.unitDefense/unit1.unitAttack > 1) {
 
             unit2.unitHP -=  unit1.unitAttack;
-            Double f = unit2.unitHP;
+            //Double f = unit2.unitHP;
         }else {
-            Double attack = unit1.unitAttack - unit2.unitDefense;
-            if(unit2.unitDefense == 0)
-                unit2.unitDefense = unit1.unitAttack;
+            //Double attack = unit1.unitAttack - unit2.unitDefense;
             unit2.unitHP -= (unit1.unitAttack - unit2.unitDefense);
-            Double f = unit2.unitHP;
+            //Double f = unit2.unitHP;
         }
+    }
+
+    public static void nextTurn(Player[] players){
+        //for (int i = 0; i < ; i++) {
+
+       // }
     }
 
 }

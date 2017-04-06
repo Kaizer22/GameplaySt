@@ -12,8 +12,8 @@ public class Cell {
 
     public double cellCoeff;
 
-    public Unit unitOnIt;
-    public City cityOnIt;
+    //public Unit unitOnIt;
+   // public City cityOnIt;
 
     public boolean cityOn;
     public boolean unitOn;

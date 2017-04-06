@@ -21,6 +21,13 @@ public class TextureManager {
     public Texture cityTextureLate;
 
     public Texture infoBarTexture;
+    public Texture resourceBarTexture;
+
+
+    public Texture eatScoreIcon;
+    public Texture populationScoreIcon;
+    public Texture powerScoreIcon;
+    public Texture happinessScoreIcon;
 
 
     public Texture moveOpportunityMarker;
@@ -42,6 +49,7 @@ public class TextureManager {
         //fractionUnit_test.resizeTexture(scM.cellWidth,scM.cellHeight);
         moveOpportunityMarker.resizeTexture(scM.cellWidth, scM.cellHeight);
         attackOpportunityMarker.resizeTexture(scM.cellWidth, scM.cellHeight);
+
     }
 
     public void resizeTextureArray(Map <String,Texture> map, ScreenManager scM){

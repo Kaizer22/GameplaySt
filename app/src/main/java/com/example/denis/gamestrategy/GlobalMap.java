@@ -34,7 +34,7 @@ public class GlobalMap {
     }
 
     public void setMoveOpportunityMarker(int Y, int X, boolean t){
-        if(map[Y][X].unitOnIt == null)
+        if(!map[Y][X].unitOn)
             map[Y][X].moveOpportunityMarkerOnIt = t;
     }
 
