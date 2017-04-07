@@ -36,7 +36,25 @@ public class Drawer {
         canvas.drawText(ir.message, ir.x + canvas.getWidth() / 20, ir.y + ir.textSize, paint);
     }
     public void drawResourceBar(ResourceBar rb, Canvas canvas) {
+        int drx = rb.padding;
+        int dry = (int)(1.0/6*rb.height);
+        int dryText = dry+rb.textSize/2+rb.textSize/4;
         canvas.drawBitmap(rb.getResourceBarTexture().getBitmap(), rb.x, rb.y, paint);
+        canvas.drawBitmap(rb.getHappinessScoreIcon().getBitmap(), drx, dry, paint);
+        drx+=rb.iconSize;
+        canvas.drawText(rb.happinessScore+" ",drx,dryText,paint);
+        drx+=rb.iconSize+rb.padding*3;
+        canvas.drawBitmap(rb.getEatScoreIcon().getBitmap(), drx, dry, paint);
+        drx+=rb.iconSize;
+        canvas.drawText(rb.eatScore+" ",drx,dryText,paint);
+        drx+=rb.iconSize+rb.padding*3;
+        canvas.drawBitmap(rb.getPopulationScoreIcon().getBitmap(), drx, dry, paint);
+        drx+=rb.iconSize;
+        canvas.drawText(rb.populationScore+" ",drx,dryText,paint);
+        drx+=rb.iconSize+rb.padding*3;
+        canvas.drawBitmap(rb.getPowerScoreIcon().getBitmap(), drx, dry, paint);
+        drx+=rb.iconSize;
+        canvas.drawText(rb.powerScore+" ",drx,dryText,paint);
         //canvas.drawText(ir.message, ir.x + canvas.getWidth() / 20, ir.y + ir.textSize, paint);
     }
 

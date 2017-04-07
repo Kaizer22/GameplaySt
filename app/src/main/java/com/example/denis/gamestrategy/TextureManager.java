@@ -20,6 +20,8 @@ public class TextureManager {
     public Texture cityTextureEarly;
     public Texture cityTextureLate;
 
+    public Texture nextTurnButtonTexture;
+
     public Texture infoBarTexture;
     public Texture resourceBarTexture;
 
@@ -45,6 +47,7 @@ public class TextureManager {
         resizeTextureArray(mapTextures,scM);
         resizeTextureArray(unitTextures,scM);
         resizeTextureArray(fractionsTextures,scM);
+
         //fractionGround_test.resizeTexture(scM.cellWidth,scM.cellHeight);
         //fractionUnit_test.resizeTexture(scM.cellWidth,scM.cellHeight);
         moveOpportunityMarker.resizeTexture(scM.cellWidth, scM.cellHeight);

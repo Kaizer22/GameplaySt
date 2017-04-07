@@ -5,6 +5,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -147,6 +148,8 @@ public class GameView extends View{
         drawer.drawVisibleMap(players,canvas,scM,txM,m);
         drawer.drawInfoRectangle(infoBar,canvas);
         drawer.drawResourceBar(resourceBar,canvas);
+        canvas.drawBitmap(txM.nextTurnButtonTexture.getBitmap(),screenWidth - screenWidth/6,screenHeight-infoBar.height-screenWidth/6,new Paint());
+
     }
 
     public void onUpdate(){
@@ -249,10 +252,13 @@ public class GameView extends View{
 
         txM.resourceBarTexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.resource_bar));
 
-        txM.populationScoreIcon = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.socio_64x64));
-        txM.powerScoreIcon = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.socio_64x64));
-        txM.eatScoreIcon =  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.socio_64x64));
-        txM.happinessScoreIcon = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.socio_64x64));
+        txM.nextTurnButtonTexture = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.next_turn));
+        txM.nextTurnButtonTexture.resizeTexture(screenWidth/6,screenWidth/6);
+
+        txM.populationScoreIcon = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.population_score));
+        txM.powerScoreIcon = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.power_score));
+        txM.eatScoreIcon =  new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.eat));
+        txM.happinessScoreIcon = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.happiness_score));
 
         loadMapTexturesFromAssets();
         loadFractionsTexturesFromAssets();

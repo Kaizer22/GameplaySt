@@ -13,12 +13,14 @@ public class ResourceBar {
     private Texture powerScoreIcon;
     private Texture happinessScoreIcon;
 
-    public int eatScore = 0;
-    public int populationScore = 0;
-    public int powerScore = 0;
-    public int happinessScore = 0;
+    public int eatScore = 9999;
+    public int populationScore = 9999;
+    public int powerScore = 9999;
+    public int happinessScore = 9999;
 
     public int width,height;
+    public int padding;
+    int iconSize;
     public int x = 0,y = 0;
     public  int textSize;
 
@@ -26,16 +28,18 @@ public class ResourceBar {
         width = screenWidth;
         height = scM.cellHeight;
         textSize = height / 4 * 3;
+        padding = width/30;
         resourceBarTexture = rb;
         resourceBarTexture.resizeTexture(width,height);
+        iconSize = (int)(4.0/6*height);
         eatScoreIcon = esi;
-        eatScoreIcon.resizeTexture(height,height);
+        eatScoreIcon.resizeTexture(iconSize,iconSize);
         populationScoreIcon = psi;
-        populationScoreIcon.resizeTexture(height,height);
+        populationScoreIcon.resizeTexture(iconSize,iconSize);
         powerScoreIcon = posi;
-        powerScoreIcon.resizeTexture(height,height);
+        powerScoreIcon.resizeTexture(iconSize,iconSize);
         happinessScoreIcon = hsi;
-        happinessScoreIcon.resizeTexture(height,height);
+        happinessScoreIcon.resizeTexture(iconSize,iconSize);
 
     }
 

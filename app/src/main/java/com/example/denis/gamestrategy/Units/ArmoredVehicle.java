@@ -9,7 +9,6 @@ import com.example.denis.gamestrategy.Unit;
  */
 
 public class ArmoredVehicle extends Unit {
-
     public ArmoredVehicle( Player.Fraction f, int y, int x) {
         super(TypeOfUnit.ARMORED_VEHICLE, f, y, x);
         unitMaxSteps = 1;
