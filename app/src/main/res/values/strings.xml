@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">GameStrategy</string>
+    <string name="headline_choose_activity">Выберете племя, за которое будете играть:</string>
+    <string name="tribe_1">Зулусы</string>
+    <string name="tribe_2">Бушмены</string>
+    <string name="tribe_3">Луба</string>
+    <string name="tribe_4">Масаи</string>
+    <string name="tribe_5">Пигмеи</string>
+    <string name="tribe_6">Нуэр</string>
+    <string name="tribe_7">Йоруба</string>
+    <string name="tribe_8">Ашанти</string>
+    <string name="tribe_9">Нуба</string>
+    <string name="tribe_10">Хауса</string>
+    <string name="tribe_11">Догоны</string>
+    <string name="tribe_12">Амхара</string>
+    <string name="tribe_13">Фульбе</string>
+    <string name="tribe_14">Туареги</string>
+    <string name="tribe_15">Берберы</string>
 </resources>
