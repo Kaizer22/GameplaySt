@@ -140,6 +140,7 @@ public class ChooseActivity extends AppCompatActivity {
     public void startNewGame(View view){
         Intent gameplayActivity = new Intent(this, GameplayActivity.class);
         gameplayActivity.putExtra("choosenTribe",choosenTribe-1);
+        gameplayActivity.putExtra("isNewGame",true);
         startActivity(gameplayActivity);
         finish();
     }

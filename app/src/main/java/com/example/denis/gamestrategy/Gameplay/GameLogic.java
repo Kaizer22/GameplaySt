@@ -76,7 +76,7 @@ public abstract class  GameLogic {
     public static void nextTurn(Player[] players, GlobalMap glM){
         Unit unit;
         for (int i = 0; i <players.length ; i++) {
-            for (Map.Entry<String, Unit> playersUnit: players[i].units.entrySet())
+            for (Map.Entry<String, Unit> playersUnit: players[i].units.entrySet()) // дописать восстановление здоровья на дружественной территории
             {
                 unit = playersUnit.getValue();
                 unit.unitSteps = unit.unitMaxSteps;

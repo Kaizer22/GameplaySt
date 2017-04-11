@@ -12,8 +12,6 @@ public class TextureManager {
     public Map <String, Texture> unitTextures;
 
     public Map<String, Texture>  fractionsTextures;
-    //public Map<String, Texture>  fractionsForCity;
-    //public Map<String, Texture>  fractionForG
 
     public Texture cityTextureEarly;
     public Texture cityTextureLate;
@@ -46,8 +44,6 @@ public class TextureManager {
         resizeTextureArray(unitTextures,scM);
         resizeTextureArray(fractionsTextures,scM);
 
-        //fractionGround_test.resizeTexture(scM.cellWidth,scM.cellHeight);
-        //fractionUnit_test.resizeTexture(scM.cellWidth,scM.cellHeight);
         moveOpportunityMarker.resizeTexture(scM.cellWidth, scM.cellHeight);
         attackOpportunityMarker.resizeTexture(scM.cellWidth, scM.cellHeight);
 

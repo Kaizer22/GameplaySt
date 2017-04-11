@@ -62,6 +62,13 @@ public class Drawer {
             canvas.drawBitmap(ntb.buttonTexture.getBitmap(),ntb.x,ntb.y,paint);
     }
 
+    public void drawSaveExitButton(GameView.SaveExitButton seb, Canvas canvas){
+        if (seb.isPressed)
+            canvas.drawBitmap(seb.pressedButtonTexture.getBitmap(),seb.x,seb.y,paint);
+        else
+            canvas.drawBitmap(seb.buttonTexture.getBitmap(),seb.x,seb.y,paint);
+    }
+
 
     public void setTextSize(int ts) {
         paint.setTextSize(ts);

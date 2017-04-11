@@ -13,8 +13,9 @@ public class GameplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent i = getIntent();
         int noComputerPlayer =  i.getIntExtra("choosenTribe",0);
+        boolean isNewGame  = i.getBooleanExtra("isNewGame",false);
         Log.d("AAAAAAAAAAAAAAAAAAAAA",noComputerPlayer+" ");
-        GameView game = new GameView(this,noComputerPlayer);
+        GameView game = new GameView(this,noComputerPlayer,isNewGame);
         setContentView(game);
     }
 }

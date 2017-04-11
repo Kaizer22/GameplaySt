@@ -2,6 +2,8 @@ package com.example.denis.gamestrategy.Gameplay;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,10 +11,15 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.denis.gamestrategy.Gameplay.Units.ArmoredVehicle;
+import com.example.denis.gamestrategy.Gameplay.Units.CamelWarrior;
+import com.example.denis.gamestrategy.Gameplay.Units.Spearmens;
 import com.example.denis.gamestrategy.R;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Scanner;
 
 /**
  * Created by denis on 19.02.17.
@@ -21,13 +28,21 @@ import java.io.InputStream;
 public class GameView extends View{
 
     final AssetManager am;
+
+    boolean isNewGame;
     int screenWidth ;
     int screenHeight ;
     final  int moveMistake = 30;
+
+    final int nextTurnButtonSize = 6;
+    final int saveExitButtonSize = 15; // size = 1.0/ эту переменную * screenWidth;
     int mapSize = 64;
-    int scale = 16;
+    int scale = 16;              //количество видимых клеток по оси x на экране
     Drawer drawer;
     GlobalMap m ;
+
+    DBHelper dbHelper;
+
     ScreenManager scM;
     TextureManager txM ;
     int startEventMoveX = 0, startEventMoveY = 0,finalEventX = 0,finalEventY = 0, startEventX = 0, startEventY = 0;
@@ -36,6 +51,7 @@ public class GameView extends View{
     public InfoBar infoBar;
     public ResourceBar resourceBar;
     public NextTurnButton nextTurnButton;
+    public SaveExitButton saveExitButton;
 
     int noComputerPlayer;
     //public Player player1;
@@ -60,45 +76,58 @@ public class GameView extends View{
 
     }
 
-    public GameView(Context context,int nCP) {
+    public GameView(Context context,int nCP, boolean iNG) {
         super(context);
+        dbHelper = new DBHelper(context);
         noComputerPlayer = nCP;
+        isNewGame = iNG;
         am = context.getAssets();
     }
 
 
 
-    public void prepareGameView(){
+    public void prepareGameView() {
+
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
 
         txM = new TextureManager();
         loadTextures();
-        //computerIntellect2 = new ComputerIntellect();
-        //computerIntellect3 = new ComputerIntellect();
-       // playerIntellect1 = new PlayerIntellect();
 
-       // player1 = new Player(Player.Fraction.BERBER,computerIntellect2);
-        //player2 = new Player(Player.Fraction.REBELS,playerIntellect1);
-        //player3 = new Player(Player.Fraction.ADVANSED_NATIONS,computerIntellect3);
 
-        scM = new ScreenManager(screenWidth,screenHeight,scale);
+        scM = new ScreenManager(screenWidth, screenHeight, scale);
 
         txM.resizeTextures(scM);
 
         drawer = new Drawer();
         m = new GlobalMap();
-         //loadMap(am, mapTextures); при повторном запуске
 
-        //createPlayers(); //loadPlayers(); при повторном запуске
-        //loadPlayer(player1);
-        //loadPlayer(player2);
-        //loadPlayer(player3);
         createPlayers();
 
-        m.generateMap(am,mapSize,players,txM.cityTextureEarly);
+
+        int isSomethingSaved = 0;
+        try{
+            InputStream in = am.open("launching_information");
+            Scanner sc = new Scanner(in);
+            isSomethingSaved = sc.nextInt();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (isNewGame || isSomethingSaved == 0) {
+            createPlayers();
+            m.generateMap(am, mapSize, players, txM.cityTextureEarly);
+        } else{
+            loadGameFromDatabase(database);
+        }
+
+
 
         infoBar = new InfoBar(screenWidth,screenHeight,scM,txM.infoBarTexture);
         resourceBar = new ResourceBar(screenWidth,scM,txM.resourceBarTexture,txM.eatScoreIcon,txM.populationScoreIcon,txM.powerScoreIcon,txM.happinessScoreIcon);
-        nextTurnButton= new NextTurnButton();
+        nextTurnButton = new NextTurnButton(nextTurnButtonSize);
+        saveExitButton = new SaveExitButton(saveExitButtonSize);
         drawer.setTextSize(infoBar.textSize);
 
 
@@ -133,6 +162,8 @@ public class GameView extends View{
                 startEventY = (int)event.getY();
                 if (startEventX > screenWidth-nextTurnButton.size && startEventY > screenHeight-nextTurnButton.size )
                     nextTurnButton.isPressed = true;
+                else if (finalEventX > saveExitButton.x && finalEventY > saveExitButton.y && finalEventX < saveExitButton.x + saveExitButton.size & finalEventY < saveExitButton.y + saveExitButton.size)
+                    saveExitButton.isPressed = true;
                 break;
             case MotionEvent.ACTION_MOVE:
                 finalEventX = (int)event.getX();
@@ -148,10 +179,13 @@ public class GameView extends View{
                 finalEventX = (int)event.getX();
                 finalEventY = (int)event.getY();
                 nextTurnButton.isPressed = false;
+                saveExitButton.isPressed = false;
                 if (startEventX - finalEventX <= moveMistake && startEventX - finalEventX <= moveMistake){
-                    if (finalEventX > 5.0/6*screenWidth && finalEventY > screenHeight-1.0/6*screenWidth ) {
-
+                    if (finalEventX > nextTurnButton.x && finalEventY > nextTurnButton.y ) {
                         nextTurnButton.makeAction();
+
+                    }else if (finalEventX > saveExitButton.x && finalEventY > saveExitButton.y && finalEventX < saveExitButton.x + saveExitButton.size & finalEventY < saveExitButton.y + saveExitButton.size){
+                        saveExitButton.makeAction();
 
                     }else
                         scM.chooseCell(players,players[noComputerPlayer],m,infoBar,screenWidth,screenHeight,finalEventX,finalEventY);
@@ -172,6 +206,7 @@ public class GameView extends View{
         drawer.drawInfoRectangle(infoBar,canvas);
         drawer.drawResourceBar(resourceBar,canvas);
         drawer.drawNextTurnButton(nextTurnButton,canvas);
+        drawer.drawSaveExitButton(saveExitButton,canvas);
 
 
     }
@@ -265,6 +300,121 @@ public class GameView extends View{
         }
     }
 
+    private void loadGameFromDatabase(SQLiteDatabase db){
+        Cursor map_cursor = db.query(DBHelper.TABLE_MAP,null,null,null,null,null,null);
+        Cursor units_cursor;
+
+        map_cursor.moveToFirst();
+
+
+        Cell[][] glMap = m.getMap();
+        int cx;
+        int cy;
+        String terrain;
+        String typeOfCell;
+        String territoryOf;
+
+
+        int cellXIndex = map_cursor.getColumnIndex(DBHelper.KEY_CELL_X);
+        int cellYIndex = map_cursor.getColumnIndex(DBHelper.KEY_CELL_Y);
+        int terrainIndex = map_cursor.getColumnIndex(DBHelper.KEY_TERRAIN);
+        int typeOfCellIndex = map_cursor.getColumnIndex(DBHelper.KEY_TYPE_OF_CELL);
+        int territoryOfIndex = map_cursor.getColumnIndex(DBHelper.KEY_TERRITORY_OF);
+
+
+
+        do{
+            cx = map_cursor.getInt(cellXIndex);
+            cy = map_cursor.getInt(cellYIndex);
+            terrain = map_cursor.getString(terrainIndex);
+            typeOfCell = map_cursor.getString(typeOfCellIndex);
+            territoryOf = map_cursor.getString(territoryOfIndex);
+
+
+            glMap[cy][cx].setTerrain(StringMaster.getTerrainByString(terrain));
+            glMap[cy][cx].setTypeOfCell(StringMaster.getTypeOfCellByString(typeOfCell));
+            glMap[cy][cx].territoryOf = StringMaster.getFractionByString(territoryOf);
+
+        }while(map_cursor.moveToNext());
+        map_cursor.close();
+
+
+
+        String selection;
+
+        int unitXIndex;
+        int unitYIndex;
+        int typeOfUnitIndex;
+        int fractionIndex;
+        int unitHPIndex;
+        int unitsStepsIndex;
+
+        int unitX;
+        int unitY;
+        String typeOfUnit;
+        String fraction;
+        int unitHP;
+        int unitSteps;
+
+        for (int i = 0; i < players.length; i++) {
+
+            selection = DBHelper.KEY_FRACTION + "=" + players[i].fr.toString().toLowerCase();
+
+            units_cursor =  db.query(DBHelper.TABLE_UNITS,null,selection,null,null,null,null);
+            units_cursor.moveToFirst();
+
+            unitXIndex = units_cursor.getColumnIndex(DBHelper.KEY_UNIT_X);
+            unitYIndex = units_cursor.getColumnIndex(DBHelper.KEY_UNIT_Y);
+            typeOfUnitIndex = units_cursor.getColumnIndex(DBHelper.KEY_TYPE_OF_UNIT);
+            fractionIndex = units_cursor.getColumnIndex(DBHelper.KEY_FRACTION);
+            unitHPIndex = units_cursor.getColumnIndex(DBHelper.KEY_UNIT_HP);
+            unitsStepsIndex =  units_cursor.getColumnIndex(DBHelper.KEY_UNIT_STEPS);
+
+            do {
+                unitX = units_cursor.getInt(unitXIndex);
+                unitY = units_cursor.getInt(unitYIndex);
+                typeOfUnit = units_cursor.getString(typeOfUnitIndex);
+                fraction = units_cursor.getString(fractionIndex);
+                unitHP = units_cursor.getInt(unitHPIndex);
+                unitSteps = units_cursor.getInt(unitsStepsIndex);
+
+                String unitKey;
+                unitKey = unitX + " " + unitY;
+
+                Unit bufferUnit;
+                switch(StringMaster.getTypeOfUnitByString(typeOfUnit)) {
+                    case ARMORED_VEHICLE:
+                        players[i].units.put(unitKey,new ArmoredVehicle(StringMaster.getFractionByString(fraction),unitX,unitY));
+                        bufferUnit = players[i].units.get(unitKey);
+                        bufferUnit.unitHP = unitHP;
+                        bufferUnit.unitHP = unitSteps;
+                        GameLogic.setUnitAttack(bufferUnit);
+                        GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
+                        break;
+                    case SPEARMENS:
+                        players[i].units.put(unitKey,new Spearmens(StringMaster.getFractionByString(fraction),unitX,unitY));
+                        bufferUnit = players[i].units.get(unitKey);
+                        bufferUnit.unitHP = unitHP;
+                        bufferUnit.unitHP = unitSteps;
+                        GameLogic.setUnitAttack(bufferUnit);
+                        GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
+                        break;
+                    case CAMEL_WARRIOR:
+                        players[i].units.put(unitKey,new CamelWarrior(StringMaster.getFractionByString(fraction),unitX,unitY));
+                        bufferUnit = players[i].units.get(unitKey);
+                        bufferUnit.unitHP = unitHP;
+                        bufferUnit.unitHP = unitSteps;
+                        GameLogic.setUnitAttack(bufferUnit);
+                        GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
+                        break;
+                }
+            }while(units_cursor.moveToNext());
+            units_cursor.close();
+            db.close();
+        }
+    }
+
+
     private void loadTextures(){
         txM.infoBarTexture = new Texture(BitmapFactory.decodeResource(getResources(), R.drawable.info_bar));
 
@@ -300,25 +450,24 @@ public class GameView extends View{
         Texture pressedButtonTexture;
         Texture buttonTexture;
 
-        MyButton() {
-            size = (int) (1.0 / 6 * screenWidth);
-            x = screenWidth - size;
-            y = screenHeight - size;
+        MyButton(int i) {
+            size = (int) (1.0 / i * screenWidth);
+
         }
 
         public void makeAction(){}
 
     }
-
     class NextTurnButton extends MyButton {
 
-        NextTurnButton() {
+        NextTurnButton(int i) {
+            super(i);
+            x = screenWidth - size;
+            y = screenHeight - size;
             pressedButtonTexture = new Texture(BitmapFactory.decodeResource(getResources(), R.drawable.next_turn_dark));
             pressedButtonTexture.resizeTexture(size, size);
 
-            buttonTexture = new
-
-                    Texture(BitmapFactory.decodeResource(getResources(), R.drawable.next_turn));
+            buttonTexture = new Texture(BitmapFactory.decodeResource(getResources(), R.drawable.next_turn));
             buttonTexture.resizeTexture(size, size);
         }
 
@@ -327,5 +476,25 @@ public class GameView extends View{
             GameLogic.nextTurn(players,m);
         }
     }
+    class SaveExitButton  extends MyButton{
+        SaveExitButton(int i) {
+            super(i);
+            x = resourceBar.padding;
+            y = screenHeight - infoBar.height - size;
+
+            pressedButtonTexture = new Texture(BitmapFactory.decodeResource(getResources(), R.drawable.save_and_exit_pressed));
+            pressedButtonTexture.resizeTexture(size, size);
+
+            buttonTexture = new Texture(BitmapFactory.decodeResource(getResources(), R.drawable.save_and_exit));
+            buttonTexture.resizeTexture(size, size);
+        }
+        @Override
+        public  void makeAction(){
+
+        }
+    }
+
+
+
 }
 

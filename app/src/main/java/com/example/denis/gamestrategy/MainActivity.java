@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.denis.gamestrategy.Gameplay.GameplayActivity;
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -26,6 +28,13 @@ public class MainActivity extends AppCompatActivity {
         startActivity(optionActivity);
         finish();
 
+    }
+
+    public void continueGame (View view){
+        Intent gameplayActivity  = new Intent ( this, GameplayActivity.class);
+        gameplayActivity.putExtra("isNewGame",false);
+        startActivity(gameplayActivity);
+        finish();
     }
 
 

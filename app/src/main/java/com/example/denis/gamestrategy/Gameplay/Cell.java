@@ -42,30 +42,7 @@ public class Cell {
 
     public String getInfoAboutCell(){
         String info;
-
-        switch (terrain) {
-            case WATER:
-                info = "Вода";
-                break;
-            case SAVANNAH:
-                info = "Саванна";
-                break;
-            case HILLS:
-                info = "Холмы";
-                break;
-            case PEAKS:
-                info = "Горы";
-                break;
-            case DESERT:
-                info = "Пустыня";
-                break;
-            case JUNGLE:
-                info = "Джунгли";
-                break;
-            default:
-                info = "";
-        }
-
+        info = StringMaster.getTerrainOnRussian(terrain);
         info += "  " + typeOfCell.toString() +" "+ territoryOf.toString(); // для отладки
         return info;
     }
