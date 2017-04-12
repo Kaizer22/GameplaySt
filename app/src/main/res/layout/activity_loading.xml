@@ -16,15 +16,4 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:background="@drawable/progress_bar_background" />
-
-    <Button
-        android:id="@+id/start_game_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:onClick="startGame"
-        android:visibility="invisible"
-        android:text=""/>
 </RelativeLayout>

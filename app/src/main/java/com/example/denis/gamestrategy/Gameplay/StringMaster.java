@@ -30,7 +30,7 @@ public class StringMaster {
     public static Cell.Terrain getTerrainByString(String s){
         Cell.Terrain[] allTerrains = Cell.Terrain.values();
         for (Cell.Terrain t: allTerrains) {
-            if (t.toString().toLowerCase() == s)
+            if (t.toString().toLowerCase().equals(s))
                 return t;
         }
         return Cell.Terrain.WATER;
@@ -39,7 +39,7 @@ public class StringMaster {
     public static Cell.TypeOfCell getTypeOfCellByString(String s){
         Cell.TypeOfCell[] allTypes = Cell.TypeOfCell.values();
         for (Cell.TypeOfCell t: allTypes) {
-            if (t.toString().toLowerCase() == s)
+            if (t.toString().toLowerCase().equals(s))
                 return t;
         }
         return Cell.TypeOfCell.DEFAULT;
@@ -48,16 +48,16 @@ public class StringMaster {
     public static Player.Fraction getFractionByString(String s){
         Player.Fraction[] allFractions = Player.Fraction.values();
         for (Player.Fraction t: allFractions) {
-            if (t.toString().toLowerCase() == s)
+            if (t.toString().toLowerCase().equals(s))
                 return t;
         }
-        return Player.Fraction.NONE;
+        return Player.Fraction.REBELS;
     }
 
     public static Unit.TypeOfUnit getTypeOfUnitByString(String s){
         Unit.TypeOfUnit[] allTypesOfUnits = Unit.TypeOfUnit.values();
         for (Unit.TypeOfUnit t: allTypesOfUnits) {
-            if (t.toString().toLowerCase() == s)
+            if (t.toString().toLowerCase().equals(s))
                 return t;
         }
         return Unit.TypeOfUnit.SPEARMENS;

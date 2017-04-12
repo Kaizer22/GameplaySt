@@ -19,6 +19,10 @@ public class GlobalMap {
     private int maxX ,maxY ;
 
 
+    GlobalMap(int size){
+        maxX = size;
+        maxY = size;
+    }
     public int getMaxX(){return maxX;}
     public int getMaxY(){return maxY;}
 
@@ -53,12 +57,12 @@ public class GlobalMap {
         map[y] = c;
     }
 
-    public void loadMap(int mY, int mX){                   //!!!!
+    public void newMap(){                   //!!!!
 
-        map = new Cell[mY][mX];
+        map = new Cell[maxY][maxX];
 
-        for (int i = 0; i < mY ; i++) {
-            for (int j = 0; j < mX; j++) {
+        for (int i = 0; i < maxY ; i++) {
+            for (int j = 0; j < maxX; j++) {
                 map[i][j] = new Cell();
             }
         }
@@ -104,10 +108,10 @@ public class GlobalMap {
 
     }
 
-    public void generateMap(AssetManager am,int mXY,Player[] players, Texture city){
+    public void generateMap(AssetManager am,Player[] players, Texture city){
         MapGenerator mg = new MapGenerator();
-        loadMap(mXY,mXY);
-        mg.generateMap(am,mXY);
+        newMap();
+        mg.generateMap(am,maxY);
         updateParam();
         mg.generatePlayersInfrastructure(players, city, this);
 

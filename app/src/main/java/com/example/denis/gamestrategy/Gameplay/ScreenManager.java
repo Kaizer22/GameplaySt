@@ -51,7 +51,7 @@ public class ScreenManager {
         String cityKey;
         try {
 
-            InputStream in = am.open(fileName );
+            InputStream in = am.open(fileName);
             Scanner sc = new Scanner(in);
             int buf;
 
@@ -60,8 +60,9 @@ public class ScreenManager {
                     buf = sc.nextInt();
 
                     if (buf == 1) {
-                        cityKey = i+"_"+j;
-                        player.cityes.put(cityKey,new City(city,player.fr,j,i));; //добавить больше юнитов
+                        cityKey = i + "_" + j;
+                        player.cityes.put(cityKey, new City(city, player.fr, j, i));
+                        ; //добавить больше юнитов
                         GameLogic.makeCityTerritory(glM, player.cityes.get(cityKey));
                         map[i][j].cityOn = true;
                     }
@@ -72,8 +73,6 @@ public class ScreenManager {
             }
             in.close();
             sc.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -97,18 +96,18 @@ public class ScreenManager {
             for (int i = 0; i < glM.getMaxY(); i++) {
                 for (int j = 0; j < glM.getMaxX(); j++) { //прим. размер карты юнитов должен совпадать с размером карты!
                     buf = sc.nextInt();
-                    unitKey = i+"_"+j;
+                    unitKey = i + "_" + j;
                     switch (buf) {
                         case 0: //разобраться с индексами для текстур юнитов!
-                            player.units.put(unitKey,new ArmoredVehicle(player.fr, i, j)); //добавить больше юнитов
+                            player.units.put(unitKey, new ArmoredVehicle(player.fr, i, j)); //добавить больше юнитов
                             GameLogic.setUnitDefense(player.units.get(unitKey), map[i][j].cellCoeff);
-                            GameLogic.setUnitAttack(player.units.get(unitKey) );
+                            GameLogic.setUnitAttack(player.units.get(unitKey));
                             map[i][j].unitOn = true;
                             break;
                         case 1:
-                            player.units.put(unitKey,new CamelWarrior(player.fr, i, j)); //добавить больше юнитов
+                            player.units.put(unitKey, new CamelWarrior(player.fr, i, j)); //добавить больше юнитов
                             GameLogic.setUnitDefense(player.units.get(unitKey), map[i][j].cellCoeff);
-                            GameLogic.setUnitAttack(player.units.get(unitKey) );
+                            GameLogic.setUnitAttack(player.units.get(unitKey));
                             map[i][j].unitOn = true;
                             break;
                     }
@@ -118,12 +117,11 @@ public class ScreenManager {
             }
             in.close();
             sc.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        }catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     public void chooseUnit(Unit unit, InfoBar ib){
         ib.message ="("+unit.nameOfUnit + ") З(%)/А/Защ./Ш --- " + (int)(unit.unitHP/unit.unitMaxHP*100) +"/"+ (int)(unit.unitAttack)+"/"+(int)(unit.unitDefense) +"/"+ unit.unitSteps;

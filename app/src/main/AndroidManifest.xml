@@ -10,18 +10,21 @@
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
             android:name=".Gameplay.GameplayActivity"
+            android:screenOrientation="userLandscape"></activity>
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="userLandscape">
-        </activity>
-        <activity android:name=".MainActivity"
-            android:screenOrientation="userLandscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChooseActivity"
+        <activity
+            android:name=".ChooseActivity"
             android:screenOrientation="userLandscape" />
-        <activity android:name=".OptionActivity"></activity>
+        <activity android:name=".OptionActivity" />
+        <activity android:name=".LoadingActivity"></activity>
     </application>
 
 </manifest>

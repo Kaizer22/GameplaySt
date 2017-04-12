@@ -1,5 +1,6 @@
 package com.example.denis.gamestrategy.Gameplay;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
@@ -16,9 +17,15 @@ import com.example.denis.gamestrategy.Gameplay.Units.CamelWarrior;
 import com.example.denis.gamestrategy.Gameplay.Units.Spearmens;
 import com.example.denis.gamestrategy.R;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -36,7 +43,7 @@ public class GameView extends View{
 
     final int nextTurnButtonSize = 6;
     final int saveExitButtonSize = 15; // size = 1.0/ эту переменную * screenWidth;
-    int mapSize = 64;
+
     int scale = 16;              //количество видимых клеток по оси x на экране
     Drawer drawer;
     GlobalMap m ;
@@ -76,19 +83,23 @@ public class GameView extends View{
 
     }
 
-    public GameView(Context context,int nCP, boolean iNG) {
+    public GameView(Context context,int nCP, boolean iNG,GlobalMap map, Player[] allPlayers) {
         super(context);
         dbHelper = new DBHelper(context);
         noComputerPlayer = nCP;
         isNewGame = iNG;
         am = context.getAssets();
+        m = map;
+        players = allPlayers;
+        isNewGame = iNG;
     }
 
 
 
     public void prepareGameView() {
 
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
+
+
 
         txM = new TextureManager();
         loadTextures();
@@ -99,28 +110,10 @@ public class GameView extends View{
         txM.resizeTextures(scM);
 
         drawer = new Drawer();
-        m = new GlobalMap();
-
-        createPlayers();
 
 
-        int isSomethingSaved = 0;
-        try{
-            InputStream in = am.open("launching_information");
-            Scanner sc = new Scanner(in);
-            isSomethingSaved = sc.nextInt();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (isNewGame || isSomethingSaved == 0) {
-            createPlayers();
-            m.generateMap(am, mapSize, players, txM.cityTextureEarly);
-        } else{
-            loadGameFromDatabase(database);
-        }
+        if (isNewGame)
+            m.generateMap(am, players, txM.cityTextureEarly);
 
 
 
@@ -130,18 +123,12 @@ public class GameView extends View{
         saveExitButton = new SaveExitButton(saveExitButtonSize);
         drawer.setTextSize(infoBar.textSize);
 
+        dbHelper.close();
+
 
     }
 
-    public void createPlayers(){
-        Player.Fraction[] fractions = Player.Fraction.values();
-        for (int i = 0; i < fractions.length - 1 ; i++) {
-            if (i == noComputerPlayer) {
-                players[i] = new Player(fractions[i],new PlayerIntellect());
-            }else
-                players[i] = new Player(fractions[i],new ComputerIntellect());
-        }
-    }
+
 
     public void loadPlayer(Player player){
         scM.loadUnitMap(player,m,am);
@@ -300,119 +287,6 @@ public class GameView extends View{
         }
     }
 
-    private void loadGameFromDatabase(SQLiteDatabase db){
-        Cursor map_cursor = db.query(DBHelper.TABLE_MAP,null,null,null,null,null,null);
-        Cursor units_cursor;
-
-        map_cursor.moveToFirst();
-
-
-        Cell[][] glMap = m.getMap();
-        int cx;
-        int cy;
-        String terrain;
-        String typeOfCell;
-        String territoryOf;
-
-
-        int cellXIndex = map_cursor.getColumnIndex(DBHelper.KEY_CELL_X);
-        int cellYIndex = map_cursor.getColumnIndex(DBHelper.KEY_CELL_Y);
-        int terrainIndex = map_cursor.getColumnIndex(DBHelper.KEY_TERRAIN);
-        int typeOfCellIndex = map_cursor.getColumnIndex(DBHelper.KEY_TYPE_OF_CELL);
-        int territoryOfIndex = map_cursor.getColumnIndex(DBHelper.KEY_TERRITORY_OF);
-
-
-
-        do{
-            cx = map_cursor.getInt(cellXIndex);
-            cy = map_cursor.getInt(cellYIndex);
-            terrain = map_cursor.getString(terrainIndex);
-            typeOfCell = map_cursor.getString(typeOfCellIndex);
-            territoryOf = map_cursor.getString(territoryOfIndex);
-
-
-            glMap[cy][cx].setTerrain(StringMaster.getTerrainByString(terrain));
-            glMap[cy][cx].setTypeOfCell(StringMaster.getTypeOfCellByString(typeOfCell));
-            glMap[cy][cx].territoryOf = StringMaster.getFractionByString(territoryOf);
-
-        }while(map_cursor.moveToNext());
-        map_cursor.close();
-
-
-
-        String selection;
-
-        int unitXIndex;
-        int unitYIndex;
-        int typeOfUnitIndex;
-        int fractionIndex;
-        int unitHPIndex;
-        int unitsStepsIndex;
-
-        int unitX;
-        int unitY;
-        String typeOfUnit;
-        String fraction;
-        int unitHP;
-        int unitSteps;
-
-        for (int i = 0; i < players.length; i++) {
-
-            selection = DBHelper.KEY_FRACTION + "=" + players[i].fr.toString().toLowerCase();
-
-            units_cursor =  db.query(DBHelper.TABLE_UNITS,null,selection,null,null,null,null);
-            units_cursor.moveToFirst();
-
-            unitXIndex = units_cursor.getColumnIndex(DBHelper.KEY_UNIT_X);
-            unitYIndex = units_cursor.getColumnIndex(DBHelper.KEY_UNIT_Y);
-            typeOfUnitIndex = units_cursor.getColumnIndex(DBHelper.KEY_TYPE_OF_UNIT);
-            fractionIndex = units_cursor.getColumnIndex(DBHelper.KEY_FRACTION);
-            unitHPIndex = units_cursor.getColumnIndex(DBHelper.KEY_UNIT_HP);
-            unitsStepsIndex =  units_cursor.getColumnIndex(DBHelper.KEY_UNIT_STEPS);
-
-            do {
-                unitX = units_cursor.getInt(unitXIndex);
-                unitY = units_cursor.getInt(unitYIndex);
-                typeOfUnit = units_cursor.getString(typeOfUnitIndex);
-                fraction = units_cursor.getString(fractionIndex);
-                unitHP = units_cursor.getInt(unitHPIndex);
-                unitSteps = units_cursor.getInt(unitsStepsIndex);
-
-                String unitKey;
-                unitKey = unitX + " " + unitY;
-
-                Unit bufferUnit;
-                switch(StringMaster.getTypeOfUnitByString(typeOfUnit)) {
-                    case ARMORED_VEHICLE:
-                        players[i].units.put(unitKey,new ArmoredVehicle(StringMaster.getFractionByString(fraction),unitX,unitY));
-                        bufferUnit = players[i].units.get(unitKey);
-                        bufferUnit.unitHP = unitHP;
-                        bufferUnit.unitHP = unitSteps;
-                        GameLogic.setUnitAttack(bufferUnit);
-                        GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
-                        break;
-                    case SPEARMENS:
-                        players[i].units.put(unitKey,new Spearmens(StringMaster.getFractionByString(fraction),unitX,unitY));
-                        bufferUnit = players[i].units.get(unitKey);
-                        bufferUnit.unitHP = unitHP;
-                        bufferUnit.unitHP = unitSteps;
-                        GameLogic.setUnitAttack(bufferUnit);
-                        GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
-                        break;
-                    case CAMEL_WARRIOR:
-                        players[i].units.put(unitKey,new CamelWarrior(StringMaster.getFractionByString(fraction),unitX,unitY));
-                        bufferUnit = players[i].units.get(unitKey);
-                        bufferUnit.unitHP = unitHP;
-                        bufferUnit.unitHP = unitSteps;
-                        GameLogic.setUnitAttack(bufferUnit);
-                        GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
-                        break;
-                }
-            }while(units_cursor.moveToNext());
-            units_cursor.close();
-            db.close();
-        }
-    }
 
 
     private void loadTextures(){
@@ -490,7 +364,8 @@ public class GameView extends View{
         }
         @Override
         public  void makeAction(){
-
+            DBManager dbM = new DBManager(dbHelper,players,m,false);
+            dbM.execute();
         }
     }
 
