@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class Player {
     public Map<String, Unit> units;
-    public Map <String, City> cityes;
+    public Map <String, City> cities;
     Intellect intellect ;
 
     Fraction fr; //текстура в зависимости от fr
@@ -19,7 +19,7 @@ public class Player {
         fr = f;
         intellect = i;
         units = new HashMap<>();
-        cityes = new HashMap<>();
+        cities = new HashMap<>();
 
     }
 

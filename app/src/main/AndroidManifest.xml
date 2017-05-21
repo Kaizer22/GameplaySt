@@ -23,8 +23,8 @@
         <activity
             android:name=".ChooseActivity"
             android:screenOrientation="userLandscape" />
-        <activity android:name=".OptionActivity" />
-        <activity android:name=".LoadingActivity"></activity>
+        <activity android:name=".OptionActivity"
+            android:screenOrientation="userLandscape" />
     </application>
 
 </manifest>

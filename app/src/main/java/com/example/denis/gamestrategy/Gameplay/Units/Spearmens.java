@@ -15,7 +15,7 @@ public class Spearmens extends Unit {
         nameOfUnit = "Копейщики";
         unitMaxHP = 20;
         unitHP = unitMaxHP;
-        unitBaseAttack = 10 ; // xdd
+        unitBaseAttack = 10 ;
         unitBaseDefense = 5;
         isShip = false;
     }

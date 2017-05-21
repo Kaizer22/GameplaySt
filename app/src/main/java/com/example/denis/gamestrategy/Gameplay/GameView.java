@@ -1,10 +1,7 @@
 package com.example.denis.gamestrategy.Gameplay;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,21 +9,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.denis.gamestrategy.Gameplay.Units.ArmoredVehicle;
-import com.example.denis.gamestrategy.Gameplay.Units.CamelWarrior;
-import com.example.denis.gamestrategy.Gameplay.Units.Spearmens;
 import com.example.denis.gamestrategy.R;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
 
 /**
  * Created by denis on 19.02.17.
@@ -35,11 +21,12 @@ import java.util.Scanner;
 public class GameView extends View{
 
     final AssetManager am;
-
+    Context ct;
     boolean isNewGame;
     int screenWidth ;
     int screenHeight ;
-    final  int moveMistake = 30;
+    final  int moveMistake = 20;
+    final  int touchMistake = 30;
 
     final int nextTurnButtonSize = 6;
     final int saveExitButtonSize = 15; // size = 1.0/ эту переменную * screenWidth;
@@ -58,7 +45,7 @@ public class GameView extends View{
     public InfoBar infoBar;
     public ResourceBar resourceBar;
     public NextTurnButton nextTurnButton;
-    public SaveExitButton saveExitButton;
+    public SaveButton saveExitButton;
 
     int noComputerPlayer;
     //public Player player1;
@@ -85,6 +72,7 @@ public class GameView extends View{
 
     public GameView(Context context,int nCP, boolean iNG,GlobalMap map, Player[] allPlayers) {
         super(context);
+        ct = context;
         dbHelper = new DBHelper(context);
         noComputerPlayer = nCP;
         isNewGame = iNG;
@@ -120,7 +108,7 @@ public class GameView extends View{
         infoBar = new InfoBar(screenWidth,screenHeight,scM,txM.infoBarTexture);
         resourceBar = new ResourceBar(screenWidth,scM,txM.resourceBarTexture,txM.eatScoreIcon,txM.populationScoreIcon,txM.powerScoreIcon,txM.happinessScoreIcon);
         nextTurnButton = new NextTurnButton(nextTurnButtonSize);
-        saveExitButton = new SaveExitButton(saveExitButtonSize);
+        saveExitButton = new SaveButton(saveExitButtonSize);
         drawer.setTextSize(infoBar.textSize);
 
         dbHelper.close();
@@ -130,10 +118,7 @@ public class GameView extends View{
 
 
 
-    public void loadPlayer(Player player){
-        scM.loadUnitMap(player,m,am);
-        scM.loadCityMap(player,m,txM.cityTextureEarly,am); // в этом методе в зависимости от развития игрока можно менять текстуру города
-    }
+
 
 
 
@@ -167,7 +152,7 @@ public class GameView extends View{
                 finalEventY = (int)event.getY();
                 nextTurnButton.isPressed = false;
                 saveExitButton.isPressed = false;
-                if (startEventX - finalEventX <= moveMistake && startEventX - finalEventX <= moveMistake){
+                if (startEventX - finalEventX <= touchMistake && startEventX - finalEventX <= touchMistake){
                     if (finalEventX > nextTurnButton.x && finalEventY > nextTurnButton.y ) {
                         nextTurnButton.makeAction();
 
@@ -350,21 +335,21 @@ public class GameView extends View{
             GameLogic.nextTurn(players,m);
         }
     }
-    class SaveExitButton  extends MyButton{
-        SaveExitButton(int i) {
+    class SaveButton extends MyButton{
+        SaveButton(int i) {
             super(i);
             x = resourceBar.padding;
             y = screenHeight - infoBar.height - size;
 
-            pressedButtonTexture = new Texture(BitmapFactory.decodeResource(getResources(), R.drawable.save_and_exit_pressed));
+            pressedButtonTexture = new Texture(BitmapFactory.decodeResource(getResources(), R.drawable.save_dark));
             pressedButtonTexture.resizeTexture(size, size);
 
-            buttonTexture = new Texture(BitmapFactory.decodeResource(getResources(), R.drawable.save_and_exit));
+            buttonTexture = new Texture(BitmapFactory.decodeResource(getResources(), R.drawable.save));
             buttonTexture.resizeTexture(size, size);
         }
         @Override
         public  void makeAction(){
-            DBManager dbM = new DBManager(dbHelper,players,m,false);
+            DBSaver dbM = new DBSaver(ct,dbHelper,players,m);
             dbM.execute();
         }
     }

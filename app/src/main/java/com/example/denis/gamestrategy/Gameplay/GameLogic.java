@@ -65,21 +65,29 @@ public abstract class  GameLogic {
         if (unit2.unitDefense/unit1.unitAttack > 1) {
 
             unit2.unitHP -=  unit1.unitAttack;
-            //Double f = unit2.unitHP;
+
         }else {
-            //Double attack = unit1.unitAttack - unit2.unitDefense;
+
             unit2.unitHP -= (unit1.unitAttack - unit2.unitDefense);
-            //Double f = unit2.unitHP;
         }
     }
 
     public static void nextTurn(Player[] players, GlobalMap glM){
         Unit unit;
+        Cell[][] glMap = glM.getMap();
         for (int i = 0; i <players.length ; i++) {
             for (Map.Entry<String, Unit> playersUnit: players[i].units.entrySet()) // дописать восстановление здоровья на дружественной территории
             {
                 unit = playersUnit.getValue();
                 unit.unitSteps = unit.unitMaxSteps;
+
+                if (unit.fraction == glMap[unit.posY][unit.posX].territoryOf){
+                    if (unit.unitHP < unit.unitMaxHP)
+                        unit.unitHP += 1.0/10*unit.unitMaxHP;
+                    if (unit.unitHP > unit.unitMaxHP)
+                        unit.unitHP = unit.unitMaxHP;
+
+                }
             }
             players[i].makeTurn(glM);
         }

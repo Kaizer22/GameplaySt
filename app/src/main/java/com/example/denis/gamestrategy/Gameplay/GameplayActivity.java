@@ -1,31 +1,28 @@
 package com.example.denis.gamestrategy.Gameplay;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.example.denis.gamestrategy.Gameplay.Units.ArmoredVehicle;
 import com.example.denis.gamestrategy.Gameplay.Units.CamelWarrior;
 import com.example.denis.gamestrategy.Gameplay.Units.Spearmens;
 import com.example.denis.gamestrategy.R;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 public class GameplayActivity extends AppCompatActivity {
     Player[] players;
     GlobalMap globalMap;
     int mapSize = 64;
+
+    Texture city;
 
     int noComputerPlayer;
     boolean isNewGame;
@@ -40,6 +37,8 @@ public class GameplayActivity extends AppCompatActivity {
 
         createPlayers();
 
+        city = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_early));
+
         globalMap = new GlobalMap(mapSize);
 
         Log.d("AAAAAAAAAAAAAAAAAAAAA",noComputerPlayer+" ");
@@ -48,8 +47,8 @@ public class GameplayActivity extends AppCompatActivity {
         if (!isNewGame) {
             globalMap.newMap();
             DBHelper dbHelper = new DBHelper(this);
-            DBManager dbManager = new DBManager(dbHelper, players, globalMap, !isNewGame);
-            dbManager.execute();
+            DBLoader dbLoader = new DBLoader(dbHelper, players, globalMap);
+            dbLoader.execute();
         }else {
             GameView game = new GameView(this, noComputerPlayer, isNewGame, globalMap, players);
             setContentView(game);
@@ -75,25 +74,21 @@ public class GameplayActivity extends AppCompatActivity {
 
 
 
-    public class DBManager extends AsyncTask<Void,Void,Void> {
+    public class DBLoader extends AsyncTask<Void,Void,Void> {
         DBHelper dbHelper;
         Player[] players;
         GlobalMap m;
-        boolean toLoad;
 
-        public DBManager(DBHelper dbH,Player[] allPlayers, GlobalMap glM, boolean isL){
+        public DBLoader(DBHelper dbH, Player[] allPlayers, GlobalMap glM){
             dbHelper = dbH;
             players = allPlayers;
             m = glM;
-            toLoad = isL;
+
         }
 
         @Override
         protected Void doInBackground(Void ...params) {
-            if (toLoad)
-                loadGameFromDatabase();
-            else
-                saveGameToDatabase();
+            loadGameFromDatabase();
             return null;
         }
 
@@ -101,6 +96,8 @@ public class GameplayActivity extends AppCompatActivity {
         protected void onPostExecute(Void o) {
             super.onPostExecute(o);
 
+            ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar3);
+            progressBar.setVisibility(View.INVISIBLE);
             Button button = (Button) findViewById(R.id.start_game_button);
             button.setVisibility(View.VISIBLE);
         }
@@ -135,9 +132,9 @@ public class GameplayActivity extends AppCompatActivity {
                 territoryOf = cursor.getString(territoryOfIndex);
 
 
-                glMap[cy][cx].setTerrain(StringMaster.getTerrainByString(terrain));
-                glMap[cy][cx].setTypeOfCell(StringMaster.getTypeOfCellByString(typeOfCell));
-                glMap[cy][cx].territoryOf = StringMaster.getFractionByString(territoryOf);
+                glMap[cy][cx].setTerrain(StringConverter.getTerrainByString(terrain));
+                glMap[cy][cx].setTypeOfCell(StringConverter.getTypeOfCellByString(typeOfCell));
+                glMap[cy][cx].territoryOf = StringConverter.getFractionByString(territoryOf);
 
                 Log.d("Database map values ", "\n" +
                         "("+cy+" : " + cx+")"+ " " + terrain + "  "+ typeOfCell +" " + territoryOf);
@@ -146,6 +143,7 @@ public class GameplayActivity extends AppCompatActivity {
 
 
             String selection;
+            char zn ='"';
 
             int unitXIndex;
             int unitYIndex;
@@ -158,14 +156,14 @@ public class GameplayActivity extends AppCompatActivity {
             int unitY;
             String typeOfUnit;
             String fraction;
-            int unitHP;
+            double unitHP;
             int unitSteps;
 
             for (int i = 0; i < players.length; i++) {
 
-                char zn ='"';
 
-                selection = DBHelper.KEY_FRACTION + " = " + zn + players[i].fr.toString().toLowerCase()+ zn ;
+
+                selection = DBHelper.KEY_UNIT_FRACTION + " = " + zn + players[i].fr.toString().toLowerCase()+ zn ;
 
                 cursor = database.query(DBHelper.TABLE_UNITS, null, selection, null, null, null, null);
                 cursor.moveToFirst();
@@ -173,7 +171,7 @@ public class GameplayActivity extends AppCompatActivity {
                 unitXIndex = cursor.getColumnIndex(DBHelper.KEY_UNIT_X);
                 unitYIndex = cursor.getColumnIndex(DBHelper.KEY_UNIT_Y);
                 typeOfUnitIndex = cursor.getColumnIndex(DBHelper.KEY_TYPE_OF_UNIT);
-                fractionIndex = cursor.getColumnIndex(DBHelper.KEY_FRACTION);
+                fractionIndex = cursor.getColumnIndex(DBHelper.KEY_UNIT_FRACTION);
                 unitHPIndex = cursor.getColumnIndex(DBHelper.KEY_UNIT_HP);
                 unitsStepsIndex = cursor.getColumnIndex(DBHelper.KEY_UNIT_STEPS);
 
@@ -182,7 +180,7 @@ public class GameplayActivity extends AppCompatActivity {
                     unitY = cursor.getInt(unitYIndex);
                     typeOfUnit = cursor.getString(typeOfUnitIndex);
                     fraction = cursor.getString(fractionIndex);
-                    unitHP = cursor.getInt(unitHPIndex);
+                    unitHP = cursor.getDouble(unitHPIndex);
                     unitSteps = cursor.getInt(unitsStepsIndex);
 
                     Log.d("Database units values " , "\n" +
@@ -192,126 +190,90 @@ public class GameplayActivity extends AppCompatActivity {
                     unitKey = unitY + "_" + unitX;
 
                     Unit bufferUnit;
-                    switch (StringMaster.getTypeOfUnitByString(typeOfUnit)) {
+                    switch (StringConverter.getTypeOfUnitByString(typeOfUnit)) {
                         case ARMORED_VEHICLE:
-                            players[i].units.put(unitKey, new ArmoredVehicle(StringMaster.getFractionByString(fraction), unitY, unitX));
-                            bufferUnit = players[i].units.get(unitKey);
-                            bufferUnit.unitHP = unitHP;
-                            bufferUnit.unitHP = unitSteps;
+                            bufferUnit = new ArmoredVehicle(StringConverter.getFractionByString(fraction), unitY, unitX);
+                            bufferUnit.unitHP = unitHP ;
+                            bufferUnit.unitSteps = unitSteps;
                             GameLogic.setUnitAttack(bufferUnit);
                             GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
+                            players[i].units.put(unitKey, bufferUnit);
+
                             break;
                         case SPEARMENS:
-                            players[i].units.put(unitKey, new Spearmens(StringMaster.getFractionByString(fraction), unitY, unitX));
-                            bufferUnit = players[i].units.get(unitKey);
-                            bufferUnit.unitHP = unitHP;
-                            bufferUnit.unitHP = unitSteps;
+                            bufferUnit = new Spearmens(StringConverter.getFractionByString(fraction), unitY, unitX);
+                            bufferUnit.unitHP = unitHP ;
+                            bufferUnit.unitSteps = unitSteps;
                             GameLogic.setUnitAttack(bufferUnit);
                             GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
+                            players[i].units.put(unitKey, bufferUnit);
                             break;
                         case CAMEL_WARRIOR:
-                            players[i].units.put(unitKey, new CamelWarrior(StringMaster.getFractionByString(fraction), unitY, unitX));
-                            bufferUnit = players[i].units.get(unitKey);
-                            bufferUnit.unitHP = unitHP;
-                            bufferUnit.unitHP = unitSteps;
+                            bufferUnit = new CamelWarrior(StringConverter.getFractionByString(fraction), unitY, unitX);
+                            bufferUnit.unitHP = unitHP ;
+                            bufferUnit.unitSteps = unitSteps;
                             GameLogic.setUnitAttack(bufferUnit);
                             GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
+                            players[i].units.put(unitKey, bufferUnit);
                             break;
                     }
                     glMap[unitY][unitX].unitOn = true;
                 } while (cursor.moveToNext());
             }
+
+
+            int cityXIndex;
+            int cityYIndex;
+            int cityNameIndex;
+            int cityFractionIndex;
+            int cityAffectAreaIndex;
+            int cityHPIndex;
+
+            int cityX;
+            int cityY;
+            String cityName;
+            String cityFraction;
+            int cityAffectArea;
+            int cityHP;
+
+            for (int i = 0; i < players.length ; i++) {
+                selection = DBHelper.KEY_CITY_FRACTION + " = " + zn + players[i].fr.toString().toLowerCase()+ zn ;
+
+                cursor = database.query(DBHelper.TABLE_CITIES, null, selection, null, null, null, null);
+                cursor.moveToFirst();
+
+                cityXIndex = cursor.getColumnIndex(DBHelper.KEY_CITY_X);
+                cityYIndex = cursor.getColumnIndex(DBHelper.KEY_CITY_Y);
+                cityNameIndex =  cursor.getColumnIndex(DBHelper.KEY_CITY_NAME);
+                cityFractionIndex =  cursor.getColumnIndex(DBHelper.KEY_CITY_FRACTION);
+                cityAffectAreaIndex =  cursor.getColumnIndex(DBHelper.KEY_AFFECT_AREA);
+                cityHPIndex =  cursor.getColumnIndex(DBHelper.KEY_CITY_HP);
+
+                do{
+                    cityX = cursor.getInt(cityXIndex);
+                    cityY = cursor.getInt(cityYIndex);
+                    cityName = cursor.getString(cityNameIndex);
+                    cityFraction = cursor.getString(cityFractionIndex);
+                    cityAffectArea = cursor.getInt(cityAffectAreaIndex);
+                    cityHP = cursor.getInt(cityHPIndex);
+
+                    String cityKey;
+                    cityKey = cityY + "_" + cityX;
+
+                    City bufferCity = new City(city, StringConverter.getFractionByString(cityFraction),cityX,cityY);
+                    bufferCity.name = cityName;
+                    bufferCity.affectArea = cityAffectArea;
+                    bufferCity.cityHP = cityHP;
+
+                    players[i].cities.put(cityKey,bufferCity);
+                    glMap[cityY][cityX].cityOn = true;
+                }while (cursor.moveToNext());
+            }
+
             cursor.close();
             database.close();
         }
-        public void  saveGameToDatabase(){
-            SQLiteDatabase database = dbHelper.getWritableDatabase();
-            dbHelper.onUpgrade(database, dbHelper.DATABASE_VERSION, dbHelper.DATABASE_VERSION);
 
-            ContentValues map_contentValues = new ContentValues();
-
-            Cell[][] glMap = m.getMap();
-            String terrain;
-            String typeOfCell;
-            String territoryOf;
-
-
-            for (int y = 0; y < m.getMaxY() ; y++) {
-                for (int x = 0; x < m.getMaxX(); x++) {
-                    terrain = glMap[y][x].getTerrain().toString().toLowerCase();
-                    typeOfCell = glMap[y][x].getTypeOfCell().toString().toLowerCase();
-                    territoryOf = glMap[y][x].territoryOf.toString().toLowerCase();
-
-                    map_contentValues.put(DBHelper.KEY_CELL_Y,y);
-                    map_contentValues.put(DBHelper.KEY_CELL_X,x);
-                    map_contentValues.put(DBHelper.KEY_TERRAIN,terrain);
-                    map_contentValues.put(DBHelper.KEY_TYPE_OF_CELL,typeOfCell);
-                    map_contentValues.put(DBHelper.KEY_TERRITORY_OF,territoryOf);
-
-                    database.insert(DBHelper.TABLE_MAP,null,map_contentValues);
-
-                    map_contentValues.clear();
-                }
-            }
-
-
-
-
-            ContentValues units_contentValues = new ContentValues();
-
-            String typeOfUnit;
-            String fraction;
-
-
-
-            Map<String, Unit> allUnits = new HashMap<>();
-            Unit bufferUnit;
-
-            for (int i = 0; i < players.length ; i++) {
-                allUnits.putAll(players[i].units);
-
-            }
-
-            for (Map.Entry<String, Unit> playersUnit: allUnits.entrySet()) // дописать восстановление здоровья на дружественной территории
-            {
-                bufferUnit = playersUnit.getValue();
-                typeOfUnit = bufferUnit.getType().toString().toLowerCase();
-                fraction = bufferUnit.fraction.toString().toLowerCase();
-
-                units_contentValues.put(DBHelper.KEY_UNIT_Y,bufferUnit.posY);
-                units_contentValues.put(DBHelper.KEY_UNIT_X,bufferUnit.posX);
-                units_contentValues.put(DBHelper.KEY_TYPE_OF_UNIT, typeOfUnit);
-                units_contentValues.put(DBHelper.KEY_FRACTION,fraction);
-                units_contentValues.put(DBHelper.KEY_UNIT_HP,bufferUnit.unitHP);
-                units_contentValues.put(DBHelper.KEY_UNIT_STEPS,bufferUnit.unitSteps);
-
-                database.insert(DBHelper.TABLE_UNITS,null,units_contentValues);
-
-                units_contentValues.clear();
-
-            }
-
-            database.close();
-
-
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            String info  =1 + "" ;
-            byte[] buffer = info.getBytes();
-            try {
-                bos.write(buffer);
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-
-
-            try{
-                FileOutputStream fos = new FileOutputStream("launching_information.txt");
-                bos.writeTo(fos);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
     }
 
 }

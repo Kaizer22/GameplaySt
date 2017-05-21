@@ -6,7 +6,7 @@ import com.example.denis.gamestrategy.Gameplay.Units.Spearmens;
  * Created by denis on 11.04.17.
  */
 
-public class StringMaster {
+public class StringConverter {
 
     public static String getTerrainOnRussian(Cell.Terrain terrain){
         switch (terrain) {
@@ -61,5 +61,46 @@ public class StringMaster {
                 return t;
         }
         return Unit.TypeOfUnit.SPEARMENS;
+    }
+
+    public static String getFractionOnRussian(Player.Fraction f ){
+        switch(f){
+            case ZULU:
+                return "Зулусы";
+            case BUSHMAN:
+                return "Бушмены";
+            case LUBA:
+                return "Луба";
+            case MASAI:
+                return "Масаи";
+            case PYGMY:
+                return "Пигмеи";
+            case NUER:
+                return "Нуэр";
+            case YORUBA:
+                return "Йоруба";
+            case ASHANTI:
+                return "Ашанти";
+            case NUBA:
+                return "Нуба";
+            case HAUSA:
+                return "Хауса";
+            case DOGON:
+                return "Догоны";
+            case AMHARA:
+                return "Амхара";
+            case FULBE:
+                return "Фульбе";
+            case TUAREG:
+                return  "Туареги";
+            case BERBER:
+                return "Берберы";
+            case ADVANSED_NATIONS:
+                return "Развитые нации";
+            case REBELS:
+                return "Мятежники";
+            default:
+                return "";
+        }
     }
 }

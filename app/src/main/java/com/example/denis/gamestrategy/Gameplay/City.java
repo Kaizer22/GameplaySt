@@ -5,13 +5,14 @@ package com.example.denis.gamestrategy.Gameplay;
  */
 
 public class City {
-    String name;
+    String name = "default";
     public Player.Fraction fraction;
     private Texture texture;
     int affectArea;
     int posX,posY;
 
-    int cityHP;
+    int cityHP = 10;
+    int cityMaxHP = 10 ;
 
     public void setSize(int width,int height){
         texture.resizeTexture(width,height);

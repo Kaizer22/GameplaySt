@@ -52,7 +52,7 @@ public class Drawer {
         canvas.drawBitmap(rb.getPowerScoreIcon().getBitmap(), drx, dry, paint);
         drx+=rb.iconSize;
         canvas.drawText(rb.powerScore+" ",drx,dryText,paint);
-        //canvas.drawText(ir.message, ir.x + canvas.getWidth() / 20, ir.y + ir.textSize, paint);
+
     }
 
     public void drawNextTurnButton(GameView.NextTurnButton ntb, Canvas canvas){
@@ -62,7 +62,7 @@ public class Drawer {
             canvas.drawBitmap(ntb.buttonTexture.getBitmap(),ntb.x,ntb.y,paint);
     }
 
-    public void drawSaveExitButton(GameView.SaveExitButton seb, Canvas canvas){
+    public void drawSaveExitButton(GameView.SaveButton seb, Canvas canvas){
         if (seb.isPressed)
             canvas.drawBitmap(seb.pressedButtonTexture.getBitmap(),seb.x,seb.y,paint);
         else
@@ -94,7 +94,7 @@ public class Drawer {
         Map <String, City> allCityes =  new HashMap<>();
         for (int i = 0; i < players.length ; i++) {
             allUnits.putAll(players[i].units);
-            allCityes.putAll(players[i].cityes);
+            allCityes.putAll(players[i].cities);
         }
 
         Cell[][] m = glGlobalMap.getMap();

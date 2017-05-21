@@ -68,45 +68,8 @@ public class GlobalMap {
         }
     }
 
-    public void loadMap(final AssetManager am, final Texture[] textures) {
-
-        //количество клеток в строке и в столбце  в текстовом документе
-                try{
-
-                    InputStream in = am.open("map");
-                    Scanner sc = new Scanner(in);
-                    int buf;
-
-                    maxX = sc.nextInt();
-                    sc.nextLine();
-                    maxY = sc.nextInt();
-                    sc.nextLine();
-                    map = new Cell[maxY][maxX];
-
-                    while(sc.hasNext()) {
-
-                        for (int j = 0; j < maxY; j++) {
-                            for (int i = 0; i < maxX; i++) {
-
-                                buf = sc.nextInt();
-                                map[j][i] = new Cell();
-                                //switch(buf){map[j][i].setTerrain();}
 
 
-                                }
-                            }
-                            sc.nextLine();
-                        }
-                    sc.close();
-                    in.close();
-
-                }catch(FileNotFoundException e){
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-    }
 
     public void generateMap(AssetManager am,Player[] players, Texture city){
         MapGenerator mg = new MapGenerator();
@@ -347,13 +310,13 @@ public class GlobalMap {
                     y = (int) (Math.random() * (maxY-2));
                     if (map[y][x].getTerrain() != Cell.Terrain.WATER && map[y][x].territoryOf == Player.Fraction.NONE && !map[y][x].cityOn) {
                         cityKey = y + "_" + x;
-                        players[i].cityes.put(cityKey, new City(city, players[i].fr, x, y));
-                        GameLogic.makeCityTerritory(glM, players[i].cityes.get(cityKey));
+                        players[i].cities.put(cityKey, new City(city, players[i].fr, x, y));
+                        GameLogic.makeCityTerritory(glM, players[i].cities.get(cityKey));
                         map[y][x].cityOn = true;
                         cityIsCreated = true;
 
                         x --;
-                        y --;
+                        //y ;
                         unitKey = y+"_"+x;
                         players[i].units.put(unitKey,new Spearmens(players[i].fr, y, x)); //добавить больше юнитов
                         GameLogic.setUnitDefense(players[i].units.get(unitKey), map[y][x].cellCoeff);

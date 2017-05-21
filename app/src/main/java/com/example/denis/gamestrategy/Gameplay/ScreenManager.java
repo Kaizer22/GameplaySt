@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
@@ -44,83 +43,6 @@ public class ScreenManager {
     }
 
 
-
-    public void loadCityMap(Player player, GlobalMap glM, Texture city, AssetManager am) {
-        Cell[][] map = glM.getMap();
-        String fileName = player.getFractionName()+"_city_map";
-        String cityKey;
-        try {
-
-            InputStream in = am.open(fileName);
-            Scanner sc = new Scanner(in);
-            int buf;
-
-            for (int i = 0; i < glM.getMaxY(); i++) {
-                for (int j = 0; j < glM.getMaxX(); j++) { //прим. размер карты городов должен совпадать с размером карты!
-                    buf = sc.nextInt();
-
-                    if (buf == 1) {
-                        cityKey = i + "_" + j;
-                        player.cityes.put(cityKey, new City(city, player.fr, j, i));
-                        ; //добавить больше юнитов
-                        GameLogic.makeCityTerritory(glM, player.cityes.get(cityKey));
-                        map[i][j].cityOn = true;
-                    }
-
-                }
-                sc.nextLine();
-
-            }
-            in.close();
-            sc.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-
-
-
-    public void loadUnitMap(Player player,GlobalMap glM,  AssetManager am) {
-        Cell[][] map = glM.getMap();
-        String fileName = player.getFractionName()+"_"+"unit_map";
-        String unitKey;
-        try {
-
-            InputStream in = am.open(fileName);
-            Scanner sc = new Scanner(in);
-            int buf;
-
-            for (int i = 0; i < glM.getMaxY(); i++) {
-                for (int j = 0; j < glM.getMaxX(); j++) { //прим. размер карты юнитов должен совпадать с размером карты!
-                    buf = sc.nextInt();
-                    unitKey = i + "_" + j;
-                    switch (buf) {
-                        case 0: //разобраться с индексами для текстур юнитов!
-                            player.units.put(unitKey, new ArmoredVehicle(player.fr, i, j)); //добавить больше юнитов
-                            GameLogic.setUnitDefense(player.units.get(unitKey), map[i][j].cellCoeff);
-                            GameLogic.setUnitAttack(player.units.get(unitKey));
-                            map[i][j].unitOn = true;
-                            break;
-                        case 1:
-                            player.units.put(unitKey, new CamelWarrior(player.fr, i, j)); //добавить больше юнитов
-                            GameLogic.setUnitDefense(player.units.get(unitKey), map[i][j].cellCoeff);
-                            GameLogic.setUnitAttack(player.units.get(unitKey));
-                            map[i][j].unitOn = true;
-                            break;
-                    }
-                }
-                sc.nextLine();
-
-            }
-            in.close();
-            sc.close();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public void chooseUnit(Unit unit, InfoBar ib){
@@ -162,7 +84,7 @@ public class ScreenManager {
 
         for (int i = 0; i < players.length ; i++) {
             allUnits.putAll(players[i].units);
-            allCityes.putAll(players[i].cityes);
+            allCityes.putAll(players[i].cities);
             allPlayers.put(players[i].fr.toString().toLowerCase(),players[i]);
         }
 
@@ -224,7 +146,7 @@ public class ScreenManager {
 
         }else{
             infoBar.message = c.getInfoAboutCell();
-            infoBar.message += "   ("+glcX.toString()+";"+glcY.toString()+") "+c.cityOn;
+            infoBar.message += "  ("+glcX.toString()+";"+glcY.toString()+")";
         }
 
         //Integer f = c.getcWidth();

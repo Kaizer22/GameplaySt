@@ -12,14 +12,12 @@ public class Cell {
 
     public double cellCoeff;
 
-    //public Unit unitOnIt;
-   // public City cityOnIt;
 
     public boolean cityOn;
     public boolean unitOn;
     public boolean moveOpportunityMarkerOnIt;
     public boolean attackMarkerOnIt;
-    //public boolean isSomeonsTerritory;
+
 
     public Cell(){
         territoryOf = Player.Fraction.NONE;
@@ -42,8 +40,8 @@ public class Cell {
 
     public String getInfoAboutCell(){
         String info;
-        info = StringMaster.getTerrainOnRussian(terrain);
-        info += "  " + typeOfCell.toString() +" "+ territoryOf.toString(); // для отладки
+        info = StringConverter.getTerrainOnRussian(terrain);
+        info += "  " + StringConverter.getFractionOnRussian(territoryOf);
         return info;
     }
 

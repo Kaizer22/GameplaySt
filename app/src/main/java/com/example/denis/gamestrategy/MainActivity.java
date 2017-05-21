@@ -1,24 +1,22 @@
 package com.example.denis.gamestrategy;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.example.denis.gamestrategy.Gameplay.Cell;
 import com.example.denis.gamestrategy.Gameplay.DBHelper;
-import com.example.denis.gamestrategy.Gameplay.GameLogic;
 import com.example.denis.gamestrategy.Gameplay.GameplayActivity;
-import com.example.denis.gamestrategy.Gameplay.GlobalMap;
-import com.example.denis.gamestrategy.Gameplay.StringMaster;
-import com.example.denis.gamestrategy.Gameplay.Unit;
-import com.example.denis.gamestrategy.Gameplay.Units.ArmoredVehicle;
-import com.example.denis.gamestrategy.Gameplay.Units.CamelWarrior;
-import com.example.denis.gamestrategy.Gameplay.Units.Spearmens;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,12 +26,16 @@ import java.util.Scanner;
 public class MainActivity extends AppCompatActivity {
     public AssetManager am;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
     }
+
+
+
 
     public void newGame(View view){
         Intent chooseActivity = new Intent(this, ChooseActivity.class);
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public void options(View view){
         Intent optionActivity = new Intent(this, OptionActivity.class);
         startActivity(optionActivity);
-        //showMeDatabase();
+        showMeDatabase();
         finish();
 
     }
@@ -139,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         unitXIndex = units_cursor.getColumnIndex(DBHelper.KEY_UNIT_X);
         unitYIndex = units_cursor.getColumnIndex(DBHelper.KEY_UNIT_Y);
         typeOfUnitIndex = units_cursor.getColumnIndex(DBHelper.KEY_TYPE_OF_UNIT);
-        fractionIndex = units_cursor.getColumnIndex(DBHelper.KEY_FRACTION);
+        fractionIndex = units_cursor.getColumnIndex(DBHelper.KEY_UNIT_FRACTION);
         unitHPIndex = units_cursor.getColumnIndex(DBHelper.KEY_UNIT_HP);
         unitsStepsIndex = units_cursor.getColumnIndex(DBHelper.KEY_UNIT_STEPS);
 
