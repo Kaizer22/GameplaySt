@@ -13,11 +13,15 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "gameplayDB";
 
+    public static final String TABLE_INFO = "info";
     public static final String TABLE_MAP = "map";
     public static final String TABLE_UNITS = "units";
     public static final String TABLE_CITIES = "cities";
 
     public static final String KEY_ID = "_id";
+
+    public static final String KEY_NO_COMPUTER_PLAYER = "no_computer_player";
+    public static final String KEY_MAP_SIZE = "map_size";
 
     public static final String KEY_CELL_X = "x";
     public static final String KEY_CELL_Y = "y";
@@ -48,6 +52,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        String createTableInfo = "CREATE TABLE " + TABLE_INFO +
+                "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                KEY_NO_COMPUTER_PLAYER +" INTEGER NOT NULL, "+
+                KEY_MAP_SIZE +" INTEGER NOT NULL)";
+
         String createTableMap = "CREATE TABLE " + TABLE_MAP +
                 "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
                 KEY_CELL_X +" INTEGER NOT NULL, "+
@@ -76,6 +86,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_CITY_HP + " INTEGER NOT NULL)";
 
 
+        db.execSQL(createTableInfo);
         db.execSQL(createTableMap);
         db.execSQL(createTableUnits);
         db.execSQL(createTableCityes);
@@ -85,6 +96,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_INFO);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MAP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_UNITS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CITIES);

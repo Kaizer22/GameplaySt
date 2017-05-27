@@ -84,6 +84,8 @@ public abstract class  GameLogic {
                 if (unit.fraction == glMap[unit.posY][unit.posX].territoryOf){
                     if (unit.unitHP < unit.unitMaxHP)
                         unit.unitHP += 1.0/10*unit.unitMaxHP;
+                        setUnitAttack(unit);
+                        setUnitDefense(unit,glMap[unit.posY][unit.posX].cellCoeff);
                     if (unit.unitHP > unit.unitMaxHP)
                         unit.unitHP = unit.unitMaxHP;
 

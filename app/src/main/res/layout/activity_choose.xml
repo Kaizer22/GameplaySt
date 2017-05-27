@@ -123,10 +123,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/button_continue_169x50"
-                    android:id="@+id/button_continue2"
+                    android:id="@+id/button_continue_map_options"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:onClick="startNewGame"
+                    android:onClick="toMapOptionsActivity"
                     android:background="@android:drawable/list_selector_background" />
             </RelativeLayout>
         </LinearLayout>

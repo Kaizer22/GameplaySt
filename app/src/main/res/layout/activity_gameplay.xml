@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
 
     android:background="@drawable/loading_background"
-    tools:context="com.example.denis.gamestrategy.LoadingActivity">
+    tools:context=".Gameplay.GameplayActivity">
 
     <ProgressBar
         android:id="@+id/progressBar3"

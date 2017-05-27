@@ -72,8 +72,16 @@ public class ScreenManager {
 
         unit.posXOnScreen = cx;
         unit.posYOnScreen = cy;
-        ib.message ="("+unit.nameOfUnit + ") З(%)/А/Защ./Ш --- " + (int)(unit.unitHP/unit.unitMaxHP*100) +"/"+ (int)(unit.unitAttack)+"/"+(int)(unit.unitDefense) +"/"+ unit.unitSteps;   ;
+        ib.message = unit.getInfoAboutUnit();
 
+    }
+
+    public void chooseComputerCity(City city,InfoBar infoBar){
+        infoBar.message = city.getInfoAboutCity();
+    }
+
+    public void choosePlayerCity(City city, InfoBar infoBar){
+        infoBar.message = city.getInfoAboutCity();
     }
 
     public void chooseCell(Player[] players,Player player,GlobalMap glMap, InfoBar infoBar,int screenWidth,int screenHeight,int x,int y){
@@ -126,7 +134,7 @@ public class ScreenManager {
             }else{
                 GameLogic.setUnitDefense(choosenUnit, glM[choosenUnit.posY][choosenUnit.posX].cellCoeff);
                 GameLogic.setUnitAttack(choosenUnit);
-                GameLogic.setUnitDefense(choosenUnit, glM[attacked.posY][attacked.posX].cellCoeff);
+                GameLogic.setUnitDefense(attacked, glM[attacked.posY][attacked.posX].cellCoeff);
                 GameLogic.setUnitAttack(attacked);
             }
 
@@ -140,9 +148,16 @@ public class ScreenManager {
                 chooseUnit(unit,infoBar);
 
         }else if(c.moveOpportunityMarkerOnIt) {
-            createMarkers(glMap,allUnits, false);
-            player.moveUnit(choosenUnit,glM,glcX,glcY);
-            GameLogic.setUnitDefense(choosenUnit,c.cellCoeff);
+            createMarkers(glMap, allUnits, false);
+            player.moveUnit(choosenUnit, glM, glcX, glcY);
+            GameLogic.setUnitDefense(choosenUnit, c.cellCoeff);
+        }else if (c.cityOn){
+            City city = allCityes.get(cellKey);
+            if (city.fraction == player.fr)
+                choosePlayerCity(city,infoBar);
+            else
+                chooseComputerCity(city,infoBar);
+
 
         }else{
             infoBar.message = c.getInfoAboutCell();
@@ -162,6 +177,7 @@ public class ScreenManager {
         int maxY = glMap.getMaxY() , maxX = glMap.getMaxX() ;
         Cell[][] map = glMap.getMap();
         Unit unit;
+        City city;
         int ux,uy;
 
         if (choosenUnit.isShip){
@@ -174,7 +190,7 @@ public class ScreenManager {
 
                 if (uy + i < maxY  && ux + i < maxX ) {
                     unit = allUnits.get((uy+i)+"_"+(ux+i));
-                    if (map[uy + i][ux + i].unitOn  && unit.fraction != choosenUnit.fraction)
+                    if ((map[uy + i][ux + i].unitOn  && unit.fraction != choosenUnit.fraction) || (map[uy + i][ux + i].cityOn  && unit.fraction != choosenUnit.fraction))
                         glMap.setAttackMarker(uy + i, ux + i, isMarker);
                     else {
                         glMap.setMoveOpportunityMarker(uy + i, ux + i, isMarker);

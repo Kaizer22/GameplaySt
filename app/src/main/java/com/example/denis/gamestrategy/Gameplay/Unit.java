@@ -60,9 +60,14 @@ public abstract class Unit {
         GameLogic.getDamage(attacked,this);
         //Log.d("Whatch here",
 
+    }
 
+    public void attack(City attacked){
 
+    }
 
+    public String getInfoAboutUnit(){
+        return "("+this.nameOfUnit + ") З(%)/А/Защ./Ш --- " + (int)(this.unitHP/this.unitMaxHP*100) +"/"+ (int)(this.unitAttack)+"/"+(int)(this.unitDefense) +"/"+ this.unitSteps;
     }
 
     public enum TypeOfUnit {

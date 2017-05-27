@@ -10,7 +10,7 @@
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
             android:name=".Gameplay.GameplayActivity"
-            android:screenOrientation="userLandscape"></activity>
+            android:screenOrientation="userLandscape" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="userLandscape">
@@ -23,8 +23,12 @@
         <activity
             android:name=".ChooseActivity"
             android:screenOrientation="userLandscape" />
-        <activity android:name=".OptionActivity"
+        <activity
+            android:name=".OptionActivity"
             android:screenOrientation="userLandscape" />
+        <activity android:name=".MapOptionActivity"
+            android:screenOrientation="userLandscape" />
+
     </application>
 
 </manifest>

@@ -17,6 +17,7 @@ import java.util.Scanner;
 public class GlobalMap {
     private Cell[][] map;
     private int maxX ,maxY ;
+    private int mapPattern;
 
 
     GlobalMap(int size){
@@ -25,6 +26,10 @@ public class GlobalMap {
     }
     public int getMaxX(){return maxX;}
     public int getMaxY(){return maxY;}
+
+    public void setMapPattern(int mP){
+        mapPattern = mP;
+    }
 
     public void updateParam(){
         maxX = map[0].length;
@@ -175,7 +180,7 @@ public class GlobalMap {
         private void makePattern(final AssetManager am, Cell[][] map, int step){ //размеры карты должны быть кратны step
             try{
 
-                InputStream in = am.open("map_pattern1");   //Pattern1
+                InputStream in = am.open("map_pattern" + mapPattern);
                 Scanner sc = new Scanner(in);
                 Cell.Terrain t ;
                 int buf;
@@ -288,7 +293,7 @@ public class GlobalMap {
         }
 
         public void generateMap(AssetManager am,int maxXY) {
-            int step = maxXY / 8;
+            int step = maxXY/  8;
 
             makePattern(am,map,step); //подготовка шаблона с заданной детализацией
             step /= 2;                //увеличение детализации
@@ -315,7 +320,7 @@ public class GlobalMap {
                         map[y][x].cityOn = true;
                         cityIsCreated = true;
 
-                        x --;
+                        //x --;
                         //y ;
                         unitKey = y+"_"+x;
                         players[i].units.put(unitKey,new Spearmens(players[i].fr, y, x)); //добавить больше юнитов

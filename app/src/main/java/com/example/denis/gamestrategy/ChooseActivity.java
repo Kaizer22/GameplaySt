@@ -137,11 +137,11 @@ public class ChooseActivity extends AppCompatActivity {
 
     }
 
-    public void startNewGame(View view){
-        Intent gameplayActivity = new Intent(this, GameplayActivity.class);
-        gameplayActivity.putExtra("choosenTribe",choosenTribe-1);
-        gameplayActivity.putExtra("isNewGame",true);
-        startActivity(gameplayActivity);
+    public void toMapOptionsActivity(View view){
+        Intent mapOptionsActivity = new Intent(this, MapOptionActivity.class);//GameplayActivity.class);
+        mapOptionsActivity.putExtra("choosenTribe",choosenTribe-1);
+        mapOptionsActivity.putExtra("isNewGame",true);
+        startActivity(mapOptionsActivity);
         finish();
     }
 }

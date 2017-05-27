@@ -11,8 +11,9 @@ public class City {
     int affectArea;
     int posX,posY;
 
-    int cityHP = 10;
-    int cityMaxHP = 10 ;
+    double cityHP ;
+    double cityMaxHP = 100 ;
+
 
     public void setSize(int width,int height){
         texture.resizeTexture(width,height);
@@ -23,9 +24,12 @@ public class City {
         return texture;
     }
 
-
+    public String getInfoAboutCity(){
+        return "("+ name + ")  " + StringConverter.getFractionOnRussian(fraction) + " З - " + (int)(cityMaxHP/cityHP*100)+"%" ;
+    }
 
     public City(Texture t, Player.Fraction fr, int pX, int pY){
+        cityHP = cityMaxHP;
         fraction = fr;
         texture = t;
         affectArea = 2;

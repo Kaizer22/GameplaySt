@@ -1,6 +1,7 @@
 package com.example.denis.gamestrategy.Gameplay;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
@@ -17,11 +18,15 @@ import com.example.denis.gamestrategy.Gameplay.Units.CamelWarrior;
 import com.example.denis.gamestrategy.Gameplay.Units.Spearmens;
 import com.example.denis.gamestrategy.R;
 
-public class GameplayActivity extends AppCompatActivity {
-    Player[] players;
-    GlobalMap globalMap;
-    int mapSize = 64;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Scanner;
 
+public class GameplayActivity extends AppCompatActivity {
+    public Player[] players;
+    public GlobalMap globalMap;
+    int mapSize;
+    int mapPattern = 1;
     Texture city;
 
     int noComputerPlayer;
@@ -33,23 +38,35 @@ public class GameplayActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         isNewGame = i.getBooleanExtra("isNewGame",false);
-        noComputerPlayer =  i.getIntExtra("choosenTribe",0);
-
-        createPlayers();
 
         city = new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.city_early));
-
-        globalMap = new GlobalMap(mapSize);
 
         Log.d("AAAAAAAAAAAAAAAAAAAAA",noComputerPlayer+" ");
         setContentView(R.layout.activity_gameplay);
 
         if (!isNewGame) {
-            globalMap.newMap();
+
+
+
+            Integer mp = mapSize;
+            Log.d("AAAAAAAAAAAAASSSSSSSSSS", mp.toString());
+
+
             DBHelper dbHelper = new DBHelper(this);
-            DBLoader dbLoader = new DBLoader(dbHelper, players, globalMap);
+            DBLoader dbLoader = new DBLoader(dbHelper);
             dbLoader.execute();
+
         }else {
+
+            mapSize = i.getIntExtra("choosenSize",32);
+            mapPattern = i.getIntExtra("choosenPattern",1);
+            noComputerPlayer =  i.getIntExtra("choosenTribe",0);
+
+            createPlayers();
+
+            globalMap = new GlobalMap(mapSize);
+            globalMap.setMapPattern(mapPattern);
+
             GameView game = new GameView(this, noComputerPlayer, isNewGame, globalMap, players);
             setContentView(game);
         }
@@ -76,13 +93,11 @@ public class GameplayActivity extends AppCompatActivity {
 
     public class DBLoader extends AsyncTask<Void,Void,Void> {
         DBHelper dbHelper;
-        Player[] players;
-        GlobalMap m;
 
-        public DBLoader(DBHelper dbH, Player[] allPlayers, GlobalMap glM){
+
+        public DBLoader(DBHelper dbH){
             dbHelper = dbH;
-            players = allPlayers;
-            m = glM;
+
 
         }
 
@@ -105,11 +120,26 @@ public class GameplayActivity extends AppCompatActivity {
 
         public void loadGameFromDatabase() {
             SQLiteDatabase database = dbHelper.getReadableDatabase();
-            Cursor cursor = database.query(DBHelper.TABLE_MAP, null, null, null, null, null, null);
+
+            Cursor cursor = database.query(DBHelper.TABLE_INFO, null, null, null, null, null, null);
+            cursor.moveToFirst();
+            int noComputerPlayerIndex = cursor.getColumnIndex(DBHelper.KEY_NO_COMPUTER_PLAYER);
+            int mapSizeIndex = cursor.getColumnIndex(DBHelper.KEY_MAP_SIZE);
+
+            mapSize = cursor.getInt(mapSizeIndex);
+
+            globalMap = new GlobalMap(mapSize);
+            globalMap.newMap();
+            noComputerPlayer = cursor.getInt(noComputerPlayerIndex);
+
+            createPlayers();
+
+
+            cursor = database.query(DBHelper.TABLE_MAP, null, null, null, null, null, null);
             cursor.moveToFirst();
 
 
-            Cell[][] glMap = m.getMap();
+            Cell[][] glMap = globalMap.getMap();
             int cx;
             int cy;
             String terrain;

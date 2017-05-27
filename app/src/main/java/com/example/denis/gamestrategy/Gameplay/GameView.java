@@ -11,8 +11,12 @@ import android.view.View;
 
 import com.example.denis.gamestrategy.R;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 /**
  * Created by denis on 19.02.17.
@@ -349,7 +353,7 @@ public class GameView extends View{
         }
         @Override
         public  void makeAction(){
-            DBSaver dbM = new DBSaver(ct,dbHelper,players,m);
+            DBSaver dbM = new DBSaver(ct, dbHelper, players, m, noComputerPlayer);
             dbM.execute();
         }
     }
