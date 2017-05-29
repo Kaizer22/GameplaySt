@@ -26,9 +26,10 @@
         <activity
             android:name=".OptionActivity"
             android:screenOrientation="userLandscape" />
-        <activity android:name=".MapOptionActivity"
+        <activity
+            android:name=".MapOptionActivity"
             android:screenOrientation="userLandscape" />
-
+        <activity android:name=".TestActivity"></activity>
     </application>
 
 </manifest>

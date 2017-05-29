@@ -1,18 +1,22 @@
 package com.example.denis.gamestrategy.Gameplay;
 
+import android.util.Log;
+
 /**
  * Created by denis on 21.03.17.
  */
 
 public class City {
-    String name = "default";
+    String name = "city_name";
     public Player.Fraction fraction;
     private Texture texture;
     int affectArea;
     int posX,posY;
 
     double cityHP ;
-    double cityMaxHP = 100 ;
+    double cityMaxHP = 20 ;
+
+    int cityDefense;
 
 
     public void setSize(int width,int height){
@@ -25,10 +29,11 @@ public class City {
     }
 
     public String getInfoAboutCity(){
-        return "("+ name + ")  " + StringConverter.getFractionOnRussian(fraction) + " З - " + (int)(cityMaxHP/cityHP*100)+"%" ;
+        return "("+ name + ")  " + StringConverter.getFractionOnRussian(fraction) + " З - " + (int)(cityHP/cityMaxHP*100)+"%" + " Защ. - " + cityDefense ;
     }
 
     public City(Texture t, Player.Fraction fr, int pX, int pY){
+        cityDefense = 3;
         cityHP = cityMaxHP;
         fraction = fr;
         texture = t;

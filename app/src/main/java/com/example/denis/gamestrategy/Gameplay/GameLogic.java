@@ -28,6 +28,51 @@ public abstract class  GameLogic {
                 return   2;
         }
     }
+    public static void deleteCityTerritory(GlobalMap glM,City city){
+        int maxY = glM.getMaxY() , maxX = glM.getMaxX() ;
+        Cell[][] map = glM.getMap();
+        for (int i = 0; i <= city.affectArea  ; i++) {
+            if (city.posY + i < maxY  && city.posX + i < maxX) {
+                if (map[city.posY + i][city.posX + i].territoryOf == city.fraction)
+                    glM.setFraction(city.posY + i, city.posX + i, Player.Fraction.NONE);
+
+            }
+            if (city.posY + i < maxY) {
+                if (map[city.posY + i][city.posX].territoryOf == city.fraction)
+                    glM.setFraction(city.posY + i, city.posX, Player.Fraction.NONE);
+            }
+            if (city.posY - i >= 0 && city.posX + i < maxX) {
+                if (map[city.posY - i][city.posX + i].territoryOf == city.fraction){
+                    glM.setFraction(city.posY - i, city.posX + i, Player.Fraction.NONE);
+                }
+            }
+            if (city.posY - i >= 0) {
+                if (map[city.posY - i][city.posX].territoryOf == city.fraction){
+                    glM.setFraction(city.posY - i, city.posX, Player.Fraction.NONE);
+                }
+            }
+            if (city.posY - i >= 0 && city.posX - i >= 0) {
+                if (map[city.posY - i][city.posX - i].territoryOf == city.fraction){
+                    glM.setFraction(city.posY - i, city.posX - i, Player.Fraction.NONE);
+                }
+            }
+            if (city.posX - i >= 0) {
+                if (map[city.posY][city.posX - i].territoryOf == city.fraction) {
+                    glM.setFraction(city.posY, city.posX - i, Player.Fraction.NONE);
+                }
+            }
+            if (city.posY + i< maxY && city.posX - i >= 0) {
+                if (map[city.posY + i][city.posX - i].territoryOf == city.fraction) {
+                    glM.setFraction(city.posY + i, city.posX - i, Player.Fraction.NONE);
+                }
+            }
+            if (city.posX + i < maxX) {
+                if (map[city.posY][city.posX + i].territoryOf == city.fraction) {
+                    glM.setFraction(city.posY, city.posX + i, Player.Fraction.NONE);
+                }
+            }
+        }
+    }
 
     public static void makeCityTerritory(GlobalMap glM, City city) {
         int maxY = glM.getMaxY() , maxX = glM.getMaxX() ;
@@ -70,6 +115,11 @@ public abstract class  GameLogic {
 
             unit2.unitHP -= (unit1.unitAttack - unit2.unitDefense);
         }
+    }
+
+    public static void getDamage(Unit unit, City city){
+        unit.unitHP -= city.cityDefense;
+        city.cityHP -= unit.unitAttack;
     }
 
     public static void nextTurn(Player[] players, GlobalMap glM){

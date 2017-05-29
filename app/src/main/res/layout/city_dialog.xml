@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.denis.gamestrategy.TestActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/city_dialog_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/button_create_spearmans"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/button_onoff_indicator_off"
+                    android:text="Копейщик" />
+
+                <Button
+                    android:id="@+id/button_create_camel_warrior"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/button_onoff_indicator_off"
+                    android:text="Воин на верблюде" />
+
+                <Button
+                    android:id="@+id/button_create_small_bombard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/button_onoff_indicator_off"
+                    android:text="Малая бомбарда" />
+
+                <Button
+                    android:id="@+id/button_create_armored_vehicle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/button_onoff_indicator_on"
+                    android:text="Бронеповозка" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/city_dialog_a_bg"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image_view_mn_box_g"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            app:srcCompat="@android:drawable/btn_dialog" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/city_dialog_b_bg"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image_view_mn_box_r"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            app:srcCompat="@android:drawable/btn_dialog" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/city_HP"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="city_HP"
+                            android:textColor="@color/black"
+                            android:layout_below="@+id/mn_box_g"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true" />
+
+                        <TextView
+                            android:id="@+id/mn_box_g"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="mn_box_g"
+                            android:textColor="@color/black"
+                            android:layout_below="@+id/city_name"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true" />
+
+                        <TextView
+                            android:id="@+id/city_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:text="city_name"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/mn_box_r"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="mn_box_r"
+                            android:textColor="@color/black"
+                            android:layout_above="@+id/city_HP"
+                            android:layout_toRightOf="@+id/city_name"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true" />
+
+                        <TextView
+                            android:id="@+id/city_defense"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="city_defense"
+                            android:textColor="@color/black"
+                            android:layout_below="@+id/city_HP"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/city_dialog_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/info_bar"
+                android:text="Назад"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

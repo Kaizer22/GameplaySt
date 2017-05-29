@@ -19,6 +19,9 @@ public class GlobalMap {
     private int maxX ,maxY ;
     private int mapPattern;
 
+    public int playersCapitalX;
+    public int playersCapitalY;
+
 
     GlobalMap(int size){
         maxX = size;
@@ -76,12 +79,12 @@ public class GlobalMap {
 
 
 
-    public void generateMap(AssetManager am,Player[] players, Texture city){
+    public void generateMap(AssetManager am,Player[] players, Texture city, int noComputerPlayer){
         MapGenerator mg = new MapGenerator();
         newMap();
         mg.generateMap(am,maxY);
         updateParam();
-        mg.generatePlayersInfrastructure(players, city, this);
+        mg.generatePlayersInfrastructure(players, city, this, noComputerPlayer);
 
     }
 
@@ -302,7 +305,7 @@ public class GlobalMap {
 
         }
 
-        public void generatePlayersInfrastructure(Player[] players, Texture city, GlobalMap glM){
+        public void generatePlayersInfrastructure(Player[] players, Texture city, GlobalMap glM, int noComputerPlayer){
             String cityKey;
             String unitKey;
             boolean cityIsCreated;
@@ -319,6 +322,11 @@ public class GlobalMap {
                         GameLogic.makeCityTerritory(glM, players[i].cities.get(cityKey));
                         map[y][x].cityOn = true;
                         cityIsCreated = true;
+
+                        if (i == noComputerPlayer){
+                            playersCapitalY = y;
+                            playersCapitalX = x;
+                        }
 
                         //x --;
                         //y ;

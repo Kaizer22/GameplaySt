@@ -6,4 +6,5 @@
     <color name="easy">#00FF7F</color>
     <color name="normal">#FFFF00</color>
     <color name="hard">#FF0000</color>
+    <color name="black">#000000</color>
 </resources>

@@ -44,7 +44,7 @@
                     <ImageView
                         android:layout_height="match_parent"
                         android:layout_width="wrap_content"
-                        app:srcCompat="@drawable/logo_238x140"
+                        app:srcCompat="@drawable/logo"
                         android:id="@+id/logo"
                         />
                 </TableRow>

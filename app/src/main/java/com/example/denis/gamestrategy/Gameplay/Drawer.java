@@ -133,10 +133,11 @@ public class Drawer {
                     Texture fractionUnit = txM.getTextureByFraction(unit.fraction, TextureManager.TypeOfFractionTexture.UNIT);
                     unitTexture = txM.getUnitTextureByType(unit.getType());
                     drawUnit(canvas, unitTexture, fractionUnit, scM, cx, cy);
-                    if (m[i][j].attackMarkerOnIt)
-                        drawMarker(canvas, txM.attackOpportunityMarker, scM, cx, cy);
+                }
 
-                } else if (m[i][j].moveOpportunityMarkerOnIt) {
+                if (m[i][j].attackMarkerOnIt){
+                    drawMarker(canvas, txM.attackOpportunityMarker, scM, cx, cy);
+                }else if (m[i][j].moveOpportunityMarkerOnIt) {
                     drawMarker(canvas, txM.moveOpportunityMarker, scM, cx, cy);
                 }
             }

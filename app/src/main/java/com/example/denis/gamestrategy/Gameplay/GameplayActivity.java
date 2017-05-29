@@ -1,11 +1,14 @@
 package com.example.denis.gamestrategy.Gameplay;
 
+import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +18,7 @@ import android.widget.ProgressBar;
 
 import com.example.denis.gamestrategy.Gameplay.Units.ArmoredVehicle;
 import com.example.denis.gamestrategy.Gameplay.Units.CamelWarrior;
+import com.example.denis.gamestrategy.Gameplay.Units.SmallBombard;
 import com.example.denis.gamestrategy.Gameplay.Units.Spearmens;
 import com.example.denis.gamestrategy.R;
 
@@ -28,6 +32,7 @@ public class GameplayActivity extends AppCompatActivity {
     int mapSize;
     int mapPattern = 1;
     Texture city;
+
 
     int noComputerPlayer;
     boolean isNewGame;
@@ -43,6 +48,9 @@ public class GameplayActivity extends AppCompatActivity {
 
         Log.d("AAAAAAAAAAAAAAAAAAAAA",noComputerPlayer+" ");
         setContentView(R.layout.activity_gameplay);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
 
         if (!isNewGame) {
 
@@ -67,14 +75,14 @@ public class GameplayActivity extends AppCompatActivity {
             globalMap = new GlobalMap(mapSize);
             globalMap.setMapPattern(mapPattern);
 
-            GameView game = new GameView(this, noComputerPlayer, isNewGame, globalMap, players);
+            GameView game = new GameView(this, noComputerPlayer, isNewGame, globalMap, players,fragmentManager);
             setContentView(game);
         }
     }
 
     public void startGame(View view){
-
-        GameView game = new GameView(this,noComputerPlayer,isNewGame,globalMap,players);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        GameView game = new GameView(this,noComputerPlayer,isNewGame,globalMap,players,fragmentManager);
         setContentView(game);
     }
 
@@ -206,48 +214,58 @@ public class GameplayActivity extends AppCompatActivity {
                 unitsStepsIndex = cursor.getColumnIndex(DBHelper.KEY_UNIT_STEPS);
 
                 do {
-                    unitX = cursor.getInt(unitXIndex);
-                    unitY = cursor.getInt(unitYIndex);
-                    typeOfUnit = cursor.getString(typeOfUnitIndex);
-                    fraction = cursor.getString(fractionIndex);
-                    unitHP = cursor.getDouble(unitHPIndex);
-                    unitSteps = cursor.getInt(unitsStepsIndex);
+                    try {
+                        unitX = cursor.getInt(unitXIndex);
+                        unitY = cursor.getInt(unitYIndex);
+                        typeOfUnit = cursor.getString(typeOfUnitIndex);
+                        fraction = cursor.getString(fractionIndex);
+                        unitHP = cursor.getDouble(unitHPIndex);
+                        unitSteps = cursor.getInt(unitsStepsIndex);
 
-                    Log.d("Database units values " , "\n" +
-                            "("+unitY+" : " + unitX +")"+" "+typeOfUnit+" "+ fraction +" "+ unitHP + " " + unitSteps);
+                        Log.d("Database units values ", "\n" +
+                                "(" + unitY + " : " + unitX + ")" + " " + typeOfUnit + " " + fraction + " " + unitHP + " " + unitSteps);
 
-                    String unitKey;
-                    unitKey = unitY + "_" + unitX;
+                        String unitKey;
+                        unitKey = unitY + "_" + unitX;
 
-                    Unit bufferUnit;
-                    switch (StringConverter.getTypeOfUnitByString(typeOfUnit)) {
-                        case ARMORED_VEHICLE:
-                            bufferUnit = new ArmoredVehicle(StringConverter.getFractionByString(fraction), unitY, unitX);
-                            bufferUnit.unitHP = unitHP ;
-                            bufferUnit.unitSteps = unitSteps;
-                            GameLogic.setUnitAttack(bufferUnit);
-                            GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
-                            players[i].units.put(unitKey, bufferUnit);
+                        Unit bufferUnit;
+                        switch (StringConverter.getTypeOfUnitByString(typeOfUnit)) {
+                            case ARMORED_VEHICLE:
+                                bufferUnit = new ArmoredVehicle(StringConverter.getFractionByString(fraction), unitY, unitX);
+                                bufferUnit.unitHP = unitHP;
+                                bufferUnit.unitSteps = unitSteps;
+                                GameLogic.setUnitAttack(bufferUnit);
+                                GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
+                                players[i].units.put(unitKey, bufferUnit);
 
-                            break;
-                        case SPEARMENS:
-                            bufferUnit = new Spearmens(StringConverter.getFractionByString(fraction), unitY, unitX);
-                            bufferUnit.unitHP = unitHP ;
-                            bufferUnit.unitSteps = unitSteps;
-                            GameLogic.setUnitAttack(bufferUnit);
-                            GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
-                            players[i].units.put(unitKey, bufferUnit);
-                            break;
-                        case CAMEL_WARRIOR:
-                            bufferUnit = new CamelWarrior(StringConverter.getFractionByString(fraction), unitY, unitX);
-                            bufferUnit.unitHP = unitHP ;
-                            bufferUnit.unitSteps = unitSteps;
-                            GameLogic.setUnitAttack(bufferUnit);
-                            GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
-                            players[i].units.put(unitKey, bufferUnit);
-                            break;
-                    }
-                    glMap[unitY][unitX].unitOn = true;
+                                break;
+                            case SPEARMENS:
+                                bufferUnit = new Spearmens(StringConverter.getFractionByString(fraction), unitY, unitX);
+                                bufferUnit.unitHP = unitHP;
+                                bufferUnit.unitSteps = unitSteps;
+                                GameLogic.setUnitAttack(bufferUnit);
+                                GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
+                                players[i].units.put(unitKey, bufferUnit);
+                                break;
+                            case CAMEL_WARRIOR:
+                                bufferUnit = new CamelWarrior(StringConverter.getFractionByString(fraction), unitY, unitX);
+                                bufferUnit.unitHP = unitHP;
+                                bufferUnit.unitSteps = unitSteps;
+                                GameLogic.setUnitAttack(bufferUnit);
+                                GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
+                                players[i].units.put(unitKey, bufferUnit);
+                                break;
+                            case SMALL_BOMBARD:
+                                bufferUnit = new SmallBombard(StringConverter.getFractionByString(fraction), unitY, unitX);
+                                bufferUnit.unitHP = unitHP;
+                                bufferUnit.unitSteps = unitSteps;
+                                GameLogic.setUnitAttack(bufferUnit);
+                                GameLogic.setUnitDefense(bufferUnit, glMap[unitY][unitX].cellCoeff);
+                                players[i].units.put(unitKey, bufferUnit);
+                                break;
+                        }
+                        glMap[unitY][unitX].unitOn = true;
+                    }catch (CursorIndexOutOfBoundsException e){}
                 } while (cursor.moveToNext());
             }
 
@@ -280,23 +298,25 @@ public class GameplayActivity extends AppCompatActivity {
                 cityHPIndex =  cursor.getColumnIndex(DBHelper.KEY_CITY_HP);
 
                 do{
-                    cityX = cursor.getInt(cityXIndex);
-                    cityY = cursor.getInt(cityYIndex);
-                    cityName = cursor.getString(cityNameIndex);
-                    cityFraction = cursor.getString(cityFractionIndex);
-                    cityAffectArea = cursor.getInt(cityAffectAreaIndex);
-                    cityHP = cursor.getInt(cityHPIndex);
+                    try {
+                        cityX = cursor.getInt(cityXIndex);
+                        cityY = cursor.getInt(cityYIndex);
+                        cityName = cursor.getString(cityNameIndex);
+                        cityFraction = cursor.getString(cityFractionIndex);
+                        cityAffectArea = cursor.getInt(cityAffectAreaIndex);
+                        cityHP = cursor.getInt(cityHPIndex);
 
-                    String cityKey;
-                    cityKey = cityY + "_" + cityX;
+                        String cityKey;
+                        cityKey = cityY + "_" + cityX;
 
-                    City bufferCity = new City(city, StringConverter.getFractionByString(cityFraction),cityX,cityY);
-                    bufferCity.name = cityName;
-                    bufferCity.affectArea = cityAffectArea;
-                    bufferCity.cityHP = cityHP;
+                        City bufferCity = new City(city, StringConverter.getFractionByString(cityFraction), cityX, cityY);
+                        bufferCity.name = cityName;
+                        bufferCity.affectArea = cityAffectArea;
+                        bufferCity.cityHP = cityHP;
 
-                    players[i].cities.put(cityKey,bufferCity);
-                    glMap[cityY][cityX].cityOn = true;
+                        players[i].cities.put(cityKey, bufferCity);
+                        glMap[cityY][cityX].cityOn = true;
+                    }catch (CursorIndexOutOfBoundsException e){}
                 }while (cursor.moveToNext());
             }
 

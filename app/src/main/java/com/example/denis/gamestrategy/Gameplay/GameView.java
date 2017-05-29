@@ -1,13 +1,19 @@
 package com.example.denis.gamestrategy.Gameplay;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.denis.gamestrategy.R;
 
@@ -22,14 +28,14 @@ import java.io.OutputStreamWriter;
  * Created by denis on 19.02.17.
  */
 
-public class GameView extends View{
+public class GameView extends View {
 
     final AssetManager am;
     Context ct;
     boolean isNewGame;
     int screenWidth ;
     int screenHeight ;
-    final  int moveMistake = 20;
+    int moveMistake = 20;
     final  int touchMistake = 30;
 
     final int nextTurnButtonSize = 6;
@@ -43,6 +49,9 @@ public class GameView extends View{
 
     ScreenManager scM;
     TextureManager txM ;
+
+    FragmentManager fM;
+
     int startEventMoveX = 0, startEventMoveY = 0,finalEventX = 0,finalEventY = 0, startEventX = 0, startEventY = 0;
 
 
@@ -74,7 +83,7 @@ public class GameView extends View{
 
     }
 
-    public GameView(Context context,int nCP, boolean iNG,GlobalMap map, Player[] allPlayers) {
+    public GameView(Context context, int nCP, boolean iNG, GlobalMap map, Player[] allPlayers, FragmentManager fm) {
         super(context);
         ct = context;
         dbHelper = new DBHelper(context);
@@ -84,6 +93,7 @@ public class GameView extends View{
         m = map;
         players = allPlayers;
         isNewGame = iNG;
+        fM = fm;
     }
 
 
@@ -96,16 +106,19 @@ public class GameView extends View{
         txM = new TextureManager();
         loadTextures();
 
-
-        scM = new ScreenManager(screenWidth, screenHeight, scale);
+        scM = new ScreenManager(screenWidth, screenHeight, scale, getContext(),fM);
+        moveMistake = scM.cellWidth/3;
 
         txM.resizeTextures(scM);
 
         drawer = new Drawer();
 
 
-        if (isNewGame)
-            m.generateMap(am, players, txM.cityTextureEarly);
+        if (isNewGame) {
+            m.generateMap(am, players, txM.cityTextureEarly, noComputerPlayer);
+            Toast.makeText(ct,"Ваш город находится на клетке ("+m.playersCapitalX+";"+m.playersCapitalY+")",Toast.LENGTH_LONG).show();
+        }
+
 
 
 
@@ -118,9 +131,9 @@ public class GameView extends View{
         dbHelper.close();
 
 
+
+
     }
-
-
 
 
 
@@ -152,6 +165,7 @@ public class GameView extends View{
                 break;
 
             case MotionEvent.ACTION_UP:
+
                 finalEventX = (int)event.getX();
                 finalEventY = (int)event.getY();
                 nextTurnButton.isPressed = false;
@@ -303,6 +317,7 @@ public class GameView extends View{
         txM.unitTextures.put("armored_vehicle",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.armored)));
         txM.unitTextures.put("camel_warrior",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.camel_warrior)));
         txM.unitTextures.put("spearmens",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.spearmens)));
+        txM.unitTextures.put("small_bombard",new Texture(BitmapFactory.decodeResource(getResources(),R.drawable.small_bombard)));
     }
 
     class MyButton{

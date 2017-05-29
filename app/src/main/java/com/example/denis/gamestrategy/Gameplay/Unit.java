@@ -63,14 +63,15 @@ public abstract class Unit {
     }
 
     public void attack(City attacked){
+        GameLogic.getDamage(this,attacked);
 
     }
 
     public String getInfoAboutUnit(){
-        return "("+this.nameOfUnit + ") З(%)/А/Защ./Ш --- " + (int)(this.unitHP/this.unitMaxHP*100) +"/"+ (int)(this.unitAttack)+"/"+(int)(this.unitDefense) +"/"+ this.unitSteps;
+        return "("+this.nameOfUnit + ")("+StringConverter.getFractionOnRussian(fraction)+") З(%)/А/Защ./Ш --- " + (int)(this.unitHP/this.unitMaxHP*100) +"/"+ (int)(this.unitAttack)+"/"+(int)(this.unitDefense) +"/"+ this.unitSteps;
     }
 
     public enum TypeOfUnit {
-        ARMORED_VEHICLE, CAMEL_WARRIOR, SPEARMENS
+        ARMORED_VEHICLE, SMALL_BOMBARD, CAMEL_WARRIOR, SPEARMENS
     }
 }

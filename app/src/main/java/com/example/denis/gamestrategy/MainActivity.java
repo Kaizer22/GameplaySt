@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        showMeDatabase();
+        //showMeDatabase();
         setContentView(R.layout.activity_main);
     }
 
@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void options(View view){
-        Intent optionActivity = new Intent(this, OptionActivity.class);
+        Intent optionActivity = new Intent(this,OptionActivity.class); //OptionActivity.class);
         startActivity(optionActivity);
-        showMeDatabase();
+        //showMeDatabase();
         finish();
 
     }
