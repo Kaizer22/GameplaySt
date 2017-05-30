@@ -26,33 +26,74 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/button_create_spearmans"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:drawable/button_onoff_indicator_off"
-                    android:text="Копейщик" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
 
-                <Button
-                    android:id="@+id/button_create_camel_warrior"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:drawable/button_onoff_indicator_off"
-                    android:text="Воин на верблюде" />
+                    <Button
+                        android:id="@+id/button_create_spearmans"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/context_button_bg"
+                        android:text="Копейщик"
+                        android:textColor="@color/black"
+                        android:textSize="18dp"/>
+                </LinearLayout>
 
-                <Button
-                    android:id="@+id/button_create_small_bombard"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:drawable/button_onoff_indicator_off"
-                    android:text="Малая бомбарда" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
 
-                <Button
-                    android:id="@+id/button_create_armored_vehicle"
+                    <Button
+                        android:id="@+id/button_create_camel_warrior"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/context_button_bg"
+                        android:text="Воин на верблюде"
+                        android:textSize="18dp"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:drawable/button_onoff_indicator_on"
-                    android:text="Бронеповозка" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/button_create_small_bombard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/context_button_bg"
+                        android:text="Малая бомбарда"
+                        android:textSize="18dp"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/button_create_armored_vehicle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/context_button_bg"
+                        android:text="Бронеповозка"
+                        android:textSize="18dp"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -79,7 +120,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            app:srcCompat="@android:drawable/btn_dialog" />
+                            app:srcCompat="@android:drawable/ic_menu_manage" />
 
                     </LinearLayout>
 
@@ -95,7 +136,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            app:srcCompat="@android:drawable/btn_dialog" />
+                            app:srcCompat="@android:drawable/ic_menu_preferences" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -113,7 +154,7 @@
                             android:id="@+id/city_HP"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="city_HP"
+                            android:text="Прочность города - "
                             android:textColor="@color/black"
                             android:layout_below="@+id/mn_box_g"
                             android:layout_alignParentLeft="true"
@@ -123,7 +164,7 @@
                             android:id="@+id/mn_box_g"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="mn_box_g"
+                            android:text=""
                             android:textColor="@color/black"
                             android:layout_below="@+id/city_name"
                             android:layout_alignParentLeft="true"
@@ -142,7 +183,7 @@
                             android:id="@+id/mn_box_r"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="mn_box_r"
+                            android:text=""
                             android:textColor="@color/black"
                             android:layout_above="@+id/city_HP"
                             android:layout_toRightOf="@+id/city_name"
@@ -153,7 +194,7 @@
                             android:id="@+id/city_defense"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="city_defense"
+                            android:text="Очки защиты:"
                             android:textColor="@color/black"
                             android:layout_below="@+id/city_HP"
                             android:layout_alignParentLeft="true"
@@ -174,10 +215,10 @@
             <Button
                 android:id="@+id/city_dialog_back"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/info_bar"
                 android:text="Назад"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
         </LinearLayout>
     </LinearLayout>
 

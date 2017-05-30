@@ -22,11 +22,11 @@ public class OptionActivity extends AppCompatActivity {
     public void music(View view){
         ImageButton musicButton = (ImageButton) findViewById(R.id.button_music);
         if(currentMusic) {
-            musicButton.setImageResource(R.drawable.music_off_100x100);
+            musicButton.setImageResource(R.drawable.music_off);
             currentMusic = false;
         }
         else {
-            musicButton.setImageResource(R.drawable.music_on_100x100);
+            musicButton.setImageResource(R.drawable.music_on);
             currentMusic = true;
         }
 
@@ -34,11 +34,11 @@ public class OptionActivity extends AppCompatActivity {
     public void sounds(View view){
         ImageButton soundsButton = (ImageButton) findViewById(R.id.button_sounds);
         if(currentSounds) {
-            soundsButton.setImageResource(R.drawable.sounds_off_100x100);
+            soundsButton.setImageResource(R.drawable.sounds_off);
             currentSounds = false;
         }
         else {
-            soundsButton.setImageResource(R.drawable.sounds_on_100x100);
+            soundsButton.setImageResource(R.drawable.sounds_on);
             currentSounds = true;
         }
 
@@ -46,11 +46,11 @@ public class OptionActivity extends AppCompatActivity {
     public void tips(View view){
         ImageButton tipsButton = (ImageButton) findViewById(R.id.button_tips);
         if(currentTips) {
-            tipsButton.setImageResource(R.drawable.tips_off_100x100);
+            tipsButton.setImageResource(R.drawable.tips_off);
             currentTips = false;
         }
         else {
-            tipsButton.setImageResource(R.drawable.tips_on_100x100);
+            tipsButton.setImageResource(R.drawable.tips_on);
             currentTips = true;
         }
     }

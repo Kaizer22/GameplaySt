@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.denis.gamestrategy.Gameplay.Units.ArmoredVehicle;
@@ -54,6 +55,13 @@ public class CityDialog extends android.support.v4.app.DialogFragment {
             }
         });
 
+        TextView cHP = (TextView) v.findViewById(R.id.city_HP);
+        cHP.setText("Прочность города - " + city.cityHP + "/" + city.cityMaxHP);
+
+        TextView cD = (TextView) v.findViewById(R.id.city_defense);
+        cD.setText("Очки защиты - " + city.cityDefense);
+
+
         final ImageView mbg = (ImageView) v.findViewById(R.id.image_view_mn_box_g);
         final ImageView mbr = (ImageView) v.findViewById(R.id.image_view_mn_box_r);
 
@@ -65,6 +73,8 @@ public class CityDialog extends android.support.v4.app.DialogFragment {
                 if (!globalMap[city.posY][city.posX].unitOn){
                     player.units.put(city.posY+"_"+city.posX,new ArmoredVehicle(player.fr,city.posY,city.posX));
                     globalMap[city.posY][city.posX].unitOn = true;
+                    GameLogic.setUnitDefense(player.units.get(city.posY+"_"+city.posX),globalMap[city.posY][city.posX].cellCoeff);
+                    GameLogic.setUnitAttack(player.units.get(city.posY+"_"+city.posX));
 
                 }else
                     Toast.makeText(v.getContext(),"Клетка занята",Toast.LENGTH_LONG).show();
@@ -80,6 +90,9 @@ public class CityDialog extends android.support.v4.app.DialogFragment {
                 if (!globalMap[city.posY][city.posX].unitOn){
                     player.units.put(city.posY+"_"+city.posX,new CamelWarrior(player.fr,city.posY,city.posX));
                     globalMap[city.posY][city.posX].unitOn = true;
+                    GameLogic.setUnitDefense(player.units.get(city.posY+"_"+city.posX),globalMap[city.posY][city.posX].cellCoeff);
+                    GameLogic.setUnitAttack(player.units.get(city.posY+"_"+city.posX));
+
                 }else
                     Toast.makeText(v.getContext(),"Клетка занята",Toast.LENGTH_LONG).show();
             }
@@ -93,6 +106,9 @@ public class CityDialog extends android.support.v4.app.DialogFragment {
                 if (!globalMap[city.posY][city.posX].unitOn){
                     player.units.put(city.posY+"_"+city.posX,new SmallBombard(player.fr,city.posY,city.posX));
                     globalMap[city.posY][city.posX].unitOn = true;
+                    GameLogic.setUnitDefense(player.units.get(city.posY+"_"+city.posX),globalMap[city.posY][city.posX].cellCoeff);
+                    GameLogic.setUnitAttack(player.units.get(city.posY+"_"+city.posX));
+
                 }else
                     Toast.makeText(v.getContext(),"Клетка занята",Toast.LENGTH_LONG).show();
             }
@@ -106,6 +122,9 @@ public class CityDialog extends android.support.v4.app.DialogFragment {
                 if (!globalMap[city.posY][city.posX].unitOn){
                     player.units.put(city.posY+"_"+city.posX,new Spearmens(player.fr,city.posY,city.posX));
                     globalMap[city.posY][city.posX].unitOn = true;
+                    GameLogic.setUnitDefense(player.units.get(city.posY+"_"+city.posX),globalMap[city.posY][city.posX].cellCoeff);
+                    GameLogic.setUnitAttack(player.units.get(city.posY+"_"+city.posX));
+
                 }else
                     Toast.makeText(v.getContext(),"Клетка занята",Toast.LENGTH_LONG).show();
             }
@@ -120,12 +139,14 @@ public class CityDialog extends android.support.v4.app.DialogFragment {
         window.setLayout((int)(screenHight*0.8),(int)(screenWeight*0.9));
         window.setGravity(Gravity.CENTER);
     }
-        public void setParam(Player pl, Cell[][] glMap, City c, int scH, int scW){
-            player = pl;
-            globalMap = glMap;
-            city = c;
-            screenHight = scH;
-            screenWeight = scW;
-        }
+
+    public void setParam(Player pl, Cell[][] glMap, City c, int scH, int scW){
+
+        player = pl;
+        globalMap = glMap;
+        city = c;
+        screenHight = scH;
+        screenWeight = scW;
+    }
 
 }

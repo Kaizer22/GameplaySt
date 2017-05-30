@@ -40,82 +40,82 @@ public class ChooseActivity extends AppCompatActivity {
                 info.setText(getString(R.string.tribe_1));
                 info.setTextColor(getResources().getColor(R.color.easy));
                 choosenFraction = Player.Fraction.ZULU;
-                tribe.setImageResource(R.drawable.zulu_290x222);
+                tribe.setImageResource(R.drawable.zulu);
                 break;
             case 2:
                 info.setText(getString(R.string.tribe_2));
                 choosenFraction = Player.Fraction.BUSHMAN;
-                tribe.setImageResource(R.drawable.bushman_290x222);
+                tribe.setImageResource(R.drawable.bushman);
                 break;
             case 3:
                 info.setText(getString(R.string.tribe_3));
                 choosenFraction = Player.Fraction.LUBA;
-                tribe.setImageResource(R.drawable.luba_290x222);
+                tribe.setImageResource(R.drawable.luba);
                 break;
             case 4:
                 info.setText(getString(R.string.tribe_4));
                 choosenFraction = Player.Fraction.MASAI;
-                tribe.setImageResource(R.drawable.masai_290x222);
+                tribe.setImageResource(R.drawable.masai);
                 break;
             case 5:
                 info.setText(getString(R.string.tribe_5));
                 info.setTextColor(getResources().getColor(R.color.easy));
                 choosenFraction = Player.Fraction.PYGMY;
-                tribe.setImageResource(R.drawable.pygmy_290x222);
+                tribe.setImageResource(R.drawable.pygmy);
                 break;
             case 6:
                 info.setText(getString(R.string.tribe_6));
                 info.setTextColor(getResources().getColor(R.color.normal));
                 choosenFraction = Player.Fraction.NUER;
-                tribe.setImageResource(R.drawable.nuer_290x222);
+                tribe.setImageResource(R.drawable.nuer);
                 break;
             case 7:
                 info.setText(getString(R.string.tribe_7));
                 choosenFraction = Player.Fraction.YORUBA;
-                tribe.setImageResource(R.drawable.yoruba_290x222);
+                tribe.setImageResource(R.drawable.yoruba);
                 break;
             case 8:
                 info.setText(getString(R.string.tribe_8));
                 choosenFraction = Player.Fraction.ASHANTI;
-                tribe.setImageResource(R.drawable.ashanti_290x222);
+                tribe.setImageResource(R.drawable.ashanti);
                 break;
             case 9:
                 info.setText(getString(R.string.tribe_9));
                 choosenFraction = Player.Fraction.NUBA;
-                tribe.setImageResource(R.drawable.nuba_290x222);
+                tribe.setImageResource(R.drawable.nuba);
                 break;
             case 10:
                 info.setText(getString(R.string.tribe_10));
                 choosenFraction = Player.Fraction.HAUSA;
-                tribe.setImageResource(R.drawable.hausa_290x222);
+                tribe.setImageResource(R.drawable.hausa);
                 break;
             case 11:
                 info.setText(getString(R.string.tribe_11));
                 info.setTextColor(getResources().getColor(R.color.normal));
                 choosenFraction = Player.Fraction.DOGON;
-                tribe.setImageResource(R.drawable.dogon_290x222);
+                tribe.setImageResource(R.drawable.dogon);
                 break;
             case 12:
                 info.setText(getString(R.string.tribe_12));
                 info.setTextColor(getResources().getColor(R.color.hard));
                 choosenFraction = Player.Fraction.AMHARA;
-                tribe.setImageResource(R.drawable.amhara_290x222);
+                tribe.setImageResource(R.drawable.amhara);
                 break;
             case 13:
                 info.setText(getString(R.string.tribe_13));
                 choosenFraction = Player.Fraction.FULBE;
-                tribe.setImageResource(R.drawable.fulbe_290x222);
+                tribe.setImageResource(R.drawable.fulbe);
                 break;
             case 14:
                 info.setText(getString(R.string.tribe_14));
                 choosenFraction = Player.Fraction.TUAREG;
-                tribe.setImageResource(R.drawable.tuareg_290x222);
+                tribe.setImageResource(R.drawable.tuareg);
                 break;
             case 15:
                 info.setText(getString(R.string.tribe_15));
                 info.setTextColor(getResources().getColor(R.color.hard));
                 choosenFraction = Player.Fraction.BERBER;
-                tribe.setImageResource(R.drawable.berber_290x222);
+                tribe.setImageResource(R.drawable.berber);
                 break;
         }
 

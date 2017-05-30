@@ -28,6 +28,52 @@ public abstract class  GameLogic {
                 return   2;
         }
     }
+
+    public static void changeTerritoryFraction(GlobalMap glM, City city, Player.Fraction fr){
+        int maxY = glM.getMaxY() , maxX = glM.getMaxX() ;
+        Cell[][] map = glM.getMap();
+        for (int i = 0; i <= city.affectArea  ; i++) {
+            if (city.posY + i < maxY  && city.posX + i < maxX) {
+                if (map[city.posY + i][city.posX + i].territoryOf == city.fraction)
+                    glM.setFraction(city.posY + i, city.posX + i, fr);
+
+            }
+            if (city.posY + i < maxY) {
+                if (map[city.posY + i][city.posX].territoryOf == city.fraction)
+                    glM.setFraction(city.posY + i, city.posX, fr);
+            }
+            if (city.posY - i >= 0 && city.posX + i < maxX) {
+                if (map[city.posY - i][city.posX + i].territoryOf == city.fraction){
+                    glM.setFraction(city.posY - i, city.posX + i, fr);
+                }
+            }
+            if (city.posY - i >= 0) {
+                if (map[city.posY - i][city.posX].territoryOf == city.fraction){
+                    glM.setFraction(city.posY - i, city.posX, fr);
+                }
+            }
+            if (city.posY - i >= 0 && city.posX - i >= 0) {
+                if (map[city.posY - i][city.posX - i].territoryOf == city.fraction){
+                    glM.setFraction(city.posY - i, city.posX - i, fr);
+                }
+            }
+            if (city.posX - i >= 0) {
+                if (map[city.posY][city.posX - i].territoryOf == city.fraction) {
+                    glM.setFraction(city.posY, city.posX - i, fr);
+                }
+            }
+            if (city.posY + i< maxY && city.posX - i >= 0) {
+                if (map[city.posY + i][city.posX - i].territoryOf == city.fraction) {
+                    glM.setFraction(city.posY + i, city.posX - i, fr);
+                }
+            }
+            if (city.posX + i < maxX) {
+                if (map[city.posY][city.posX + i].territoryOf == city.fraction) {
+                    glM.setFraction(city.posY, city.posX + i, fr);
+                }
+            }
+        }
+    }
     public static void deleteCityTerritory(GlobalMap glM,City city){
         int maxY = glM.getMaxY() , maxX = glM.getMaxX() ;
         Cell[][] map = glM.getMap();

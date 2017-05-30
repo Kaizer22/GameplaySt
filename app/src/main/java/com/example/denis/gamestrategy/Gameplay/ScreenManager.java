@@ -1,25 +1,11 @@
 package com.example.denis.gamestrategy.Gameplay;
 
-import android.app.Dialog;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.widget.Toast;
 
-
-import com.example.denis.gamestrategy.Gameplay.Units.ArmoredVehicle;
-import com.example.denis.gamestrategy.Gameplay.Units.CamelWarrior;
-import com.example.denis.gamestrategy.R;
 
 import java.util.HashMap;
 import java.util.Map;
-
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Scanner;
 
 /**
  * Created by denis on 20.02.17.
@@ -94,7 +80,7 @@ public class ScreenManager {
     public void choosePlayerCity(Player player,Cell[][] globalMap,City city, InfoBar infoBar){
         CityDialog cityDialog = getUseableCityDialog(player,globalMap,city);
         cityDialog.show(fM,city.name);
-        infoBar.message = city.getInfoAboutCity();
+        infoBar.message = "";
     }
 
     public void chooseCell(Player[] players,Player player,GlobalMap glMap, InfoBar infoBar,int screenWidth,int screenHeight,int x,int y){
@@ -160,10 +146,15 @@ public class ScreenManager {
                 int attackedCityY = attacked.posY;
 
                 if (attacked.cityHP <= 0) {
-                    glM[attackedCityY][attackedCityX].cityOn = false;
-                    attackedPlayer.cities.remove(cellKey);
+
+
+                    DecideDialog decideDialog = getUseableDecideDialog(player,attackedPlayer,glMap,attackedCityX,attackedCityY);
+                    decideDialog.show(fM,attacked.name);
+
+
+                    //attackedPlayer.cities.remove(cellKey);
                     player.moveUnit(choosenUnit, glM, attackedCityX, attackedCityY);
-                    GameLogic.deleteCityTerritory(glMap,attacked);
+                    //GameLogic.deleteCityTerritory(glMap,attacked);
                     GameLogic.setUnitAttack(choosenUnit);
                     GameLogic.setUnitDefense(choosenUnit, glM[attackedCityY][attackedCityX].cellCoeff);
                 } else if (choosenUnit.unitHP <= 0) {
@@ -349,10 +340,16 @@ public class ScreenManager {
         }
     }
 
-    public CityDialog getUseableCityDialog(Player player,Cell[][] glM,City city){ // создавать CityDialog только так! иначе NullPointer
+    public CityDialog getUseableCityDialog(Player player, Cell[][] glM, City city){ // создавать CityDialog только так! иначе NullPointer
         CityDialog cityDialog = new CityDialog();
         cityDialog.setParam(player,glM,city,cellHeight*vmX,cellWidth*vmY);
         return cityDialog;
+    }
+
+    public DecideDialog getUseableDecideDialog(Player player,Player aPlayer, GlobalMap glM,int aCPX,int aCPY){ // создавать CityDialog только так! иначе NullPointer
+        DecideDialog decideDialog = new DecideDialog();
+        decideDialog.setParam(player,aPlayer,glM,aCPX,aCPY,cellHeight*vmX,cellWidth*vmY);
+        return decideDialog;
     }
 
 

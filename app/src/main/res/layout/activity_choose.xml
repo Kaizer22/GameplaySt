@@ -34,40 +34,69 @@
             android:layout_height="wrap_content"
             android:layout_weight="7">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="3">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageButton
+                        android:id="@+id/button_pr_tribe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:drawable/list_selector_background"
+                        android:onClick="previousTribe"
+                        app:srcCompat="@drawable/button_pr"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="2">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/zulu_290x222"
                     android:id="@+id/tribe"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true" />
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/button_pr_27x50"
-                    android:id="@+id/button_pr_tribe"
-                    android:background="@android:drawable/list_selector_background"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/tribe"
-                    android:layout_toStartOf="@+id/tribe"
-                    android:onClick="previousTribe"/>
+                    app:srcCompat="@drawable/zulu" />
 
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/button"
-                    android:id="@+id/button_nx_tribe"
-                    android:background="@android:drawable/list_selector_background"
-                    android:layout_alignTop="@+id/button_pr_tribe"
-                    android:layout_toRightOf="@+id/tribe"
-                    android:layout_toEndOf="@+id/tribe"
-                    android:onClick="nextTribe"/>
-            </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="3">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageButton
+                        android:id="@+id/button_nx_tribe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:background="@android:drawable/list_selector_background"
+                        android:onClick="nextTribe"
+                        app:srcCompat="@drawable/button_nx" />
+                </RelativeLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -75,20 +104,20 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2">
+            android:layout_weight="1">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp">
+                android:layout_height="match_parent">
 
                 <TextView
-                    android:text="@string/tribe_1"
-                    android:textColor="@color/easy"
+                    android:id="@+id/info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:id="@+id/info"
+                    android:layout_centerVertical="true"
+                    android:text="@string/tribe_1"
+                    android:textColor="@color/easy"
                     android:typeface="normal" />
             </RelativeLayout>
         </LinearLayout>
@@ -96,7 +125,8 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -106,28 +136,28 @@
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/button_back_169x50"
+                    app:srcCompat="@drawable/button_back"
                     android:id="@+id/button_back"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
                     android:onClick="backfromChoose"
-                    android:background="@android:drawable/list_selector_background" />
+                    android:background="@android:drawable/list_selector_background"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
 
                 <ImageButton
+                    android:id="@+id/button_continue_map_options"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/button_continue_169x50"
-                    android:id="@+id/button_continue_map_options"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
+                    android:background="@android:drawable/list_selector_background"
                     android:onClick="toMapOptionsActivity"
-                    android:background="@android:drawable/list_selector_background" />
+                    app:srcCompat="@drawable/button_continue"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

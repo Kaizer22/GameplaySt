@@ -24,9 +24,9 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/button_continue_169x50"
+        android:background="@drawable/button_continue"
         android:onClick="startGame"
         android:text=""
         android:visibility="invisible"
-        app:srcCompat="@drawable/button_continue_169x50" />
+        app:srcCompat="@drawable/button_continue" />
 </RelativeLayout>
